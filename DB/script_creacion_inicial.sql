@@ -35,8 +35,8 @@ CREATE TABLE [SQL_SERVANT].[Usuario](
 )
 
 --Se agrega usuario admin con contraseña "shadea" w23e
-INSERT INTO SQL_SERVANT.Usuario(Id_Usuario,Password, Cantidad_Login, Habilitado) 
-VALUES ('admin','e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7', 0, 1)
+INSERT INTO SQL_SERVANT.Usuario(Id_Usuario,Password, Cantidad_Login, Pregunta_Secreta, Respuesta_Secreta, Habilitado) 
+VALUES ('admin','e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7', 0, 'la default', 'la default', 1)
 
 --TABLA ROL
 /*
@@ -48,7 +48,7 @@ VALUES ('admin','e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be
 CREATE TABLE [SQL_SERVANT].[Rol](
 	[Id_Rol][Int]IDENTITY(1,1) NOT NULL,
 	[Descripcion][varchar](20) NOT NULL,
-	[Habilitado][bit] NULL
+	[Habilitado][bit] NOT NULL
 
 	CONSTRAINT [PK_Rol_Id_Rol] PRIMARY KEY(Id_Rol),
 	CONSTRAINT UQ_Rol_Id_Rol UNIQUE(Id_Rol)
@@ -94,8 +94,7 @@ CREATE TABLE [SQL_SERVANT].[Rol_Funcionalidad](
 	CONSTRAINT [PK_Rol_Funcionalidad] PRIMARY KEY (
 		[Id_Rol] ASC,
 		[Id_Funcionalidad] ASC
-	)
-	
+	),
 	CONSTRAINT [FK_Rol_Funcionalidad_Funcionalidad_Id_Funcionalidad] FOREIGN KEY(Id_Funcionalidad)
 		REFERENCES [SQL_SERVANT].[Funcionalidad] (Id_Funcionalidad),
 	CONSTRAINT [FK_Rol_Funcionalidad_Rol_Id_Rol] FOREIGN KEY(Id_Rol)
@@ -107,7 +106,7 @@ INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (1, 1
 INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (1, 2)
 INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (1, 3)
 INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (1, 4)
-INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (1, 13)
+INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (1, 11)
 
 --TABLA USUARIO_ROL
 /*
@@ -118,17 +117,30 @@ CREATE TABLE [SQL_SERVANT].[Usuario_Rol](
 	[Id_Usuario][varchar](20) NOT NULL,
 	[Id_Rol][Int] NOT NULL,
 	[Fecha_Creacion][datetime] NULL,
-	[Fecha_Ultima_Modificacion] NULL
+	[Fecha_Ultima_Modificacion][datetime] NULL
 
 	CONSTRAINT [PK_Usuario_Rol] PRIMARY KEY(
 		[Id_Usuario] ASC,
 		[Id_Rol] ASC
-	)
-
+	),
 	CONSTRAINT [FK_Usuario_Rol_Id_Usuario] FOREIGN KEY (Id_USuario)
 		REFERENCES [SQL_SERVANT].[Usuario] (Id_Usuario),
 	CONSTRAINT [FK_Usuario_Rol_Id_Rol] FOREIGN KEY (Id_Rol)
 		REFERENCES [SQL_SERVANT].[Rol] (Id_Rol)
+)
+
+--TABLA TIPO_IDENTIFICACION
+/*
+	Tabla con la tipificacion de los tipos de documentos validos
+*/
+CREATE TABLE [SQL_SERVANT].[Tipo_Identificacion](
+	[Id_Tipo_Identificacion][Int]IDENTITY(1,1),
+	[Descripcion][varchar](20) NOT NULL
+
+	CONSTRAINT [PK_Tipo_Identificacion] PRIMARY KEY (
+		[Id_Tipo_Identificacion] ASC
+	)
+	--CONSTRAINT UQ_Tipo_Identificacion_Descripcion UNIQUE (Descripcion)
 )
 
 --TABLA CLIENTE
@@ -138,18 +150,19 @@ CREATE TABLE [SQL_SERVANT].[Usuario_Rol](
 CREATE TABLE [SQL_SERVANT].[Cliente](
 	[Id_Cliente][Int]IDENTITY(1,1),
 	[Nro_Identificacion][Int] NOT NULL,
-	[Tipo_Identificacion][Int] NOT NULL,
+	[Id_Tipo_Identificacion][Int] NOT NULL,
 	[Nombre][varchar](30) NOT NULL,
-	[Apellido][varchar](30) NOT NULL
-
+	[Apellido][varchar](30) NOT NULL,
+	[Habilitado][bit] NOT NULL,
 	[Fecha_Creacion][datetime] NULL,
-	[Fecha_Ultima_Modificacion] NULL
+	[Fecha_Ultima_Modificacion][datetime] NULL
 
-	CONSTRAINT [FK_Cliente_Tipo_Identificacion] FOREIGN KEY (Tipo_Identificacion)
-		REFERENCES [SQL_SERVANT].[Cliente] (Tipo_Identificacion),
-	CONSTRAINT [FK_Cliente_Pais] FOREIGN KEY (Id_Pais)
-		REFERENCES [SQL_SERVANT].[Pais] (Id_Pais),
-	CONSTRAINT UQ_Clieente_Nro_Tipo_Identificacion UNIQUE (Nro_Identificacion, Tipo_Identificacion)
+	CONSTRAINT [PK_Cliente] PRIMARY KEY (
+		[Id_Cliente] ASC
+	),
+	CONSTRAINT [FK_Cliente_Tipo_Identificacion] FOREIGN KEY (Id_Tipo_Identificacion)
+		REFERENCES [SQL_SERVANT].[Tipo_Identificacion] (Id_Tipo_Identificacion),
+	CONSTRAINT UQ_Clieente_Nro_Tipo_Identificacion UNIQUE (Nro_Identificacion, Id_Tipo_Identificacion)
 )
 
 --TABLA CLIENTE_DATOS
@@ -171,11 +184,11 @@ CREATE TABLE [SQL_SERVANT].[Cliente_Datos](
 
 	CONSTRAINT [PK_Cliente_Datos] PRIMARY KEY (
 		[Id_Cliente] ASC
-	)
-
+	),
 	CONSTRAINT [FK_Cliente_Datos_Id_Cliente] FOREIGN KEY (Id_Cliente)
 		REFERENCES [SQL_SERVANT].[Cliente] (Id_Cliente),
-	CONSTRAINT UQ_Cliente_Datos_Id_Cliente UNIQUE (Id_Cliente)
+	CONSTRAINT UQ_Cliente_Datos_Id_Cliente UNIQUE (Id_Cliente),
+	CONSTRAINT UQ_Cliente_Datos_Mail UNIQUE (Mail)
 )
 
 --TABLA USUARIO_CLIENTE
@@ -189,19 +202,211 @@ CREATE TABLE [SQL_SERVANT].[Usuario_Cliente](
 	CONSTRAINT [PK_Usuario_Cliente] PRIMARY KEY (
 		[Id_Usuario] ASC,
 		[Id_Cliente] ASC
-	)
-
+	),
 	CONSTRAINT [FK_Usuario_Cliente_Id_Usuario] FOREIGN KEY (Id_Usuario)
 		REFERENCES [SQL_SERVANT].[Usuario] (Id_Usuario),
 	CONSTRAINT [FK_Usuario_Cliente_Id_Cliente] FOREIGN KEY (Id_Cliente)
 		REFERENCES [SQL_SERVANT].[Cliente] (Id_Cliente)
 )
 
---TODO
 --TABLA PAIS
+/*
+	Tabla con la tipificacion de los pais validos para le sistema
+*/
+CREATE TABLE [SQL_SERVANT].[Pais](
+	[Id_Pais][Int]IDENTITY(1,1),
+	[Descripcion][varchar](20) NOT NULL
+
+	CONSTRAINT [PK_Pais] PRIMARY KEY (Id_Pais)
+)
 
 --TODO
 --TABLA TIPO-DOCUMENTO
+
+--TABLA MONEDA
+/*
+	Tabla con la tipificacion de las monedas que utilizara el sistema
+*/
+CREATE TABLE [SQL_SERVANT].[Moneda](
+	[Id_Moneda][Int]IDENTITY(1,1),
+	[Descripcion][varchar](20) NOT NULL
+
+	CONSTRAINT [PK_Moneda] PRIMARY KEY (Id_Moneda)
+)
+
+INSERT INTO SQL_SERVANT.Moneda(Descripcion) VALUES('USD')
+
+--TABLA CLIENTE_CUENTA
+
+
+--TABLA TIPO_CUENTA
+/*
+	Tabla con la tipificacion de los tipos de cuentas
+*/
+CREATE TABLE [SQL_SERVANT].[Tipo_Cuenta](
+	[Id_Tipo_Cuenta][Int]IDENTITY(1,1) NOT NULL,
+	[Descripcion][varchar](30) NOT NULL
+
+	CONSTRAINT [PK_Tipo_Cuenta] PRIMARY KEY (Id_Tipo_Cuenta)
+)
+
+INSERT INTO SQL_SERVANT.Tipo_Cuenta(Descripcion) VALUES('Oro')
+INSERT INTO SQL_SERVANT.Tipo_Cuenta(Descripcion) VALUES('Plata')
+INSERT INTO SQL_SERVANT.Tipo_Cuenta(Descripcion) VALUES('Bronce')
+INSERT INTO SQL_SERVANT.Tipo_Cuenta(Descripcion) VALUES('Gratuita')
+
+--TABLA COSTO_TIPO_CUENTA
+--VER SI HACE FALTA AGREGAR LA DE GRATUITA
+CREATE TABLE [SQL_SERVANT].[Costo_Tipo_Cuenta](
+	[Id_Tipo_Cuenta][Int] NOT NULL,
+	[Costo][Numeric](10,2) NOT NULL
+
+	CONSTRAINT UQ_Costo_Tipo_Cuenta UNIQUE (Id_Tipo_Cuenta),
+	CONSTRAINT [FK_Costo_Tipo_Cuenta] FOREIGN KEY (Id_Tipo_Cuenta)
+		REFERENCES [SQL_SERVANT].[Tipo_Cuenta] (Id_Tipo_Cuenta)
+)
+
+--TABLA ESTADO_CUENTA
+CREATE TABLE [SQL_SERVANT].[Estado_Cuenta](
+	[Id_Estado_Cuenta][Int]IDENTITY(1,1) NOT NULL,
+	[Descripcion][varchar](30) NOT NULL
+
+	CONSTRAINT [PK_Estado_Cuenta] PRIMARY KEY (Id_Estado_Cuenta)
+)
+
+INSERT INTO SQL_SERVANT.Estado_Cuenta(Descripcion) VALUES('Pendiente de activacion')
+INSERT INTO SQL_SERVANT.Estado_Cuenta(Descripcion) VALUES('Cerrada')
+INSERT INTO SQL_SERVANT.Estado_Cuenta(Descripcion) VALUES('Inhabilitada')
+INSERT INTO SQL_SERVANT.Estado_Cuenta(Descripcion) VALUES('Habilitada')
+
+--TABLA CUENTA
+/*
+	Tabla que posea los datos de las cuentas de dinero electronico
+*/
+CREATE TABLE [SQL_SERVANT].[Cuenta](
+	[Id_Cuenta][Int] NOT NULL,
+	[Id_Pais_Registro][Int] NOT NULL,
+	[Id_Moneda][Int] NOT NULL,
+	[Fecha_Apertura][datetime] NOT NULL,
+	--Fecha vencimiento valida el periodo de habilitacion de la tarjeta, esto me parece
+	--mas acorde que poner un campo habilitado. Igual entra en juego el estado de la cuenta
+	--que puede estar habilitada o deshabilitida, pero me da a entender que esto puede ser
+	--porque las cuentas se pueden deshabilitar si no se paga su facturacion
+	[Fecha_Vencimiento][datetime] NOT NULL,
+	[Id_Tipo_Cuenta][Int] NOT NULL,
+	[Id_Estado_Cuenta][Int] NOT NULL
+
+	CONSTRAINT [PK_Cuenta] PRIMARY KEY(
+		[Id_Cuenta] ASC
+	),
+	CONSTRAINT [FK_Cuenta_Id_Pais_Registro] FOREIGN KEY (Id_Pais_Registro)
+		REFERENCES [SQL_SERVANT].[Pais] (Id_Pais),
+	CONSTRAINT [FK_Cuenta_Id_Moneda] FOREIGN KEY (Id_Moneda)
+		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda),
+	CONSTRAINT [FK_Cuenta_Tipo_Cuenta] FOREIGN KEY (Id_Tipo_Cuenta)
+		REFERENCES [SQL_SERVANT].[Tipo_Cuenta] (Id_Tipo_Cuenta)
+)
+
+--TABLA TARJETA
+/*
+	Tabla con los datos de cada tarjeta
+	PD: Si se desvincula una tarjeta, se borra del sistema(?)
+*/
+CREATE TABLE [SQL_SERVANT].[Tarjeta](
+	[Id_Tarjeta][numeric](16,0) NOT NULL,
+	[Fecha_Emision][datetime] NOT NULL,
+	[Fecha_Vencimiento][datetime] NOT NULL,
+	--es el mismo formato que el de la password de usuario, como tiene que estar encriptado
+	--lo vamos a encriptar con el mismo algoritmo de SHA256
+	[Codigo_Seguridad][varchar](64) NOT NULL
+
+	CONSTRAINT [PK_Tarjeta] PRIMARY KEY(
+		[Id_Tarjeta] ASC
+	)
+)
+
+--TABLA CLIENTE_TARJETA
+/*
+	Tabla con la relacion cliente tarjeta
+*/
+CREATE TABLE [SQL_SERVANT].[Cliente_Tarjeta](
+	[Id_Cliente][Int] NOT NULL,
+	[Id_Tarjeta][numeric](16,0) NOT NULL,
+	[Habilitada][bit] NOT NULL DEFAULT 1
+
+	CONSTRAINT [PK_Cliente_Tarjeta] PRIMARY KEY(
+		[Id_Cliente] ASC,
+		[Id_Tarjeta] ASC
+	),
+	CONSTRAINT UQ_Cliente_Tarjeta_Id_Tarjeta UNIQUE (Id_Tarjeta),
+	CONSTRAINT [FK_Cliente_Tarjeta_Id_Cliente] FOREIGN KEY (Id_Cliente)
+		REFERENCES [SQL_SERVANT].[Cliente] (Id_Cliente),
+	CONSTRAINT [FK_Cliente_Tarjeta_Id_Tarjeta] FOREIGN KEY (Id_Tarjeta)
+		REFERENCES [SQL_SERVANT].[Tarjeta] (Id_Tarjeta)
+)
+
+--TABLA DEPOSITO
+/*
+	Tabla con los registros de depositos a las cuentas
+*/
+CREATE TABLE [SQL_SERVANT].[Deposito](
+	[Id_Deposito][Int]IDENTITY(1,1) NOT NULL,
+	--Ver si el id de cuenta tiene el tipo de cuenta
+	[Id_Cuenta][Int] NOT NULL,
+	[Importe][Numeric](10,2) NOT NULL,
+	[Id_Moneda][Int] NOT NULL,
+	[Id_Tarjeta][numeric](16,0) NOT NULL,
+	[Fecha_Deposito][datetime] NOT NULL
+
+	CONSTRAINT [PK_Deposito] PRIMARY KEY (Id_Deposito),
+	CONSTRAINT [FK_Deposito_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
+		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
+	CONSTRAINT [FK_Deposito_Id_Moneda] FOREIGN KEY (Id_Moneda)
+		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda),
+	CONSTRAINT [FK_Deposito_Id_Tarjeta] FOREIGN KEY (Id_Tarjeta)
+		REFERENCES [SQL_SERVANT].[Tarjeta] (Id_Tarjeta)
+)
+
+--TABLA CHEQUE-RETIRO
+/*
+	Tabla con los retiros de efectivo
+*/
+CREATE TABLE [SQL_SERVANT].[Cheque_Retiro](
+	[Id_Cheque][Int]IDENTITY(1,1) NOT NULL,
+	[Id_Cuenta][Int] NOT NULL,
+	--EN TEORIA SIEMPRE ES DOLARES PERO POR LAS DUDAS
+	[Id_Moneda][Int] NOT NULL,
+	[Importe][Numeric](10,2) NOT NULL,
+	[Fecha_Extraccion][datetime] NOT NULL,
+	[Banco][varchar](30) NOT NULL
+
+	CONSTRAINT [PK_Cheque_Retiro] PRIMARY KEY (Id_Cheque),
+	CONSTRAINT [FK_Cheque_Retiro_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
+		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
+	CONSTRAINT [FK_Cheque_Retiro_Id_Moneda] FOREIGN KEY (Id_Moneda)
+		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
+)
+
+--TABLA TRANSFERENCIAS
+/*
+	Tabla con todas las transferencias realizadas
+*/
+CREATE TABLE [SQL_SERVANT].[Transferencia](
+	[Id_Transferencia][Int]IDENTITY(1,1) NOT NULL,
+	[Id_Cuenta_Origen][Int] NOT NULL,
+	[Id_Cuenta_Destino][Int] NOT NULL,
+	[Id_Moneda][Int] NOT NULL,
+	[Importe][Numeric](10,2) NOT NULL,
+	[Fecha_Transferencia][datetime] NOT NULL
+
+	CONSTRAINT [PK_Transferencia] PRIMARY KEY ([Id_Transferencia] ASC),
+	CONSTRAINT [FK_Transferencia_Id_Cuenta_Origen] FOREIGN KEY (Id_Cuenta_Origen)
+		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
+	CONSTRAINT [FK_Transferencia_Id_Cuenta_Destino] FOREIGN KEY (Id_Cuenta_Destino)
+		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
+	CONSTRAINT [FK_Transferencia_Id_Moneda] FOREIGN KEY (Id_Moneda)
+		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
+)
 
 /* NOTA 
 	SEGUN EL TP: además de generar (durante el proceso de migración) todos los usuarios
