@@ -8,6 +8,88 @@ CREATE SCHEMA [SQL_SERVANT] AUTHORIZATION [gd]
 GO
 
 /****************************************************************/
+-- TABLAS A PRECARGAR
+
+
+/****************************************************************/
+
+--TABLA TIPO_IDENTIFICACION
+/*
+	Tabla con la tipificacion de los tipos de documentos validos
+*/
+CREATE TABLE [SQL_SERVANT].[Tipo_Identificacion](
+	[Id_Tipo_Identificacion][Int],
+	[Descripcion][varchar](20) NOT NULL
+
+	CONSTRAINT [PK_Tipo_Identificacion] PRIMARY KEY (
+		[Id_Tipo_Identificacion] ASC
+	)
+)
+
+--LLENAR TABLA TIPO_IDENTIFICACION
+INSERT INTO SQL_SERVANT.Tipo_Identificacion (Id_Tipo_Identificacion, Descripcion)
+SELECT DISTINCT Cli_Tipo_Doc_Cod, Cli_Tipo_Doc_Desc FROM gd_esquema.Maestra
+--
+
+--TABLA PAIS
+/*
+	Tabla con la tipificacion de los pais validos para le sistema
+*/
+CREATE TABLE [SQL_SERVANT].[Pais](
+	[Id_Pais][Int],
+	[Descripcion][varchar](100) NOT NULL
+
+	CONSTRAINT [PK_Pais] PRIMARY KEY (Id_Pais)
+)
+--LLENO LA TABLA PAIS
+--Inserto solo de cliente pais
+INSERT INTO SQL_SERVANT.Pais (Id_Pais, Descripcion)
+SELECT DISTINCT Cli_Pais_Codigo, UPPER(LTRIM(RTRIM(Cli_Pais_Desc)))
+	FROM gd_esquema.Maestra
+
+--verifico los de cuentas en paises
+INSERT INTO SQL_SERVANT.Pais (Id_Pais, Descripcion)
+SELECT DISTINCT Cuenta_Dest_Pais_Codigo, UPPER(LTRIM(RTRIM(Cuenta_Dest_Pais_Desc)))
+	FROM 
+		gd_esquema.Maestra m
+	WHERE 
+		m.Cuenta_Dest_Pais_Codigo IS NOT NULL
+		AND m.Cuenta_Dest_Pais_Desc IS NOT NULL
+		AND NOT EXISTS (
+			SELECT 1 FROM SQL_SERVANT.Pais p 
+			WHERE 
+				m.Cuenta_Dest_Pais_Codigo = p.Id_Pais
+				AND UPPER(LTRIM(RTRIM(m.Cuenta_Dest_Pais_Desc))) = p.Descripcion
+			)
+
+--TABLA MONEDA
+/*
+	Tabla con la tipificacion de las monedas que utilizara el sistema
+*/
+CREATE TABLE [SQL_SERVANT].[Moneda](
+	[Id_Moneda][Int]IDENTITY(1,1) NOT NULL,
+	[Descripcion][varchar](20) NOT NULL
+
+	CONSTRAINT [PK_Moneda] PRIMARY KEY (Id_Moneda)
+)
+
+INSERT INTO SQL_SERVANT.Moneda(Descripcion) VALUES('USD')
+
+--TABLA BANCO
+/*
+	Tabla con la tipificacion de los bancos
+*/
+CREATE TABLE [SQL_SERVANT].[Banco](
+	[Id_Banco][Int]IDENTITY(1,1) NOT NULL,
+	[Nombre][varchar](60) NOT NULL,
+	[Direccion][varchar](100) NOT NULL
+
+	CONSTRAINT [PK_Banco] PRIMARY KEY (Id_Banco),
+	CONSTRAINT UQ_Banco_Descripcion UNIQUE (Nombre)
+)
+--NO HAY BANCOS CARGADOS EN EL SISTEMA A MIGRAR
+
+/****************************************************************/
 --				CREAR TABLAS E INSERTAR DATOS
 /****************************************************************/
 
@@ -129,19 +211,13 @@ CREATE TABLE [SQL_SERVANT].[Usuario_Rol](
 		REFERENCES [SQL_SERVANT].[Rol] (Id_Rol)
 )
 
---TABLA TIPO_IDENTIFICACION
-/*
-	Tabla con la tipificacion de los tipos de documentos validos
-*/
-CREATE TABLE [SQL_SERVANT].[Tipo_Identificacion](
-	[Id_Tipo_Identificacion][Int]IDENTITY(1,1),
-	[Descripcion][varchar](20) NOT NULL
+--CREACION DE USUARIO_ROL para el usuario admin tanto como administrador
+--como para cliente
+INSERT INTO SQL_SERVANT.Usuario_Rol(Id_Usuario, Id_Rol, Fecha_Creacion, Fecha_Ultima_Modificacion)
+	VALUES ('admin',1,GETDATE(),GETDATE())
+INSERT INTO SQL_SERVANT.Usuario_Rol(Id_Usuario, Id_Rol, Fecha_Creacion, Fecha_Ultima_Modificacion)
+	VALUES ('admin',2,GETDATE(),GETDATE())
 
-	CONSTRAINT [PK_Tipo_Identificacion] PRIMARY KEY (
-		[Id_Tipo_Identificacion] ASC
-	)
-	--CONSTRAINT UQ_Tipo_Identificacion_Descripcion UNIQUE (Descripcion)
-)
 
 --TABLA CLIENTE
 /*
@@ -151,8 +227,6 @@ CREATE TABLE [SQL_SERVANT].[Cliente](
 	[Id_Cliente][Int]IDENTITY(1,1),
 	[Nro_Identificacion][Int] NOT NULL,
 	[Id_Tipo_Identificacion][Int] NOT NULL,
-	[Nombre][varchar](30) NOT NULL,
-	[Apellido][varchar](30) NOT NULL,
 	[Habilitado][bit] NOT NULL,
 	[Fecha_Creacion][datetime] NULL,
 	[Fecha_Ultima_Modificacion][datetime] NULL
@@ -172,6 +246,8 @@ CREATE TABLE [SQL_SERVANT].[Cliente](
 */
 CREATE TABLE [SQL_SERVANT].[Cliente_Datos](
 	[Id_Cliente][Int] NOT NULL,
+	[Nombre][varchar](30) NOT NULL,
+	[Apellido][varchar](30) NOT NULL,
 	[Mail][varchar](30) NOT NULL,
 	[Id_Pais][Int] NOT NULL,
 	[Domicilio][varchar](20) NOT NULL,
@@ -208,36 +284,6 @@ CREATE TABLE [SQL_SERVANT].[Usuario_Cliente](
 	CONSTRAINT [FK_Usuario_Cliente_Id_Cliente] FOREIGN KEY (Id_Cliente)
 		REFERENCES [SQL_SERVANT].[Cliente] (Id_Cliente)
 )
-
---TABLA PAIS
-/*
-	Tabla con la tipificacion de los pais validos para le sistema
-*/
-CREATE TABLE [SQL_SERVANT].[Pais](
-	[Id_Pais][Int]IDENTITY(1,1),
-	[Descripcion][varchar](20) NOT NULL
-
-	CONSTRAINT [PK_Pais] PRIMARY KEY (Id_Pais)
-)
-
---TODO
---TABLA TIPO-DOCUMENTO
-
---TABLA MONEDA
-/*
-	Tabla con la tipificacion de las monedas que utilizara el sistema
-*/
-CREATE TABLE [SQL_SERVANT].[Moneda](
-	[Id_Moneda][Int]IDENTITY(1,1),
-	[Descripcion][varchar](20) NOT NULL
-
-	CONSTRAINT [PK_Moneda] PRIMARY KEY (Id_Moneda)
-)
-
-INSERT INTO SQL_SERVANT.Moneda(Descripcion) VALUES('USD')
-
---TABLA CLIENTE_CUENTA
-
 
 --TABLA TIPO_CUENTA
 /*
@@ -305,6 +351,18 @@ CREATE TABLE [SQL_SERVANT].[Cuenta](
 		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda),
 	CONSTRAINT [FK_Cuenta_Tipo_Cuenta] FOREIGN KEY (Id_Tipo_Cuenta)
 		REFERENCES [SQL_SERVANT].[Tipo_Cuenta] (Id_Tipo_Cuenta)
+)
+
+--TABLA CLIENTE_CUENTA
+CREATE TABLE [SQL_SERVANT].[Cliente_Cuenta](
+	[Id_Cliente][Int] NOT NULL,
+	[Id_Cuenta][Int] NOT NULL
+
+	CONSTRAINT UQ_Cliente_Cuenta_Id_Cliente_Id_Cuente UNIQUE (Id_Cliente, Id_Cuenta),
+	CONSTRAINT [FK_Cliente_Cuenta_Id_Cliente] FOREIGN KEY (Id_Cliente)
+		REFERENCES [SQL_SERVANT].[Cliente] (Id_Cliente),
+	CONSTRAINT [FK_Cliente_Cuenta_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
+		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta)
 )
 
 --TABLA TARJETA
@@ -408,8 +466,50 @@ CREATE TABLE [SQL_SERVANT].[Transferencia](
 		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
 )
 
+--TABLA FACTURACION_PENDIENTE
+/*
+	Tabla donde se almacenan temporalmente las facturaciones
+*/
+CREATE TABLE [SQL_SERVANT].[Facturacion_Pendiente](
+	[Id_Facturacion_Pendiente][Int]IDENTITY(1,1) NOT NULL,
+	[Id_Cuenta][Int] NOT NULL,
+	[Id_Moneda][Int] NOT NULL,
+	[Fecha][datetime] NOT NULL,
+	[Importe][Numeric](10,2) NOT NULL,
+	[Descripcion][varchar](20) NOT NULL
+
+	CONSTRAINT [PK_Facturacion_Pendiente] PRIMARY KEY(Id_Facturacion_Pendiente),
+	CONSTRAINT [FK_Facturacion_Pendiente_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
+		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
+	CONSTRAINT [FK_Facturacion_Pendiente_Id_Moneda] FOREIGN KEY (Id_Moneda)
+		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
+)
+
+CREATE TABLE [SQL_SERVANT].[Facturacion](
+	[Id_Factura][Int]IDENTITY(1,1) NOT NULL,
+	[Fecha][datetime] NOT NULL,
+	[Id_Cliente][Int] NOT NULL,
+	[Id_Cuenta][Int] NOT NULL,
+	[Id_Referencia][Int] NOT NULL,
+	[Descripcion][Int] NOT NULL,
+	[Id_Moneda][Int] NOT NULL,
+	[Importe][Int] NOT NULL
+
+	CONSTRAINT [PK_Facturacion] PRIMARY KEY(Id_Factura),
+	CONSTRAINT [FK_Facturacion_Id_Cliente] FOREIGN KEY (Id_Cliente)
+		REFERENCES [SQL_SERVANT].[Cliente] (Id_Cliente),
+	CONSTRAINT [FK_Facturacion_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
+		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
+	CONSTRAINT [FK_Facturacion_Id_Moneda] FOREIGN KEY (Id_Moneda)
+		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
+)
+
 /* NOTA 
-	SEGUN EL TP: además de generar (durante el proceso de migración) todos los usuarios
+	SEGUN EL TP: 
+	-además de generar (durante el proceso de migración) todos los usuarios
 pertenecientes a los clientes que se encuentran en la tabla maestra.
+
+	-Al momento de generar la factura se deben facturar el total de transacciones pendientes,
+teniendo en cuenta el costo de transacción puede variar en el tiempo.
 */
 
