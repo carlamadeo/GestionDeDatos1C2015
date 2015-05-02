@@ -84,10 +84,30 @@ CREATE TABLE [SQL_SERVANT].[Banco](
 	[Nombre][varchar](60) NOT NULL,
 	[Direccion][varchar](100) NOT NULL
 
-	CONSTRAINT [PK_Banco] PRIMARY KEY (Id_Banco),
-	CONSTRAINT UQ_Banco_Descripcion UNIQUE (Nombre)
+	CONSTRAINT [PK_Banco] PRIMARY KEY (Id_Banco)
 )
---NO HAY BANCOS CARGADOS EN EL SISTEMA A MIGRAR
+
+SET IDENTITY_INSERT [SQL_SERVANT].Banco ON
+
+INSERT INTO SQL_SERVANT.Banco (Id_Banco, Nombre, Direccion)
+SELECT DISTINCT Banco_Cogido, Banco_Nombre, Banco_Direccion 
+	FROM gd_esquema.Maestra WHERE Banco_Nombre IS NOT NULL
+
+SET IDENTITY_INSERT [SQL_SERVANT].Banco OFF
+
+--TABLA TARJETA_EMPRESA
+/*
+	Tabla con la tipificacion de las empresas que dan tarjetas
+*/
+CREATE TABLE [SQL_SERVANT].[Tarjeta_Empresa](
+	[Id_Tarjeta_Empresa][Int]IDENTITY(1,1) NOT NULL,
+	[Descripcion][varchar](50) NOT NULL
+
+	CONSTRAINT [PK_Tarjeta_Empresa] PRIMARY KEY(Id_Tarjeta_Empresa),
+	CONSTRAINT UQ_Tarjeta_Empresa_Descripcion UNIQUE (Descripcion)
+)
+INSERT INTO SQL_SERVANT.Tarjeta_Empresa (Descripcion)
+SELECT DISTINCT Tarjeta_Emisor_Descripcion FROM gd_esquema.Maestra WHERE Tarjeta_Emisor_Descripcion IS NOT NULL
 
 /****************************************************************/
 --				CREAR TABLAS E INSERTAR DATOS
@@ -330,15 +350,15 @@ INSERT INTO SQL_SERVANT.Estado_Cuenta(Descripcion) VALUES('Habilitada')
 	Tabla que posea los datos de las cuentas de dinero electronico
 */
 CREATE TABLE [SQL_SERVANT].[Cuenta](
-	[Id_Cuenta][Int] NOT NULL,
+	[Id_Cuenta][numeric](18,0) NOT NULL,
 	[Id_Pais_Registro][Int] NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
-	[Fecha_Apertura][datetime] NOT NULL,
+	[Fecha_Creacion][datetime] NOT NULL,
 	--Fecha vencimiento valida el periodo de habilitacion de la tarjeta, esto me parece
 	--mas acorde que poner un campo habilitado. Igual entra en juego el estado de la cuenta
 	--que puede estar habilitada o deshabilitida, pero me da a entender que esto puede ser
 	--porque las cuentas se pueden deshabilitar si no se paga su facturacion
-	[Fecha_Vencimiento][datetime] NOT NULL,
+	[Fecha_Vencimiento][datetime],
 	[Id_Tipo_Cuenta][Int] NOT NULL,
 	[Id_Estado_Cuenta][Int] NOT NULL
 
@@ -350,13 +370,24 @@ CREATE TABLE [SQL_SERVANT].[Cuenta](
 	CONSTRAINT [FK_Cuenta_Id_Moneda] FOREIGN KEY (Id_Moneda)
 		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda),
 	CONSTRAINT [FK_Cuenta_Tipo_Cuenta] FOREIGN KEY (Id_Tipo_Cuenta)
-		REFERENCES [SQL_SERVANT].[Tipo_Cuenta] (Id_Tipo_Cuenta)
+		REFERENCES [SQL_SERVANT].[Tipo_Cuenta] (Id_Tipo_Cuenta),
+	CONSTRAINT [FK_Cuenta_Id_Estado_Cuenta] FOREIGN KEY (Id_Estado_Cuenta)
+		REFERENCES [SQL_SERVANT].[Estado_Cuenta] (Id_Estado_Cuenta)
 )
+INSERT INTO SQL_SERVANT.Cuenta (Id_Cuenta, Id_Pais_Registro, Id_Moneda, Fecha_Creacion, Fecha_Vencimiento, Id_Tipo_Cuenta, Id_Estado_Cuenta)
+SELECT DISTINCT m.Cuenta_Numero, m.Cuenta_Pais_Codigo, 
+mo.Id_Moneda, m.Cuenta_Fecha_Creacion, 
+m.Cuenta_Fecha_Cierre, tc.Id_Tipo_Cuenta, ec.Id_Estado_Cuenta
+FROM gd_esquema.Maestra m 
+	INNER JOIN SQL_SERVANT.Moneda mo ON 'USD' = mo.Descripcion 
+	INNER JOIN SQL_SERVANT.Tipo_Cuenta tc ON 'Gratuita' = tc.Descripcion
+	INNER JOIN SQL_SERVANT.Estado_Cuenta ec ON 'Habilitada' = ec.Descripcion
+WHERE m.Cuenta_Numero IS NOT NULL
 
 --TABLA CLIENTE_CUENTA
 CREATE TABLE [SQL_SERVANT].[Cliente_Cuenta](
 	[Id_Cliente][Int] NOT NULL,
-	[Id_Cuenta][Int] NOT NULL
+	[Id_Cuenta][numeric](18,0) NOT NULL
 
 	CONSTRAINT UQ_Cliente_Cuenta_Id_Cliente_Id_Cuente UNIQUE (Id_Cliente, Id_Cuenta),
 	CONSTRAINT [FK_Cliente_Cuenta_Id_Cliente] FOREIGN KEY (Id_Cliente)
@@ -374,6 +405,7 @@ CREATE TABLE [SQL_SERVANT].[Tarjeta](
 	[Id_Tarjeta][numeric](16,0) NOT NULL,
 	[Fecha_Emision][datetime] NOT NULL,
 	[Fecha_Vencimiento][datetime] NOT NULL,
+	[Id_Tarjeta_Empresa][Int] NOT NULL,
 	--es el mismo formato que el de la password de usuario, como tiene que estar encriptado
 	--lo vamos a encriptar con el mismo algoritmo de SHA256
 	[Codigo_Seguridad][varchar](64) NOT NULL
@@ -382,6 +414,12 @@ CREATE TABLE [SQL_SERVANT].[Tarjeta](
 		[Id_Tarjeta] ASC
 	)
 )
+INSERT INTO SQL_SERVANT.Tarjeta (Id_Tarjeta, Fecha_Emision, Fecha_Vencimiento, Id_Tarjeta_Empresa, Codigo_Seguridad)
+SELECT DISTINCT m.Tarjeta_Numero, m.Tarjeta_Fecha_Emision, m.Tarjeta_Fecha_Vencimiento, te.Id_Tarjeta_Empresa, m.Tarjeta_Codigo_Seg 
+FROM gd_esquema.Maestra m
+	INNER JOIN SQL_SERVANT.Tarjeta_Empresa te
+		ON UPPER(LTRIM(RTRIM(m.Tarjeta_Emisor_Descripcion))) = UPPER(RTRIM(LTRIM(te.Descripcion)))
+	WHERE m.Tarjeta_Numero IS NOT NULL
 
 --TABLA CLIENTE_TARJETA
 /*
@@ -408,9 +446,9 @@ CREATE TABLE [SQL_SERVANT].[Cliente_Tarjeta](
 	Tabla con los registros de depositos a las cuentas
 */
 CREATE TABLE [SQL_SERVANT].[Deposito](
-	[Id_Deposito][Int]IDENTITY(1,1) NOT NULL,
+	[Id_Deposito][numeric](18,0)IDENTITY(1,1) NOT NULL,
 	--Ver si el id de cuenta tiene el tipo de cuenta
-	[Id_Cuenta][Int] NOT NULL,
+	[Id_Cuenta][numeric](18,0) NOT NULL,
 	[Importe][Numeric](10,2) NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
 	[Id_Tarjeta][numeric](16,0) NOT NULL,
@@ -424,26 +462,97 @@ CREATE TABLE [SQL_SERVANT].[Deposito](
 	CONSTRAINT [FK_Deposito_Id_Tarjeta] FOREIGN KEY (Id_Tarjeta)
 		REFERENCES [SQL_SERVANT].[Tarjeta] (Id_Tarjeta)
 )
+SET IDENTITY_INSERT [SQL_SERVANT].Deposito ON
 
---TABLA CHEQUE-RETIRO
+INSERT INTO SQL_SERVANT.Deposito (Id_Deposito, Id_Cuenta, Importe, Id_Moneda, Id_Tarjeta, Fecha_Deposito)
+SELECT m.Deposito_Codigo, m.Cuenta_Numero, m.Deposito_Importe, mo.Id_Moneda, m.Tarjeta_Numero, m.Deposito_Fecha 
+FROM gd_esquema.Maestra m 
+	INNER JOIN SQL_SERVANT.Moneda mo ON 'USD' = mo.Descripcion
+WHERE m.Deposito_Codigo IS NOT NULL
+
+SET IDENTITY_INSERT [SQL_SERVANT].Deposito OFF
+
+--TABLA CHEQUE
 /*
-	Tabla con los retiros de efectivo
+	Tabla con los cheques emitidos
 */
-CREATE TABLE [SQL_SERVANT].[Cheque_Retiro](
-	[Id_Cheque][Int]IDENTITY(1,1) NOT NULL,
-	[Id_Cuenta][Int] NOT NULL,
-	--EN TEORIA SIEMPRE ES DOLARES PERO POR LAS DUDAS
+CREATE TABLE [SQL_SERVANT].[Cheque](
+	[Id_Cheque][Numeric](18,0)IDENTITY(1,1) NOT NULL,
+	[Id_Cuenta][Numeric](18,0) NOT NULL,
+	[Fecha][datetime] NOT NULL,
+	[Importe][Numeric](10,2) NOT NULL,
+	[Id_Moneda][Int] NOT NULL,
+	[Id_Banco][Int] NOT NULL
+
+	CONSTRAINT [PK_Cheque] PRIMARY KEY (Id_Cheque),
+	CONSTRAINT [FK_Cheque_Id_Banco] FOREIGN KEY (Id_Banco)
+		REFERENCES [SQL_SERVANT].[Banco] (Id_Banco),
+	CONSTRAINT [FK_Cheque_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
+		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
+	CONSTRAINT [FK_Cheque_Id_Moneda] FOREIGN KEY (Id_Moneda)
+		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
+)
+SET IDENTITY_INSERT [SQL_SERVANT].Cheque ON
+
+INSERT INTO SQL_SERVANT.Cheque (Id_Cheque, Id_Cuenta, Fecha, Importe, Id_Moneda, Id_Banco)
+SELECT m.Cheque_Numero, m.Cuenta_Numero, m.Cheque_Fecha, m.Cheque_Importe, mo.Id_Moneda, m.Banco_Cogido 
+FROM gd_esquema.Maestra m 
+	INNER JOIN SQL_SERVANT.Moneda mo ON 'USD' = mo.Descripcion
+WHERE Cheque_Numero IS NOT NULL
+
+SET IDENTITY_INSERT [SQL_SERVANT].Cheque OFF
+
+--TABLA RETIRO
+/*
+	Tabla con los retiros realizados
+*/
+CREATE TABLE [SQL_SERVANT].[Retiro](
+	[Id_Retiro][Numeric](18,0)IDENTITY(1,1) NOT NULL,
+	[Id_Cuenta][Numeric](18,0) NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
 	[Importe][Numeric](10,2) NOT NULL,
 	[Fecha_Extraccion][datetime] NOT NULL,
-	[Banco][varchar](30) NOT NULL
+	[Id_Banco][Int] NOT NULL
 
-	CONSTRAINT [PK_Cheque_Retiro] PRIMARY KEY (Id_Cheque),
-	CONSTRAINT [FK_Cheque_Retiro_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
+	CONSTRAINT [PK_Retiro] PRIMARY KEY (Id_Retiro),
+	CONSTRAINT [FK_Retiro_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
 		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
-	CONSTRAINT [FK_Cheque_Retiro_Id_Moneda] FOREIGN KEY (Id_Moneda)
-		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
+	CONSTRAINT [FK_Retiro_Id_Moneda] FOREIGN KEY (Id_Moneda)
+		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda),
+	CONSTRAINT [FK_Retiro_Id_Banco] FOREIGN KEY (Id_Banco)
+		REFERENCES [SQL_SERVANT].[Banco] (Id_Banco)
 )
+SET IDENTITY_INSERT [SQL_SERVANT].Retiro ON
+
+INSERT INTO SQL_SERVANT.Retiro (Id_Retiro, Id_Cuenta, Id_Moneda, Importe, Fecha_Extraccion, Id_Banco)
+SELECT m.Retiro_Codigo, m.Cuenta_Numero, mo.Id_Moneda, m.Retiro_Importe, m.Retiro_Fecha, m.Banco_Cogido 
+FROM gd_esquema.Maestra m 
+	INNER JOIN SQL_SERVANT.Moneda mo ON 'USD' = mo.Descripcion
+WHERE m.Retiro_Codigo IS NOT NULL
+
+SET IDENTITY_INSERT [SQL_SERVANT].Retiro OFF
+
+--TABLA CHEQUE-RETIRO
+/*
+	Tabla con la relacion retiro -> cheque
+*/
+CREATE TABLE [SQL_SERVANT].[Cheque_Retiro](
+	[Id_Retiro][Numeric](18,0) NOT NULL,
+	[Id_Cheque][Numeric](18,0) NOT NULL
+
+	CONSTRAINT [PK_Cheque_Retiro] PRIMARY KEY (Id_Retiro, Id_Cheque),
+	CONSTRAINT [FK_Cheque_Retiro_Id_Cheque] FOREIGN KEY (Id_Cheque)
+		REFERENCES [SQL_SERVANT].[Cheque] (Id_Cheque),
+	CONSTRAINT [FK_Cheque_Retiro_Retiro] FOREIGN KEY (Id_Retiro)
+		REFERENCES [SQL_SERVANT].[Retiro] (Id_Retiro)
+)
+
+INSERT INTO SQL_SERVANT.Cheque_Retiro (Id_Retiro, Id_Cheque)
+SELECT DISTINCT m.Retiro_Codigo, m.Cheque_Numero
+FROM gd_esquema.Maestra m
+WHERE m.Retiro_Codigo IS NOT NULL
+	AND m.Cheque_Numero IS NOT NULL
+
 
 --TABLA TRANSFERENCIAS
 /*
@@ -451,10 +560,11 @@ CREATE TABLE [SQL_SERVANT].[Cheque_Retiro](
 */
 CREATE TABLE [SQL_SERVANT].[Transferencia](
 	[Id_Transferencia][Int]IDENTITY(1,1) NOT NULL,
-	[Id_Cuenta_Origen][Int] NOT NULL,
-	[Id_Cuenta_Destino][Int] NOT NULL,
+	[Id_Cuenta_Origen][numeric](18,0) NOT NULL,
+	[Id_Cuenta_Destino][numeric](18,0) NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
 	[Importe][Numeric](10,2) NOT NULL,
+	[Costo][Numeric](10,2) NOT NULL,
 	[Fecha_Transferencia][datetime] NOT NULL
 
 	CONSTRAINT [PK_Transferencia] PRIMARY KEY ([Id_Transferencia] ASC),
@@ -465,6 +575,12 @@ CREATE TABLE [SQL_SERVANT].[Transferencia](
 	CONSTRAINT [FK_Transferencia_Id_Moneda] FOREIGN KEY (Id_Moneda)
 		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
 )
+INSERT INTO SQL_SERVANT.Transferencia(Id_Cuenta_Origen, Id_Cuenta_Destino, Id_Moneda, Importe, Costo, Fecha_Transferencia)
+SELECT m.Cuenta_Numero, m.Cuenta_Dest_Numero, mo.Id_Moneda, m.Trans_Importe, m.Trans_Costo_Trans, m.Transf_Fecha
+FROM gd_esquema.Maestra m 
+	INNER JOIN SQL_SERVANT.Moneda mo ON 'USD' = mo.Descripcion
+WHERE m.Transf_Fecha IS NOT NULL 
+	AND m.Factura_Numero IS NOT NULL
 
 --TABLA FACTURACION_PENDIENTE
 /*
@@ -472,7 +588,7 @@ CREATE TABLE [SQL_SERVANT].[Transferencia](
 */
 CREATE TABLE [SQL_SERVANT].[Facturacion_Pendiente](
 	[Id_Facturacion_Pendiente][Int]IDENTITY(1,1) NOT NULL,
-	[Id_Cuenta][Int] NOT NULL,
+	[Id_Cuenta][numeric](18,0) NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
 	[Fecha][datetime] NOT NULL,
 	[Importe][Numeric](10,2) NOT NULL,
@@ -489,7 +605,7 @@ CREATE TABLE [SQL_SERVANT].[Facturacion](
 	[Id_Factura][Int]IDENTITY(1,1) NOT NULL,
 	[Fecha][datetime] NOT NULL,
 	[Id_Cliente][Int] NOT NULL,
-	[Id_Cuenta][Int] NOT NULL,
+	[Id_Cuenta][numeric](18,0) NOT NULL,
 	[Id_Referencia][Int] NOT NULL,
 	[Descripcion][Int] NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
