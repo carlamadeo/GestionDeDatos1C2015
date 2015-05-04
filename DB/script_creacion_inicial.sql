@@ -7,6 +7,26 @@
 CREATE SCHEMA [SQL_SERVANT] AUTHORIZATION [gd]
 GO
 
+--FUNCIONES COMPLEMENTARIAS
+
+CREATE FUNCTION SQL_SERVANT.Crear_Nombre_Usuario(
+@p_cli_name as varchar(30),
+@p_cli_lastname as varchar(30)
+)
+RETURNS varchar(30)
+BEGIN
+	declare @p_username varchar(30)
+	SET @p_username = SUBSTRING(@p_cli_name,1,1)+@p_cli_lastname
+	SET @p_username = LOWER(@p_username)
+	SET @p_username = REPLACE(@p_username,'á','a')
+	SET @p_username = REPLACE(@p_username,'é','e')
+	SET @p_username = REPLACE(@p_username,'í','i')
+	SET @p_username = REPLACE(@p_username,'ó','o')
+	SET @p_username = REPLACE(@p_username,'ú','u')
+	RETURN @p_username
+END
+GO
+
 /****************************************************************/
 -- TABLAS A PRECARGAR
 
@@ -18,7 +38,7 @@ GO
 	Tabla con la tipificacion de los tipos de documentos validos
 */
 CREATE TABLE [SQL_SERVANT].[Tipo_Identificacion](
-	[Id_Tipo_Identificacion][Int],
+	[Id_Tipo_Identificacion][Int]IDENTITY(1,1),
 	[Descripcion][varchar](20) NOT NULL
 
 	CONSTRAINT [PK_Tipo_Identificacion] PRIMARY KEY (
@@ -26,22 +46,28 @@ CREATE TABLE [SQL_SERVANT].[Tipo_Identificacion](
 	)
 )
 
+SET IDENTITY_INSERT [SQL_SERVANT].Tipo_Identificacion ON
 --LLENAR TABLA TIPO_IDENTIFICACION
 INSERT INTO SQL_SERVANT.Tipo_Identificacion (Id_Tipo_Identificacion, Descripcion)
 SELECT DISTINCT Cli_Tipo_Doc_Cod, Cli_Tipo_Doc_Desc FROM gd_esquema.Maestra
 --
+SET IDENTITY_INSERT [SQL_SERVANT].Tipo_Identificacion OFF
+
 
 --TABLA PAIS
 /*
 	Tabla con la tipificacion de los pais validos para le sistema
 */
 CREATE TABLE [SQL_SERVANT].[Pais](
-	[Id_Pais][Int],
+	[Id_Pais][Int]IDENTITY(1,1) NOT NULL,
 	[Descripcion][varchar](100) NOT NULL
 
 	CONSTRAINT [PK_Pais] PRIMARY KEY (Id_Pais)
 )
 --LLENO LA TABLA PAIS
+
+SET IDENTITY_INSERT [SQL_SERVANT].Pais ON
+
 --Inserto solo de cliente pais
 INSERT INTO SQL_SERVANT.Pais (Id_Pais, Descripcion)
 SELECT DISTINCT Cli_Pais_Codigo, UPPER(LTRIM(RTRIM(Cli_Pais_Desc)))
@@ -61,6 +87,8 @@ SELECT DISTINCT Cuenta_Dest_Pais_Codigo, UPPER(LTRIM(RTRIM(Cuenta_Dest_Pais_Desc
 				m.Cuenta_Dest_Pais_Codigo = p.Id_Pais
 				AND UPPER(LTRIM(RTRIM(m.Cuenta_Dest_Pais_Desc))) = p.Descripcion
 			)
+
+SET IDENTITY_INSERT [SQL_SERVANT].Pais OFF
 
 --TABLA MONEDA
 /*
@@ -139,6 +167,11 @@ CREATE TABLE [SQL_SERVANT].[Usuario](
 --Se agrega usuario admin con contraseña "shadea" w23e
 INSERT INTO SQL_SERVANT.Usuario(Id_Usuario,Password, Cantidad_Login, Pregunta_Secreta, Respuesta_Secreta, Habilitado) 
 VALUES ('admin','e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7', 0, 'la default', 'la default', 1)
+
+INSERT INTO SQL_SERVANT.Usuario(Id_Usuario, Password, Cantidad_Login, Pregunta_Secreta, Respuesta_Secreta, Habilitado)
+SELECT DISTINCT SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido), 
+'e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7', 0, 'default', 'default', 1
+FROM gd_esquema.Maestra m
 
 --TABLA ROL
 /*
@@ -232,20 +265,54 @@ CREATE TABLE [SQL_SERVANT].[Usuario_Rol](
 )
 
 --CREACION DE USUARIO_ROL para el usuario admin tanto como administrador
---como para cliente
 INSERT INTO SQL_SERVANT.Usuario_Rol(Id_Usuario, Id_Rol, Fecha_Creacion, Fecha_Ultima_Modificacion)
-	VALUES ('admin',1,GETDATE(),GETDATE())
-INSERT INTO SQL_SERVANT.Usuario_Rol(Id_Usuario, Id_Rol, Fecha_Creacion, Fecha_Ultima_Modificacion)
-	VALUES ('admin',2,GETDATE(),GETDATE())
+SELECT u.Id_Usuario, r.Id_Rol, CAST(GETDATE() AS DATE), CAST(GETDATE() AS DATE)
+FROM SQL_SERVANT.Usuario u
+	INNER JOIN SQL_SERVANT.Rol r ON r.Descripcion = 'cliente'
 
+INSERT INTO SQL_SERVANT.Usuario_Rol(Id_Usuario, Id_Rol, Fecha_Creacion, Fecha_Ultima_Modificacion)
+SELECT 'admin', r.Id_Rol, CAST(GETDATE() AS DATE), CAST(GETDATE() AS DATE)
+FROM SQL_SERVANT.Rol r
+	WHERE r.Descripcion = 'administrador'
+
+--TABLA CLIENTE_DATOS
+/*
+	Tabla con los datos del cliente
+
+*/
+CREATE TABLE [SQL_SERVANT].[Cliente_Datos](
+	[Id_Cliente][Int]IDENTITY(1,1) NOT NULL,
+	[Nombre][varchar](40) NOT NULL,
+	[Apellido][varchar](40) NOT NULL,
+	[Mail][varchar](50) NOT NULL,
+	[Id_Pais][Int] NOT NULL,
+	[Calle][varchar](50) NOT NULL,
+	[Calle_Nro][Int] NOT NULL,
+	[Piso][Int] NULL,
+	[Depto][varchar](3) NULL,
+	[Localidad][varchar](50) NULL,
+	[Id_Nacionalidad][Int] NOT NULL,
+	[Fecha_Nacimiento][datetime] NOT NULL
+
+	CONSTRAINT [PK_Cliente_Datos] PRIMARY KEY (
+		[Id_Cliente] ASC
+	),
+	CONSTRAINT UQ_Cliente_Datos_Mail UNIQUE (Mail)
+)
+INSERT INTO SQL_SERVANT.Cliente_Datos (Nombre, Apellido, Mail, Id_Pais, Calle, Calle_Nro, Piso, Depto, Localidad, Id_Nacionalidad, Fecha_Nacimiento)
+SELECT DISTINCT LTRIM(RTRIM(m.Cli_Nombre)), LTRIM(RTRIM(m.Cli_Apellido)), 
+	LTRIM(RTRIM(m.Cli_Mail)), m.Cli_Pais_Codigo, LTRIM(RTRIM(m.Cli_Dom_Calle)), m.Cli_Dom_Nro, m.Cli_Dom_Piso, LTRIM(RTRIM(m.Cli_Dom_Depto)),
+null, m.Cli_Pais_Codigo, CAST(m.Cli_Fecha_Nac AS DATE)
+FROM gd_esquema.Maestra m
 
 --TABLA CLIENTE
 /*
 	Tabla con los datos del cliente
 */
 CREATE TABLE [SQL_SERVANT].[Cliente](
-	[Id_Cliente][Int]IDENTITY(1,1),
-	[Nro_Identificacion][Int] NOT NULL,
+	[Id_Cliente][Int] NOT NULL,
+	--CAMBIAR CUANDO SE LES CANTE A LOS AYUDANTES LARGAR LA DATA
+	[Nro_Identificacion][Int]IDENTITY(1,1) NOT NULL,
 	[Id_Tipo_Identificacion][Int] NOT NULL,
 	[Habilitado][bit] NOT NULL,
 	[Fecha_Creacion][datetime] NULL,
@@ -254,38 +321,20 @@ CREATE TABLE [SQL_SERVANT].[Cliente](
 	CONSTRAINT [PK_Cliente] PRIMARY KEY (
 		[Id_Cliente] ASC
 	),
+	CONSTRAINT [FK_Cliente_Id_Cliente] FOREIGN KEY (Id_Cliente)
+		REFERENCES [SQL_SERVANT].[Cliente_Datos] (Id_Cliente),
+	CONSTRAINT UQ_Cliente_Id_Cliente UNIQUE (Id_Cliente),
 	CONSTRAINT [FK_Cliente_Tipo_Identificacion] FOREIGN KEY (Id_Tipo_Identificacion)
 		REFERENCES [SQL_SERVANT].[Tipo_Identificacion] (Id_Tipo_Identificacion),
 	CONSTRAINT UQ_Clieente_Nro_Tipo_Identificacion UNIQUE (Nro_Identificacion, Id_Tipo_Identificacion)
 )
-
---TABLA CLIENTE_DATOS
-/*
-	Tabla con los datos del cliente
-
-*/
-CREATE TABLE [SQL_SERVANT].[Cliente_Datos](
-	[Id_Cliente][Int] NOT NULL,
-	[Nombre][varchar](30) NOT NULL,
-	[Apellido][varchar](30) NOT NULL,
-	[Mail][varchar](30) NOT NULL,
-	[Id_Pais][Int] NOT NULL,
-	[Domicilio][varchar](20) NOT NULL,
-	[Calle][varchar](20) NOT NULL,
-	[Piso][Int] NULL,
-	[Depto][varchar](1) NULL,
-	[Localidad][varchar](20) NULL,
-	[Id_Nacionalidad][Int] NOT NULL,
-	[Fecha_Nacimiento][datetime] NOT NULL
-
-	CONSTRAINT [PK_Cliente_Datos] PRIMARY KEY (
-		[Id_Cliente] ASC
-	),
-	CONSTRAINT [FK_Cliente_Datos_Id_Cliente] FOREIGN KEY (Id_Cliente)
-		REFERENCES [SQL_SERVANT].[Cliente] (Id_Cliente),
-	CONSTRAINT UQ_Cliente_Datos_Id_Cliente UNIQUE (Id_Cliente),
-	CONSTRAINT UQ_Cliente_Datos_Mail UNIQUE (Mail)
-)
+INSERT INTO SQL_SERVANT.Cliente (Id_Cliente,Id_Tipo_Identificacion, Habilitado, Fecha_Creacion, Fecha_Ultima_Modificacion)
+SELECT DISTINCT cd.Id_Cliente, m.Cli_Tipo_Doc_Cod, 1, CAST(GETDATE() AS DATE), CAST(GETDATE() AS DATE)
+FROM gd_esquema.Maestra m
+	INNER JOIN SQL_SERVANT.Cliente_Datos cd ON 
+		cd.Nombre = LTRIM(RTRIM(m.Cli_Nombre))
+		AND cd.Apellido = LTRIM(RTRIM(m.Cli_Apellido))
+		AND cd.Mail = LTRIM(RTRIM(m.Cli_Mail))
 
 --TABLA USUARIO_CLIENTE
 /*
