@@ -27,6 +27,24 @@ BEGIN
 END
 GO
 
+CREATE FUNCTION SQL_SERVANT.Es_Fecha_Anterior(
+@p_fecha_a_evaluar as datetime,
+@p_fecha_a_tener_en_cuenta as datetime
+)
+RETURNS bit
+BEGIN
+	declare @truncate_fecha datetime
+	declare @retorno_choto bit
+	SET @truncate_fecha = CAST(@p_fecha_a_evaluar AS DATE)
+	IF(@truncate_fecha < @p_fecha_a_tener_en_cuenta)
+		SET @retorno_choto = 0
+	ELSE
+		SET @retorno_choto = 1
+	
+	RETURN @retorno_choto
+END
+GO
+
 /****************************************************************/
 -- TABLAS A PRECARGAR
 
@@ -354,6 +372,12 @@ CREATE TABLE [SQL_SERVANT].[Usuario_Cliente](
 		REFERENCES [SQL_SERVANT].[Cliente] (Id_Cliente)
 )
 
+INSERT INTO SQL_SERVANT.Usuario_Cliente (Id_Usuario, Id_Cliente)
+SELECT u.Id_Usuario, cd.Id_Cliente 
+FROM SQL_SERVANT.Cliente_Datos cd
+	INNER JOIN SQL_SERVANT.Usuario u
+	ON u.Id_Usuario = LTRIM(RTRIM(SQL_SERVANT.Crear_Nombre_Usuario(cd.Nombre, cd.Apellido)))
+
 --TABLA TIPO_CUENTA
 /*
 	Tabla con la tipificacion de los tipos de cuentas
@@ -380,6 +404,9 @@ CREATE TABLE [SQL_SERVANT].[Costo_Tipo_Cuenta](
 	CONSTRAINT [FK_Costo_Tipo_Cuenta] FOREIGN KEY (Id_Tipo_Cuenta)
 		REFERENCES [SQL_SERVANT].[Tipo_Cuenta] (Id_Tipo_Cuenta)
 )
+INSERT INTO SQL_SERVANT.Costo_Tipo_Cuenta(Id_Tipo_Cuenta, Costo)
+SELECT tc.Id_Tipo_Cuenta, 0.00
+FROM SQL_SERVANT.Tipo_Cuenta tc
 
 --TABLA ESTADO_CUENTA
 CREATE TABLE [SQL_SERVANT].[Estado_Cuenta](
@@ -398,6 +425,7 @@ INSERT INTO SQL_SERVANT.Estado_Cuenta(Descripcion) VALUES('Habilitada')
 /*
 	Tabla que posea los datos de las cuentas de dinero electronico
 */
+--NOTA VER DE AGREGAR EL VALOR ACTUAL DE CADA CUENTA
 CREATE TABLE [SQL_SERVANT].[Cuenta](
 	[Id_Cuenta][numeric](18,0) NOT NULL,
 	[Id_Pais_Registro][Int] NOT NULL,
@@ -444,6 +472,12 @@ CREATE TABLE [SQL_SERVANT].[Cliente_Cuenta](
 	CONSTRAINT [FK_Cliente_Cuenta_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
 		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta)
 )
+INSERT INTO SQL_SERVANT.Cliente_Cuenta (Id_Cliente, Id_Cuenta)
+SELECT DISTINCT uc.Id_Cliente, m.Cuenta_Numero 
+FROM gd_esquema.Maestra m
+INNER JOIN SQL_SERVANT.Usuario_Cliente uc
+	ON LTRIM(RTRIM(SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido))) = uc.Id_Usuario
+WHERE m.Cuenta_Numero IS NOT NULL
 
 --TABLA TARJETA
 /*
@@ -474,21 +508,38 @@ FROM gd_esquema.Maestra m
 /*
 	Tabla con la relacion cliente tarjeta
 */
+--NOTA PARA ESTA TARJETA 575702838885428 APARECEN DOS NUMEROS DE CLIENTES DISTINTOS
+--POR LAS DUDAS ACA TE PEGO LA QUERY
+/*
+SELECT DISTINCT uc.Id_Cliente, m.Tarjeta_Numero
+FROM gd_esquema.Maestra m
+INNER JOIN SQL_SERVANT.Usuario_Cliente uc
+	ON LTRIM(RTRIM(SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido))) = uc.Id_Usuario
+WHERE m.Tarjeta_Numero IS NOT NULL AND CAST(m.Tarjeta_Numero AS NUMERIC(16,0)) = CAST(575702838885428 AS NUMERIC (16,0))
+GROUP BY uc.Id_Cliente, m.Tarjeta_Numero
+*/
 CREATE TABLE [SQL_SERVANT].[Cliente_Tarjeta](
 	[Id_Cliente][Int] NOT NULL,
 	[Id_Tarjeta][numeric](16,0) NOT NULL,
+	--VER SI HAY QUE MOVER ESTA PROPERTY A LA TABLA DE LA TARJETA MISMA
 	[Habilitada][bit] NOT NULL DEFAULT 1
 
 	CONSTRAINT [PK_Cliente_Tarjeta] PRIMARY KEY(
 		[Id_Cliente] ASC,
 		[Id_Tarjeta] ASC
 	),
-	CONSTRAINT UQ_Cliente_Tarjeta_Id_Tarjeta UNIQUE (Id_Tarjeta),
 	CONSTRAINT [FK_Cliente_Tarjeta_Id_Cliente] FOREIGN KEY (Id_Cliente)
 		REFERENCES [SQL_SERVANT].[Cliente] (Id_Cliente),
 	CONSTRAINT [FK_Cliente_Tarjeta_Id_Tarjeta] FOREIGN KEY (Id_Tarjeta)
 		REFERENCES [SQL_SERVANT].[Tarjeta] (Id_Tarjeta)
 )
+INSERT INTO SQL_SERVANT.Cliente_Tarjeta (Id_Cliente, Id_Tarjeta, Habilitada)
+SELECT DISTINCT uc.Id_Cliente, m.Tarjeta_Numero, SQL_SERVANT.Es_Fecha_Anterior(m.Tarjeta_Fecha_Vencimiento, GETDATE())
+FROM gd_esquema.Maestra m
+INNER JOIN SQL_SERVANT.Usuario_Cliente uc
+	ON LTRIM(RTRIM(SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido))) = uc.Id_Usuario
+WHERE m.Tarjeta_Numero IS NOT NULL
+
 
 --TABLA DEPOSITO
 /*
