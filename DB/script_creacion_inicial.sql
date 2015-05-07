@@ -330,7 +330,7 @@ FROM gd_esquema.Maestra m
 CREATE TABLE [SQL_SERVANT].[Cliente](
 	[Id_Cliente][Int] NOT NULL,
 	--CAMBIAR CUANDO SE LES CANTE A LOS AYUDANTES LARGAR LA DATA
-	[Nro_Identificacion][Int]IDENTITY(1,1) NOT NULL,
+	[Nro_Identificacion][Int] NULL,
 	[Id_Tipo_Identificacion][Int] NOT NULL,
 	[Habilitado][bit] NOT NULL,
 	[Fecha_Creacion][datetime] NULL,
@@ -343,8 +343,7 @@ CREATE TABLE [SQL_SERVANT].[Cliente](
 		REFERENCES [SQL_SERVANT].[Cliente_Datos] (Id_Cliente),
 	CONSTRAINT UQ_Cliente_Id_Cliente UNIQUE (Id_Cliente),
 	CONSTRAINT [FK_Cliente_Tipo_Identificacion] FOREIGN KEY (Id_Tipo_Identificacion)
-		REFERENCES [SQL_SERVANT].[Tipo_Identificacion] (Id_Tipo_Identificacion),
-	CONSTRAINT UQ_Clieente_Nro_Tipo_Identificacion UNIQUE (Nro_Identificacion, Id_Tipo_Identificacion)
+		REFERENCES [SQL_SERVANT].[Tipo_Identificacion] (Id_Tipo_Identificacion)
 )
 INSERT INTO SQL_SERVANT.Cliente (Id_Cliente,Id_Tipo_Identificacion, Habilitado, Fecha_Creacion, Fecha_Ultima_Modificacion)
 SELECT DISTINCT cd.Id_Cliente, m.Cli_Tipo_Doc_Cod, 1, CAST(GETDATE() AS DATE), CAST(GETDATE() AS DATE)
@@ -436,6 +435,7 @@ CREATE TABLE [SQL_SERVANT].[Cuenta](
 	--que puede estar habilitada o deshabilitida, pero me da a entender que esto puede ser
 	--porque las cuentas se pueden deshabilitar si no se paga su facturacion
 	[Fecha_Vencimiento][datetime],
+	[Fecha_Cierre][datetime] NULL,
 	[Importe][numeric](18,2) NOT NULL DEFAULT 0.00,
 	[Id_Tipo_Cuenta][Int] NOT NULL,
 	[Id_Estado_Cuenta][Int] NOT NULL
