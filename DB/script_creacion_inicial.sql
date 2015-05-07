@@ -436,6 +436,7 @@ CREATE TABLE [SQL_SERVANT].[Cuenta](
 	--que puede estar habilitada o deshabilitida, pero me da a entender que esto puede ser
 	--porque las cuentas se pueden deshabilitar si no se paga su facturacion
 	[Fecha_Vencimiento][datetime],
+	[Importe][numeric](18,2) NOT NULL DEFAULT 0.00,
 	[Id_Tipo_Cuenta][Int] NOT NULL,
 	[Id_Estado_Cuenta][Int] NOT NULL
 
@@ -572,6 +573,19 @@ WHERE m.Deposito_Codigo IS NOT NULL
 
 SET IDENTITY_INSERT [SQL_SERVANT].Deposito OFF
 
+--UPDATEO LOS DEPOSITOS EN LAS CUENTAS
+--MORE INFO : http://stackoverflow.com/questions/11990534/select-aggregate-and-update-sql-server
+UPDATE  cuenta
+SET     cuenta.Importe = cuenta.Importe + deposito.dep_importe
+FROM    SQL_SERVANT.Cuenta as cuenta
+JOIN    (
+        SELECT  Id_Cuenta, SUM(Importe) as dep_importe
+        FROM    SQL_SERVANT.Deposito
+        GROUP BY
+                Id_Cuenta
+        ) AS deposito
+ON      cuenta.Id_Cuenta = deposito.Id_Cuenta
+
 --TABLA CHEQUE
 /*
 	Tabla con los cheques emitidos
@@ -632,6 +646,18 @@ WHERE m.Retiro_Codigo IS NOT NULL
 
 SET IDENTITY_INSERT [SQL_SERVANT].Retiro OFF
 
+--UPDATEO LOS IMPORTES RETIRADOS DE LA CUENTA
+UPDATE  cuenta
+SET     cuenta.Importe = cuenta.Importe - retiro.ret_importe
+FROM    SQL_SERVANT.Cuenta as cuenta
+JOIN    (
+        SELECT  Id_Cuenta, SUM(Importe) as ret_importe
+        FROM    SQL_SERVANT.Retiro
+        GROUP BY
+                Id_Cuenta
+        ) AS retiro
+ON      cuenta.Id_Cuenta = retiro.Id_Cuenta
+
 --TABLA CHEQUE-RETIRO
 /*
 	Tabla con la relacion retiro -> cheque
@@ -681,6 +707,30 @@ FROM gd_esquema.Maestra m
 	INNER JOIN SQL_SERVANT.Moneda mo ON 'USD' = mo.Descripcion
 WHERE m.Transf_Fecha IS NOT NULL 
 	AND m.Factura_Numero IS NOT NULL
+
+--UPDATEO TRANSFERENCIAS A SUS RESPECTIVAS CUENTAS
+--ENVIANTE
+UPDATE  cuenta
+SET     cuenta.Importe = cuenta.Importe - enviante.env_importe
+FROM    SQL_SERVANT.Cuenta as cuenta
+JOIN    (
+        SELECT  Id_Cuenta_Origen, SUM(Importe) as env_importe
+        FROM    SQL_SERVANT.Transferencia
+        GROUP BY
+                Id_Cuenta_Origen
+        ) AS enviante
+ON      cuenta.Id_Cuenta = enviante.Id_Cuenta_Origen
+--RECEPTOR
+UPDATE  cuenta
+SET     cuenta.Importe = cuenta.Importe + receptor.rep_importe
+FROM    SQL_SERVANT.Cuenta as cuenta
+JOIN    (
+        SELECT  Id_Cuenta_Destino, SUM(Importe) as rep_importe
+        FROM    SQL_SERVANT.Transferencia
+        GROUP BY
+                Id_Cuenta_Destino
+        ) AS receptor
+ON      cuenta.Id_Cuenta = receptor.Id_Cuenta_Destino
 
 --TABLA FACTURACION_PENDIENTE
 /*
