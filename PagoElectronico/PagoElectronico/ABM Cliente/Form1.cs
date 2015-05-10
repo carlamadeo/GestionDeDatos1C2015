@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace PagoElectronico.ABM_Rol
+namespace PagoElectronico.ABM_Cliente
 {
     public partial class Form1 : Form
     {
