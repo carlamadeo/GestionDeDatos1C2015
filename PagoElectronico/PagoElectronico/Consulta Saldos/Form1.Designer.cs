@@ -1,4 +1,4 @@
-﻿namespace PagoElectronico.ABM_Rol
+﻿namespace PagoElectronico.Consulta_Saldos
 {
     partial class Form1
     {

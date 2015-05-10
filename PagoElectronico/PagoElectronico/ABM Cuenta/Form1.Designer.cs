@@ -1,4 +1,4 @@
-﻿namespace PagoElectronico.ABM_Rol
+﻿namespace PagoElectronico.ABM_Cuenta
 {
     partial class Form1
     {
