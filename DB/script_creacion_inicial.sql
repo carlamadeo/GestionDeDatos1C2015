@@ -706,7 +706,7 @@ SELECT m.Cuenta_Numero, m.Cuenta_Dest_Numero, mo.Id_Moneda, m.Trans_Importe, m.T
 FROM gd_esquema.Maestra m 
 	INNER JOIN SQL_SERVANT.Moneda mo ON 'USD' = mo.Descripcion
 WHERE m.Transf_Fecha IS NOT NULL 
-	AND m.Factura_Numero IS NOT NULL
+	AND m.Factura_Numero IS NULL
 
 --UPDATEO TRANSFERENCIAS A SUS RESPECTIVAS CUENTAS
 --ENVIANTE
@@ -742,7 +742,8 @@ CREATE TABLE [SQL_SERVANT].[Facturacion_Pendiente](
 	[Id_Moneda][Int] NOT NULL,
 	[Fecha][datetime] NOT NULL,
 	[Importe][Numeric](10,2) NOT NULL,
-	[Descripcion][varchar](20) NOT NULL
+	[Id_Referencia][Int] NOT NULL,
+	[Descripcion][varchar](30) NOT NULL
 
 	CONSTRAINT [PK_Facturacion_Pendiente] PRIMARY KEY(Id_Facturacion_Pendiente),
 	CONSTRAINT [FK_Facturacion_Pendiente_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
@@ -750,16 +751,29 @@ CREATE TABLE [SQL_SERVANT].[Facturacion_Pendiente](
 	CONSTRAINT [FK_Facturacion_Pendiente_Id_Moneda] FOREIGN KEY (Id_Moneda)
 		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
 )
+INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Id_Moneda, Fecha, Importe, Id_Referencia, Descripcion)
+SELECT m.Cuenta_Numero, mo.Id_Moneda, m.Transf_Fecha, m.Trans_Importe, 0, 'Comisión por transferencia.' 
+FROM gd_esquema.Maestra m 
+INNER JOIN SQL_SERVANT.Moneda mo
+	ON mo.Descripcion = 'USD'
+WHERE m.Transf_Fecha IS NOT NULL 
+	AND m.Factura_Numero IS NULL 
+	AND NOT EXISTS(SELECT 1 FROM gd_esquema.Maestra m1
+		WHERE
+		m.Cuenta_Numero = m1.Cuenta_Numero
+		AND m.Cuenta_Dest_Numero = m1.Cuenta_Dest_Numero
+		AND m.Transf_Fecha = m1.Transf_Fecha
+		AND m.Trans_Importe = m1.Trans_Importe
+		AND m1.Factura_Numero IS NOT NULL
+	)
 
 CREATE TABLE [SQL_SERVANT].[Facturacion](
 	[Id_Factura][Int]IDENTITY(1,1) NOT NULL,
-	[Fecha][datetime] NOT NULL,
+	[Fecha][datetime] NOT NULL,	
 	[Id_Cliente][Int] NOT NULL,
 	[Id_Cuenta][numeric](18,0) NOT NULL,
-	[Id_Referencia][Int] NOT NULL,
-	[Descripcion][Int] NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
-	[Importe][Int] NOT NULL
+	[Importe][numeric](10,2) NOT NULL
 
 	CONSTRAINT [PK_Facturacion] PRIMARY KEY(Id_Factura),
 	CONSTRAINT [FK_Facturacion_Id_Cliente] FOREIGN KEY (Id_Cliente)
@@ -769,6 +783,61 @@ CREATE TABLE [SQL_SERVANT].[Facturacion](
 	CONSTRAINT [FK_Facturacion_Id_Moneda] FOREIGN KEY (Id_Moneda)
 		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
 )
+
+SET IDENTITY_INSERT SQL_SERVANT.Facturacion ON
+
+INSERT INTO SQL_SERVANT.Facturacion (Id_Factura, Fecha, Id_Cliente, Id_Cuenta, Id_Moneda, Importe)
+SELECT m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente, cc.Id_Cuenta, mo.Id_Moneda, SUM(Item_Factura_Importe)
+FROM gd_esquema.Maestra m
+	INNER JOIN SQL_SERVANT.Cliente_Datos cd
+		ON UPPER(LTRIM(RTRIM(m.Cli_Nombre))) = UPPER(LTRIM(RTRIM(cd.Nombre)))
+		AND UPPER(LTRIM(RTRIM(m.Cli_Apellido))) = UPPER(LTRIM(RTRIM(cd.Apellido)))
+	INNER JOIN SQL_SERVANT.Moneda mo
+		ON mo.Descripcion = 'USD'
+	INNER JOIN SQL_SERVANT.Cliente_Cuenta cc
+		ON cc.Id_Cuenta = m.Cuenta_Numero
+		AND cc.Id_Cliente = cd.Id_Cliente
+WHERE m.Factura_Numero IS NOT NULL
+GROUP BY m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente, cc.Id_Cuenta, mo.Id_Moneda
+
+SET IDENTITY_INSERT SQL_SERVANT.Facturacion OFF
+
+CREATE TABLE [SQL_SERVANT].[Facturacion_Item](
+	[Id_Factura][Int] NOT NULL,
+	[Id_Factura_Item][Int] NOT NULL,
+	[Id_Referencia][Int] NOT NULL,
+	[Descripcion][varchar](30) NOT NULL,
+	[Id_Moneda][Int] NOT NULL,
+	[Importe][numeric](10,2) NOT NULL
+
+	CONSTRAINT [FK_Facturacion_Item_Id_Factura] FOREIGN KEY (Id_Factura)
+	REFERENCES [SQL_SERVANT].[Facturacion] (Id_Factura)
+)
+
+INSERT INTO SQL_SERVANT.Facturacion_Item (Id_Factura, Id_Factura_Item, Id_Referencia, Descripcion, Id_Moneda, Importe)
+SELECT m.Factura_Numero, 1, 
+t.Id_Transferencia, m.Item_Factura_Descr, mo.Id_Moneda, m.Item_Factura_Importe
+FROM gd_esquema.Maestra m
+	INNER JOIN SQL_SERVANT.Moneda mo
+	ON mo.Descripcion = 'USD'
+	INNER JOIN SQL_SERVANT.Transferencia t
+	ON t.Id_Cuenta_Origen = m.Cuenta_Numero
+	AND t.Id_Cuenta_Destino = m.Cuenta_Dest_Numero
+	AND t.Fecha_Transferencia = m.Transf_Fecha
+	AND t.Importe = m.Trans_Importe
+WHERE Factura_Numero IS NOT NULL
+
+--SE ELIMINAN TRANSACCIONES QUE SE REALIZARON EL MISMO DIA ENTRE MISMO CLIENTES
+--QUE VAN A APARECER DOS VECES COMO TRANSFERENCIAS
+--Y EN EL INNER JOIN SE DUPLICAN
+DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15230528 AND Id_Referencia = 33384
+DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15230529 AND Id_Referencia = 33383
+DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15231781 AND Id_Referencia = 34338
+DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15231782 AND Id_Referencia = 34337
+DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15238589 AND Id_Referencia = 39586
+DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15238590 AND Id_Referencia = 39585
+DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15331954 AND Id_Referencia = 111352
+DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15331955 AND Id_Referencia = 111351
 
 /* NOTA 
 	SEGUN EL TP: 
