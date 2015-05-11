@@ -496,7 +496,9 @@ CREATE TABLE [SQL_SERVANT].[Tarjeta](
 
 	CONSTRAINT [PK_Tarjeta] PRIMARY KEY(
 		[Id_Tarjeta] ASC
-	)
+	),
+	CONSTRAINT [FK_Tarjeta_Id_Tarjeta_Empresa] FOREIGN KEY (Id_Tarjeta_Empresa)
+	REFERENCES [SQL_SERVANT].[Tarjeta_Empresa](Id_Tarjeta_Empresa)
 )
 INSERT INTO SQL_SERVANT.Tarjeta (Id_Tarjeta, Fecha_Emision, Fecha_Vencimiento, Id_Tarjeta_Empresa, Codigo_Seguridad)
 SELECT DISTINCT m.Tarjeta_Numero, m.Tarjeta_Fecha_Emision, m.Tarjeta_Fecha_Vencimiento, te.Id_Tarjeta_Empresa, m.Tarjeta_Codigo_Seg 
