@@ -3,57 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Data.SqlClient;
+using System.Data;
+using PagoElectronico.DB;
+using PagoElectronico.ABM_de_Usuario;
 
 namespace PagoElectronico.Login
 {
     class Login
     {
-        public static void procLogin(string user, string password)
+        public static Boolean isValidUser(Usuario user)
         {
-            //Compruebo que el usuario no este bloqueado
-            if (LoginDB.notBlockedUser(user))
-            {
-                //Compruebo que el nombre de usuario y contrasenia sean correctos
-                if (LoginDB.isSuccessLogin(user, password))
-                {
-                    //Si ingreso correctamente reseteo la cantidad de logins incorrectos
-                    LoginDB.ResetLogin(user);
+            return UsuarioHelper.existUser(user.id);
+        }
 
-                    //Si tiene mas de un rol muestro form para elegir el rol
-                    if (LoginDB.CountRol(user) > 1)
-                    {
-                        FormSelectRol formSR = new FormSelectRol();
-                        FormLogin.ActiveForm.Hide();
-                        formSR.ShowDialog();
-                    }
+        public static int login(Usuario user, String password)
+        {
+            SqlCommand sp_check_password = new SqlCommand();
+            sp_check_password.CommandText = "SQL_SERVANT.sp_login_check_password";
+            sp_check_password.Parameters.Add(new SqlParameter("@p_id", SqlDbType.VarChar));
+            sp_check_password.Parameters["@p_id"].Value = user.id;
+            sp_check_password.Parameters.Add(new SqlParameter("@p_pass", SqlDbType.VarChar));
+            sp_check_password.Parameters["@p_pass"].Value = Encrypt.Sha256(password);
 
-                    else
-                    {
-                        //TODO Hacer que vaya directo al Rol que tiene
-                    }
-                }
+            var returnParameterIsValid = sp_check_password.Parameters.Add(new SqlParameter("@p_intentos", SqlDbType.Int));
+            returnParameterIsValid.Direction = ParameterDirection.InputOutput;
 
-                else
-                {
-                    Mensajes.error("Por favor verifique los datos ingresados.");
+            ProcedureHelper.execute(sp_check_password, "chequear password", false);
 
-                    //Si ingreso mal los datos aumento la cantidad de login fallidos
-                    LoginDB.WrongLogin(user);
-
-                    //Si la cantidad de logins fallidos es = 3 inhabilito al usuario
-                    if (LoginDB.CountWrongLogin(user) == 3)
-                    {
-                        LoginDB.BlockUser(user);
-                    }
-                    
-                }
-            }
-
-            else
-            {
-                Mensajes.error("El usuario se encuentra Bloqueado. Por favor contacte al administrador.");
-            }
-            
+            return Convert.ToInt16(returnParameterIsValid.Value);
         }
     }
 }

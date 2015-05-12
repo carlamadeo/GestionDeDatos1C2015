@@ -270,7 +270,8 @@ CREATE TABLE [SQL_SERVANT].[Usuario_Rol](
 	[Id_Usuario][varchar](20) NOT NULL,
 	[Id_Rol][Int] NOT NULL,
 	[Fecha_Creacion][datetime] NULL,
-	[Fecha_Ultima_Modificacion][datetime] NULL
+	[Fecha_Ultima_Modificacion][datetime] NULL,
+	[Habilitado][bit] NOT NULL DEFAULT 1
 
 	CONSTRAINT [PK_Usuario_Rol] PRIMARY KEY(
 		[Id_Usuario] ASC,

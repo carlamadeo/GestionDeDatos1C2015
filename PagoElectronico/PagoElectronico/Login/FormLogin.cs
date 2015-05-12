@@ -16,24 +16,44 @@ namespace PagoElectronico.Login
             InitializeComponent();
         }
 
-        private void FormLogin_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void buttonIngresar_Click(object sender, EventArgs e)
         {
-            Login.procLogin(textBoxUser.Text, textBoxPassword.Text);
+            Usuario user = new Usuario();
+            user.id = textBoxUser.Text;
+
+            VarGlobal.usuario = user;
+
+            String pass = textBoxPassword.Text;
+
+            if (!Login.isValidUser(user))
+            {
+                MessageBox.Show("No es un usuario valido");
+            }
+            else
+            {
+                int intentos = Login.login(user, pass);
+
+                if (intentos == 0)
+                {
+                    FormSeleccionRol fSeleccionRol = new FormSeleccionRol();
+                    this.Hide();
+                    fSeleccionRol.ShowDialog();
+                    this.Close();
+                }
+                else if (intentos < 3)
+                {
+                    MessageBox.Show("La contraseña es erronea. Lleva intentos : " + intentos);
+                }
+                else
+                {
+                    MessageBox.Show("Contactese con el administrador para limpiar su clave");
+                }
+            }
         }
 
         private void buttonSalir_Click(object sender, EventArgs e)
         {
-            System.Environment.Exit(0);
+            Application.Exit();
         }
     }
 }

@@ -1,14 +1,12 @@
 --PROCEDIMIENTOS
-DROP PROCEDURE SQL_SERVANT.proc_isSuccessLogin
+DROP PROCEDURE SQL_SERVANT.sp_login_check_valid_user
 
-DROP PROCEDURE SQL_SERVANT.proc_wrongLogin
+DROP PROCEDURE SQL_SERVANT.sp_password_check_ok
 
-DROP PROCEDURE SQL_SERVANT.proc_resetLogin
+DROP PROCEDURE SQL_SERVANT.sp_password_change
 
-DROP PROCEDURE SQL_SERVANT.proc_countRol
+DROP PROCEDURE SQL_SERVANT.sp_login_check_password
 
-DROP PROCEDURE SQL_SERVANT.proc_countWrongLogin
+DROP PROCEDURE SQL_SERVANT.sp_rol_exist_one_by_user
 
-DROP PROCEDURE SQL_SERVANT.proc_blockUser
-
-DROP PROCEDURE SQL_SERVANT.proc_notBlockedUser
+DROP PROCEDURE SQL_SERVANT.sp_menu_list_functionality_by_user

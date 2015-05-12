@@ -1,0 +1,3 @@
+public static DateTime FechaHoraSistema = DateTime.ParseExact(Properties.Settings.Default.fechaSistema, Properties.Settings.Default.formatoFecha, null);
+
+public static String FechaHoraSistemaString = Properties.Settings.Default.fechaSistema;

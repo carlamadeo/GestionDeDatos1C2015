@@ -1,148 +1,115 @@
 --PROCEDIMIENTOS PARA LOGIN USUARIO
-
 GO
-CREATE PROCEDURE [SQL_SERVANT].[proc_isSuccessLogin](
-	@User varchar(20),
-	@Password varchar(64)
+CREATE PROCEDURE [SQL_SERVANT].[sp_login_check_valid_user](
+@p_id varchar(255) = null,
+@p_is_valid bit = 0 OUTPUT
 )
 AS
 BEGIN
-	DECLARE @Correct bit = 0
-	
-	SELECT * FROM SQL_SERVANT.Usuario 
-	WHERE 
-	LTRIM(RTRIM(Id_Usuario)) = LTRIM(RTRIM(@User)) AND
-	Password = @Password
-	
-	SET @Correct = @@ROWCOUNT
-	
-	RETURN @Correct
-	
+	IF EXISTS (SELECT 1 FROM SQL_SERVANT.Usuario WHERE Id_Usuario = @p_id AND Habilitado = 1)
+	BEGIN
+		SET @p_is_valid = 1
+	END
 END
 GO
-	
-	
-GO
-CREATE PROCEDURE [SQL_SERVANT].[proc_wrongLogin](
-	@User varchar(20)
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_password_check_ok](
+@p_id varchar(255) = null,
+@p_pass varchar(255) = null,
+@p_ok int = 0 OUTPUT
 )
 AS
 BEGIN
-	
-	DECLARE @CountLogin Int
-	
-	SELECT @CountLogin = Cantidad_Login FROM SQL_SERVANT.Usuario 
-	WHERE Id_Usuario = @User
-	
-	SET @CountLogin = @CountLogin + 1
-	
-	UPDATE SQL_SERVANT.Usuario SET Cantidad_Login = @CountLogin
-	WHERE Id_Usuario = @User
-	
+	IF EXISTS(SELECT 1 FROM SQL_SERVANT.Usuario
+		WHERE Id_Usuario = @p_id
+		AND Password = @p_pass)
+		SET @p_ok = 1
+	ELSE
+		SET @p_ok = 0
 END
 GO
 
-GO
-CREATE PROCEDURE [SQL_SERVANT].[proc_resetLogin](
-	@User varchar(20)
+CREATE PROCEDURE [SQL_SERVANT].[sp_password_change](
+@p_id varchar(255) = null,
+@p_pass varchar(255) = null
 )
 AS
 BEGIN
-	
-	UPDATE SQL_SERVANT.Usuario SET Cantidad_Login = 0
-	WHERE Id_Usuario = @User
-	
+	UPDATE SQL_SERVANT.Usuario
+		SET Password = @p_pass
+	WHERE Id_Usuario = @p_id
 END
 GO
 
-GO
-CREATE PROCEDURE [SQL_SERVANT].[proc_countRol](
-	@User varchar(20)
-)
-
-AS
-BEGIN
-
-DECLARE @CountRol int = 0
-	
-	SELECT * FROM SQL_SERVANT.Usuario_Rol
-	WHERE 
-	LTRIM(RTRIM(Id_Usuario)) = LTRIM(RTRIM(@User))
-	
-	SET @CountRol = @@ROWCOUNT
-	
-	RETURN @CountRol
-	
-END
-GO
-	
-GO
-CREATE PROCEDURE [SQL_SERVANT].[proc_countWrongLogin](
-	@User varchar(20)
-)
-
-AS
-BEGIN
-
-DECLARE @CountWrongLogin int = 0
-	
-	SELECT @CountWrongLogin = Cantidad_Login FROM SQL_SERVANT.Usuario 
-	WHERE Id_Usuario = @User
-	
-	RETURN @CountWrongLogin
-	
-END
-GO
-
-GO
-CREATE PROCEDURE [SQL_SERVANT].[proc_blockUser](
-	@User varchar(20)
-)
-
-AS
-BEGIN
-	
-	UPDATE SQL_SERVANT.Usuario SET Habilitado = 0
-	WHERE Id_Usuario = @User
-	
-END
-GO
-
-GO
-CREATE PROCEDURE [SQL_SERVANT].[proc_notBlockedUser](
-	@User varchar(20)
+CREATE PROCEDURE [SQL_SERVANT].[sp_login_check_password](
+@p_id varchar(255) = null,
+@p_pass varchar(255) = null,
+@p_intentos int = 0 OUTPUT
 )
 AS
 BEGIN
-	DECLARE @notBlocked bit = 1
-	
-	SELECT @notBlocked = Habilitado FROM SQL_SERVANT.Usuario 
-	WHERE LTRIM(RTRIM(Id_Usuario)) = LTRIM(RTRIM(@User))
-	
-	RETURN @notBlocked
-	
+	IF EXISTS (SELECT 1 FROM SQL_SERVANT.Usuario WHERE Id_Usuario = @p_id AND Password = @p_pass AND Habilitado = 1)
+	BEGIN
+		UPDATE SQL_SERVANT.Usuario SET Cantidad_Login = 0, Ultima_Fecha = getDate()
+		SET @p_intentos = 0
+	END
+	ELSE
+	BEGIN
+		Declare @p_intentos_base int
+		SELECT @p_intentos_base = Cantidad_Login FROM SQL_SERVANT.Usuario WHERE Id_Usuario = @p_id
+		SET @p_intentos = @p_intentos_base + 1
+
+		IF ( @p_intentos >= 3 )
+			UPDATE SQL_SERVANT.Usuario SET Cantidad_Login = @p_intentos, Ultima_Fecha = getDate(), Habilitado = 0
+		ELSE
+			UPDATE SQL_SERVANT.Usuario SET Cantidad_Login = @p_intentos, Ultima_Fecha = getDate()
+
+	END
 END
 GO
 
-GO
-CREATE PROCEDURE [SQL_SERVANT].[proc_isUser](
-	@User varchar(20)
+CREATE PROCEDURE [SQL_SERVANT].[sp_rol_exist_one_by_user](
+@p_id varchar(255) = null,
+@p_count_rol int = 0 OUTPUT,
+@p_id_rol int = 0 OUTPUT,
+@p_rol_desc varchar(255) = null OUTPUT
 )
-
 AS
 BEGIN
+	Declare @count_rol int
+	SELECT DISTINCT  Id_Usuario, Id_Rol FROM SQL_SERVANT.Usuario_Rol
+		WHERE Id_Usuario = @p_id
+		AND Habilitado = 1
 
-DECLARE @exists int = 0
-	
-	SELECT * FROM SQL_SERVANT.Usuario
-	WHERE 
-	LTRIM(RTRIM(Id_Usuario)) = LTRIM(RTRIM(@User))
-	
-	SET @exists = @@ROWCOUNT
-	
-	RETURN @exists
-	
+	SET @count_rol = @@ROWCOUNT
+
+	SET @p_count_rol = @count_rol
+
+	IF ( @count_rol = 1 )
+	BEGIN
+		SELECT @p_id_rol = ur.Id_Rol, @p_rol_desc = r.Descripcion FROM LA_MAYORIA.Usuario_Rol ur
+			INNER JOIN SQL_SERVANT.Rol r ON ur.Id_Rol = r.Id_Rol 
+		WHERE ur.Id_Usuario = @p_id 
+			AND r.Habilitado = 1
+			AND urh.Habilitado = 1
+	END
+	ELSE
+	BEGIN
+		SET @p_id_rol = null
+		SET @p_rol_desc = null
+	END
 END
 GO
 
---
+--PROCEDIMIENTO PARA LISTAR MENU
+CREATE PROCEDURE [SQL_SERVANT].[sp_menu_list_functionality_by_user](
+@p_id_rol int
+)
+AS
+BEGIN
+	SELECT fun.Descripcion, fun.Id_Funcionalidad FROM SQL_SERVANT.Funcionalidad fun
+	INNER JOIN SQL_SERVANT.Rol_Funcionalidad funR ON fun.Id_Funcionalidad = funR.Id_Funcionalidad 
+	WHERE @p_id_rol = funR.Id_Rol
+
+END
+GO
