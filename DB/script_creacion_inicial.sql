@@ -842,6 +842,45 @@ DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15238590 AND Id_Refe
 DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15331954 AND Id_Referencia = 111352
 DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15331955 AND Id_Referencia = 111351
 
+CREATE TABLE [SQL_SERVANT].[Estadistica](
+	[Id_Estadistica][int]IDENTITY(1,1) NOT NULL,
+	[Store_Procedure][varchar](100) NOT NULL,
+	[Descripcion][varchar](100) NOT NULL
+)
+
+INSERT INTO SQL_SERVANT.Estadistica (Store_Procedure, Descripcion) VALUES ('sp_estadistic_top_5_cli_count_disabled', 
+	'TOP 5 CLIENTES CUE. INH. POR NO PAGAR')
+INSERT INTO SQL_SERVANT.Estadistica (Store_Procedure, Descripcion) VALUES ('sp_estadistic_top_5_cli_more_pay_commission', 
+	'TOP 5 CLIENTES PAGAR MAS COMISIONES')
+INSERT INTO SQL_SERVANT.Estadistica (Store_Procedure, Descripcion) VALUES ('sp_estadistic_top_5_cli_trans_own_count', 
+	'TOP 5 CLIENTES TRANSF. CUENTAS PROPIAS')
+INSERT INTO SQL_SERVANT.Estadistica (Store_Procedure, Descripcion) VALUES ('sp_estadistic_top_5_country_movement', 
+	'TOP 5 PAISES MAYOR MOV. ING. EGR.')
+INSERT INTO SQL_SERVANT.Estadistica (Store_Procedure, Descripcion) VALUES ('sp_estadistic_top_5_count_type_payment', 
+	'TOP 5 TIPOS DE CUENTAS FACTURADOS')
+
+CREATE TABLE [SQL_SERVANT].[Trimestre](
+	[Id_Trimestre][Int]IDENTITY(1,1) NOT NULL,
+	[Fechas][varchar](20) NOT NULL,
+	[Descripcion][varchar](30) NOT NULL
+)
+
+INSERT INTO SQL_SERVANT.Trimestre (Fechas, Descripcion) VALUES ('1,1;31,3','1° TRIMESTRE')
+INSERT INTO SQL_SERVANT.Trimestre (Fechas, Descripcion) VALUES ('1,4;30,6','2° TRIMESTRE')
+INSERT INTO SQL_SERVANT.Trimestre (Fechas, Descripcion) VALUES ('1,7;30,9','3° TRIMESTRE')
+INSERT INTO SQL_SERVANT.Trimestre (Fechas, Descripcion) VALUES ('1,10;31,12','4° TRIMESTRE')
+
+CREATE TABLE [SQL_SERVANT].[Ano](
+	[Id_Ano][INT]IDENTITY(1,1) NOT NULL,
+	[Ano][Int] NOT NULL
+
+	CONSTRAINT [UQ_Ano_Ano] UNIQUE (Ano)
+)
+
+INSERT INTO SQL_SERVANT.Ano (Ano) VALUES (2015)
+INSERT INTO SQL_SERVANT.Ano (Ano) VALUES (2016)
+INSERT INTO SQL_SERVANT.Ano (Ano) VALUES (2017)
+
 /* NOTA 
 	SEGUN EL TP: 
 	-además de generar (durante el proceso de migración) todos los usuarios

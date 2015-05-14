@@ -220,3 +220,89 @@ BEGIN
 	DELETE FROM SQL_SERVANT.Rol_Funcionalidad WHERE Id_Rol = @p_id_rol AND Id_Funcionalidad = @p_id_functionality
 END
 GO
+
+
+--PROCEDIMIENTOS ESTADISTICOS
+CREATE PROCEDURE [SQL_SERVANT].[sp_estadistic_top_5_country_movement](
+@p_estadistic_from datetime,
+@p_estadistic_to datetime
+)
+AS
+BEGIN
+	Declare @truncateFrom datetime = CAST(@p_estadistic_from AS DATE)
+	Declare @truncateTo datetime = CAST(@p_estadistic_to AS DATE)
+
+	SELECT TOP 5 p.Descripcion 'Pais', SUM(countTrans) 'Cantidad' FROM 
+	(
+		SELECT p1.Id_Pais, COUNT(p1.Id_Pais) as countTrans FROM SQL_SERVANT.Transferencia t1
+			INNER JOIN SQL_SERVANT.Cuenta c1
+			ON t1.Id_Cuenta_Origen = c1.Id_Cuenta
+			INNER JOIN SQL_SERVANT.Pais p1
+			ON c1.Id_Pais_Registro = p1.Id_Pais
+			WHERE t1.Fecha_Transferencia BETWEEN @truncateFrom AND @truncateTo 
+			GROUP BY p1.Id_Pais
+		UNION
+		(SELECT p2.Id_Pais, COUNT(p2.Id_Pais) as countTrans FROM SQL_SERVANT.Transferencia t2
+			INNER JOIN SQL_SERVANT.Cuenta c2
+			ON t2.Id_Cuenta_Origen = c2.Id_Cuenta
+			INNER JOIN SQL_SERVANT.Pais p2
+			ON c2.Id_Pais_Registro = p2.Id_Pais
+			WHERE t2.Fecha_Transferencia BETWEEN @truncateFrom AND @truncateTo
+			GROUP BY p2.Id_Pais)
+	) t
+	INNER JOIN SQL_SERVANT.Pais p
+		ON p.Id_Pais = t.Id_Pais
+	GROUP BY p.Id_Pais, p.Descripcion
+	ORDER BY 2 DESC
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_estadistic_top_5_cli_more_pay_commission](
+@p_estadistic_from datetime,
+@p_estadistic_to datetime
+)
+AS
+BEGIN
+	Declare @truncateFrom datetime = CAST(@p_estadistic_from AS DATE)
+	Declare @truncateTo datetime = CAST(@p_estadistic_to AS DATE)
+
+	SELECT TOP 5 f.Id_Cliente 'Id cliente',
+	 cd.Nombre 'Nombre', 
+	 cd.Apellido 'Apellido', 
+	 SUM(f.Importe) 'Facturado' 
+	FROM SQL_SERVANT.Facturacion f
+	INNER JOIN SQL_SERVANT.Cliente_Datos cd
+		ON f.Id_Cliente = cd.Id_Cliente
+	WHERE f.Fecha BETWEEN @truncateFrom AND @truncateTo 
+	GROUP BY f.Id_Cliente, cd.Nombre, cd.Apellido
+	ORDER BY 4 DESC
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_estadistic_top_5_cli_trans_own_count](
+@p_estadistic_from datetime,
+@p_estadistic_to datetime
+)
+AS
+BEGIN
+	Declare @truncateFrom datetime = CAST(@p_estadistic_from AS DATE)
+	Declare @truncateTo datetime = CAST(@p_estadistic_to AS DATE)
+
+	SELECT TOP 5 cc1.Id_Cliente 'Id Cliente', 
+		cd.Nombre 'Nombre', 
+		cd.Apellido 'Apellido', 
+		COUNT(*) 'Transferencias'
+	FROM SQL_SERVANT.Transferencia t
+	INNER JOIN SQL_SERVANT.Cliente_Cuenta cc1
+		ON cc1.Id_Cuenta = t.Id_Cuenta_Origen
+	INNER JOIN SQL_SERVANT.Cliente_Cuenta cc2
+		ON cc2.Id_Cuenta = t.Id_Cuenta_Destino
+	INNER JOIN SQL_SERVANT.Cliente_Datos cd
+		ON cc1.Id_Cliente = cd.Id_Cliente
+	WHERE  cc1.Id_Cliente = cc2.Id_Cliente
+		AND t.Fecha_Transferencia BETWEEN @truncateFrom AND @truncateTo 
+	GROUP BY cc1.Id_Cliente, cd.Nombre, cd.Apellido
+	ORDER BY 4 DESC
+END
+GO
+

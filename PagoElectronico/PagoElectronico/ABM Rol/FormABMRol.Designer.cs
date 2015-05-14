@@ -44,7 +44,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(29, 29);
+            this.label1.Location = new System.Drawing.Point(29, 47);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(78, 13);
             this.label1.TabIndex = 0;
@@ -52,14 +52,14 @@
             // 
             // textBoxNameRol
             // 
-            this.textBoxNameRol.Location = new System.Drawing.Point(120, 26);
+            this.textBoxNameRol.Location = new System.Drawing.Point(120, 44);
             this.textBoxNameRol.Name = "textBoxNameRol";
             this.textBoxNameRol.Size = new System.Drawing.Size(100, 20);
             this.textBoxNameRol.TabIndex = 1;
             // 
             // buttonClean
             // 
-            this.buttonClean.Location = new System.Drawing.Point(27, 65);
+            this.buttonClean.Location = new System.Drawing.Point(27, 83);
             this.buttonClean.Name = "buttonClean";
             this.buttonClean.Size = new System.Drawing.Size(75, 23);
             this.buttonClean.TabIndex = 2;
@@ -69,7 +69,7 @@
             // 
             // buttonSearch
             // 
-            this.buttonSearch.Location = new System.Drawing.Point(351, 65);
+            this.buttonSearch.Location = new System.Drawing.Point(351, 83);
             this.buttonSearch.Name = "buttonSearch";
             this.buttonSearch.Size = new System.Drawing.Size(75, 23);
             this.buttonSearch.TabIndex = 3;
@@ -80,14 +80,14 @@
             // dgvRol
             // 
             this.dgvRol.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvRol.Location = new System.Drawing.Point(27, 112);
+            this.dgvRol.Location = new System.Drawing.Point(27, 130);
             this.dgvRol.Name = "dgvRol";
             this.dgvRol.Size = new System.Drawing.Size(399, 150);
             this.dgvRol.TabIndex = 4;
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(27, 287);
+            this.buttonCancel.Location = new System.Drawing.Point(27, 305);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -97,7 +97,7 @@
             // 
             // buttonAdd
             // 
-            this.buttonAdd.Location = new System.Drawing.Point(108, 287);
+            this.buttonAdd.Location = new System.Drawing.Point(108, 305);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(75, 23);
             this.buttonAdd.TabIndex = 6;
@@ -107,7 +107,7 @@
             // 
             // buttonEnabled
             // 
-            this.buttonEnabled.Location = new System.Drawing.Point(189, 287);
+            this.buttonEnabled.Location = new System.Drawing.Point(189, 305);
             this.buttonEnabled.Name = "buttonEnabled";
             this.buttonEnabled.Size = new System.Drawing.Size(75, 23);
             this.buttonEnabled.TabIndex = 7;
@@ -117,7 +117,7 @@
             // 
             // buttonDisable
             // 
-            this.buttonDisable.Location = new System.Drawing.Point(270, 287);
+            this.buttonDisable.Location = new System.Drawing.Point(270, 305);
             this.buttonDisable.Name = "buttonDisable";
             this.buttonDisable.Size = new System.Drawing.Size(75, 23);
             this.buttonDisable.TabIndex = 8;
@@ -127,7 +127,7 @@
             // 
             // buttonEdit
             // 
-            this.buttonEdit.Location = new System.Drawing.Point(351, 287);
+            this.buttonEdit.Location = new System.Drawing.Point(351, 305);
             this.buttonEdit.Name = "buttonEdit";
             this.buttonEdit.Size = new System.Drawing.Size(75, 23);
             this.buttonEdit.TabIndex = 9;
@@ -139,7 +139,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(460, 336);
+            this.ClientSize = new System.Drawing.Size(460, 369);
             this.Controls.Add(this.buttonEdit);
             this.Controls.Add(this.buttonDisable);
             this.Controls.Add(this.buttonEnabled);

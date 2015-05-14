@@ -62,7 +62,7 @@ namespace PagoElectronico.Menu
                     func.form = "FormABMUsuario";
                     break;
                 case "Listado Estadistico":
-                    func.folder = "Listado_Estadistico";
+                    func.folder = "Listados";
                     func.form = "FormListadoEstadistico";
                     break;
             }
