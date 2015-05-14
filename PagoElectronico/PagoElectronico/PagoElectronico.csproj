@@ -48,7 +48,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ABM Cliente\ClienteDB.cs" />
     <Compile Include="ABM Cliente\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,14 +67,23 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="ABM de Usuario\UsuarioHelper.cs" />
-    <Compile Include="ABM Rol\Form1.cs">
+    <Compile Include="ABM Rol\FormABMRol.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ABM Rol\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="ABM Rol\FormABMRol.Designer.cs">
+      <DependentUpon>FormABMRol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ABM Rol\FormABMRolModify.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ABM Rol\FormABMRolModify.Designer.cs">
+      <DependentUpon>FormABMRolModify.cs</DependentUpon>
     </Compile>
     <Compile Include="ABM Rol\Rol.cs" />
     <Compile Include="ABM Rol\Roles.cs" />
+    <Compile Include="ABM Rol\RolFuncionalityHelper.cs" />
+    <Compile Include="ABM Rol\RolHelper.cs" />
+    <Compile Include="Common\Period.cs" />
     <Compile Include="Connection.cs" />
     <Compile Include="Consulta Saldos\Form1.cs">
       <SubType>Form</SubType>
@@ -129,6 +137,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ABM Cliente\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ABM Rol\FormABMRol.resx">
+      <DependentUpon>FormABMRol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ABM Rol\FormABMRolModify.resx">
+      <DependentUpon>FormABMRolModify.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMenu.resx">
       <DependentUpon>FormMenu.cs</DependentUpon>

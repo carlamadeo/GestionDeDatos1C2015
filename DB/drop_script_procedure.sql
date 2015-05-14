@@ -7,6 +7,20 @@ DROP PROCEDURE SQL_SERVANT.sp_password_change
 
 DROP PROCEDURE SQL_SERVANT.sp_login_check_password
 
+DROP PROCEDURE SQL_SERVANT.sp_menu_list_functionality_by_user
+
 DROP PROCEDURE SQL_SERVANT.sp_rol_exist_one_by_user
 
-DROP PROCEDURE SQL_SERVANT.sp_menu_list_functionality_by_user
+DROP PROCEDURE SQL_SERVANT.sp_rol_search
+
+DROP PROCEDURE SQL_SERVANT.sp_rol_enable_disable
+
+DROP PROCEDURE SQL_SERVANT.sp_rol_create
+
+DROP PROCEDURE SQL_SERVANT.sp_rol_functionality_availability
+
+DROP PROCEDURE SQL_SERVANT.sp_rol_functionality_enabled
+
+DROP PROCEDURE SQL_SERVANT.sp_rol_functionality_add
+
+DROP PROCEDURE SQL_SERVANT.sp_rol_functionality_remove

@@ -54,7 +54,7 @@ namespace PagoElectronico.Menu
             switch (id)
             {
                 case "ABM de Rol":
-                    func.folder = "ABM_de_Rol";
+                    func.folder = "ABM_Rol";
                     func.form = "FormABMRol";
                     break;
                 case "ABM de Usuario":
