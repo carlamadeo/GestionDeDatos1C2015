@@ -85,11 +85,11 @@
     <Compile Include="ABM Rol\RolHelper.cs" />
     <Compile Include="Common\Period.cs" />
     <Compile Include="Connection.cs" />
-    <Compile Include="Consulta Saldos\Form1.cs">
+    <Compile Include="Consulta Saldos\FormConsultaSaldos.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Consulta Saldos\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Consulta Saldos\FormConsultaSaldos.Designer.cs">
+      <DependentUpon>FormConsultaSaldos.cs</DependentUpon>
     </Compile>
     <Compile Include="DB\Connection.cs" />
     <Compile Include="DB\ProcedureHelper.cs" />
@@ -143,6 +143,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ABM Rol\FormABMRolModify.resx">
       <DependentUpon>FormABMRolModify.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Consulta Saldos\FormConsultaSaldos.resx">
+      <DependentUpon>FormConsultaSaldos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMenu.resx">
       <DependentUpon>FormMenu.cs</DependentUpon>
