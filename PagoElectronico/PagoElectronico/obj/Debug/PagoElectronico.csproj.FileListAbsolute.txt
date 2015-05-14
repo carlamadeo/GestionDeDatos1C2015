@@ -24,3 +24,6 @@ C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoE
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.FormMenu.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Rol.FormABMRol.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Rol.FormABMRolModify.resources
+C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\PagoElectronico\bin\Debug\PagoElectronico.exe.config
+C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.exe
+C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.pdb
