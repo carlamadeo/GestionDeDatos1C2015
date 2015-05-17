@@ -1,6 +1,8 @@
 --PROCEDIMIENTOS
 DROP PROCEDURE SQL_SERVANT.sp_login_check_valid_user
 
+DROP PROCEDURE SQL_SERVANT.sp_login_get_answer_question_secret
+
 DROP PROCEDURE SQL_SERVANT.sp_password_check_ok
 
 DROP PROCEDURE SQL_SERVANT.sp_password_change
@@ -24,6 +26,10 @@ DROP PROCEDURE SQL_SERVANT.sp_rol_functionality_enabled
 DROP PROCEDURE SQL_SERVANT.sp_rol_functionality_add
 
 DROP PROCEDURE SQL_SERVANT.sp_rol_functionality_remove
+
+DROP PROCEDURE SQL_SERVANT.sp_user_search
+
+DROP PROCEDURE SQL_SERVANT.sp_user_enable_disable
 
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_country_movement
 

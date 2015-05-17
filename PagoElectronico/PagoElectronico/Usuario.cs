@@ -10,6 +10,6 @@ namespace PagoElectronico
     {
         public string id { get; set; }
         public Rol rol { get; set; }
-        public int hotel { get; set; }
+        public int clientId { get; set; }
     }
 }

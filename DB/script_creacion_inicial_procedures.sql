@@ -13,6 +13,19 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [SQL_SERVANT].[sp_login_get_answer_question_secret](
+@p_id as varchar(255) = null,
+@p_question as varchar(255) = null OUTPUT,
+@p_answer as varchar(255) = null OUTPUT
+)
+AS
+BEGIN
+	SELECT @p_question = Pregunta_Secreta, @p_answer = Respuesta_Secreta
+	FROM SQL_SERVANT.Usuario
+	WHERE Id_Usuario = @p_id
+END
+GO
+
 CREATE PROCEDURE [SQL_SERVANT].[sp_password_check_ok](
 @p_id varchar(255) = null,
 @p_pass varchar(255) = null,
@@ -31,12 +44,16 @@ GO
 
 CREATE PROCEDURE [SQL_SERVANT].[sp_password_change](
 @p_id varchar(255) = null,
-@p_pass varchar(255) = null
+@p_pass varchar(255) = null,
+@p_question varchar(255) = null,
+@p_answer varchar(255) = null
 )
 AS
 BEGIN
 	UPDATE SQL_SERVANT.Usuario
-		SET Password = @p_pass
+		SET Password = @p_pass,
+		Pregunta_Secreta = @p_question,
+		Respuesta_Secreta = @p_answer
 	WHERE Id_Usuario = @p_id
 END
 GO
@@ -221,6 +238,48 @@ BEGIN
 END
 GO
 
+--PROCEDIMIENTOS DE USUARIOS
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_search](
+@p_user_name varchar(255) = null,
+@p_id_rol int = null,
+@p_id_hotel int = null
+)
+AS
+BEGIN
+	SELECT DISTINCT
+				
+		u.Id_Usuario 'Usuario',
+		u.Ultima_Fecha 'Ultimo Login',
+		u.Fecha_Creacion 'Fecha Creacion',
+		u.Ultima_Modificacion 'Ultima Modificacion',
+		r.Id_Rol 'Id Rol',
+		r.Descripcion 'Rol',
+		ur.Habilitado 'Habilitado'
+		
+		FROM SQL_SERVANT.Usuario u
+			INNER JOIN SQL_SERVANT.Usuario_Rol ur
+				ON u.Id_Usuario = ur.Id_Usuario
+			INNER JOIN SQL_SERVANT.Rol r
+				ON ur.Id_Rol = r.Id_Rol
+
+		WHERE
+		((@p_id_rol IS NULL) OR ( ur.Id_Rol = @p_id_rol))
+		AND  ((@p_user_name IS NULL) OR (u.Id_Usuario like @p_user_name + '%'))
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_enable_disable](
+@p_user_name varchar(255),
+@p_id_rol int,
+@p_enable_disable int
+)
+AS
+BEGIN
+	UPDATE SQL_SERVANT.Usuario_Rol SET Habilitado = @p_enable_disable
+		WHERE Id_Usuario = @p_user_name
+		AND Id_Rol = @p_id_rol
+END
+GO
 
 --PROCEDIMIENTOS ESTADISTICOS
 CREATE PROCEDURE [SQL_SERVANT].[sp_estadistic_top_5_country_movement](

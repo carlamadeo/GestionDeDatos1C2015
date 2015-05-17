@@ -29,3 +29,5 @@ C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\P
 C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.pdb
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Consulta_Saldos.FormConsultaSaldos.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Listados.FormListadoEstadistico.resources
+C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Seguridad.Password.resources
+C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_de_Usuario.FormABMUsuario.resources
