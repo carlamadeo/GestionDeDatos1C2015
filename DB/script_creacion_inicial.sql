@@ -185,12 +185,12 @@ CREATE TABLE [SQL_SERVANT].[Usuario](
 )
 
 --Se agrega usuario admin con contraseña "shadea" w23e
-INSERT INTO SQL_SERVANT.Usuario(Id_Usuario,Password, Cantidad_Login, Ultima_Fecha, Fecha_Creacion, Pregunta_Secreta, Respuesta_Secreta, Habilitado) 
-VALUES ('admin','e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7', 0, GETDATE(), GETDATE(),'la default', 'la default', 1)
+INSERT INTO SQL_SERVANT.Usuario(Id_Usuario,Password, Cantidad_Login, Ultima_Fecha, Fecha_Creacion, Ultima_Modificacion, Pregunta_Secreta, Respuesta_Secreta, Habilitado) 
+VALUES ('admin','e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7', 0, GETDATE(), GETDATE(),  GETDATE(),'la default', 'la default', 1)
 
-INSERT INTO SQL_SERVANT.Usuario(Id_Usuario, Password, Cantidad_Login, Ultima_Fecha, Fecha_Creacion, Pregunta_Secreta, Respuesta_Secreta, Habilitado)
+INSERT INTO SQL_SERVANT.Usuario(Id_Usuario, Password, Cantidad_Login, Ultima_Fecha, Fecha_Creacion, Ultima_Modificacion,Pregunta_Secreta, Respuesta_Secreta, Habilitado)
 SELECT DISTINCT SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido), 
-'e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7', 0, GETDATE(), GETDATE(), 'default', 'default', 1
+'e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7', 0, GETDATE(), GETDATE(), GETDATE(),'default', 'default', 1
 FROM gd_esquema.Maestra m
 
 --TABLA ROL
@@ -318,7 +318,9 @@ CREATE TABLE [SQL_SERVANT].[Cliente_Datos](
 	CONSTRAINT [PK_Cliente_Datos] PRIMARY KEY (
 		[Id_Cliente] ASC
 	),
-	CONSTRAINT UQ_Cliente_Datos_Mail UNIQUE (Mail)
+	CONSTRAINT UQ_Cliente_Datos_Mail UNIQUE (Mail),
+	CONSTRAINT [FK_Cliente_Id_Pais] FOREIGN KEY (Id_Pais)
+		REFERENCES [SQL_SERVANT].[Pais] (Id_Pais)
 )
 INSERT INTO SQL_SERVANT.Cliente_Datos (Nombre, Apellido, Mail, Id_Pais, Calle, Calle_Nro, Piso, Depto, Localidad, Id_Nacionalidad, Fecha_Nacimiento)
 SELECT DISTINCT LTRIM(RTRIM(m.Cli_Nombre)), LTRIM(RTRIM(m.Cli_Apellido)), 

@@ -31,6 +31,12 @@ DROP PROCEDURE SQL_SERVANT.sp_user_search
 
 DROP PROCEDURE SQL_SERVANT.sp_user_enable_disable
 
+DROP PROCEDURE SQL_SERVANT.sp_user_get_by_user
+
+DROP PROCEDURE SQL_SERVANT.sp_user_save_update
+
+DROP PROCEDURE SQL_SERVANT.sp_user_clean_login
+
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_country_movement
 
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_cli_more_pay_commission

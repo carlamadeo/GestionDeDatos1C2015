@@ -271,13 +271,66 @@ GO
 CREATE PROCEDURE [SQL_SERVANT].[sp_user_enable_disable](
 @p_user_name varchar(255),
 @p_id_rol int,
-@p_enable_disable int
+@p_enable_disable int,
+@p_time datetime
 )
 AS
 BEGIN
-	UPDATE SQL_SERVANT.Usuario_Rol SET Habilitado = @p_enable_disable
+	UPDATE SQL_SERVANT.Usuario_Rol SET Habilitado = @p_enable_disable,
+		Fecha_Ultima_Modificacion = @p_time
 		WHERE Id_Usuario = @p_user_name
 		AND Id_Rol = @p_id_rol
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_get_by_user](
+@p_user_name varchar(255)
+)
+AS
+BEGIN
+	SELECT * FROM SQL_SERVANT.Usuario u
+		WHERE u.Id_Usuario = @p_user_name
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_clean_login](
+@p_user_name varchar(255)
+)
+AS
+BEGIN
+	UPDATE SQL_SERVANT.Usuario SET Cantidad_Login = 0
+	WHERE Id_Usuario = @p_user_name
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_save_update](
+@p_user_name varchar(255),
+@p_password varchar(255) = null,
+@p_user_question_secret varchar(255) = null,
+@p_user_answer_secret varchar(255) = null,
+@p_user_creation_date datetime,
+@p_user_modify_date datetime,
+@p_enabled bit
+)
+AS
+BEGIN
+	IF ( EXISTS(SELECT 1 FROM SQL_SERVANT.Usuario WHERE Id_Usuario = @p_user_name))
+	BEGIN
+		UPDATE SQL_SERVANT.Usuario SET Password = @p_password,
+		Fecha_Creacion = @p_user_creation_date,
+		Ultima_Modificacion = @p_user_modify_date,
+		Pregunta_Secreta = @p_user_question_secret,
+		Respuesta_Secreta = @p_user_answer_secret,
+		Habilitado = @p_enabled
+		WHERE Id_Usuario = @p_user_name
+	END
+	ELSE
+	BEGIN
+		INSERT INTO SQL_SERVANT.Usuario (Id_Usuario, Password, Cantidad_Login, Ultima_Fecha, Fecha_Creacion, Ultima_Modificacion,
+		Pregunta_Secreta, Respuesta_Secreta, Habilitado)
+		VALUES (@p_user_name, @p_password, 0, null, @p_user_creation_date, @p_user_modify_date, @p_user_question_secret, @p_user_answer_secret,
+		@p_enabled)
+	END
 END
 GO
 

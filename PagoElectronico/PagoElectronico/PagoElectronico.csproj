@@ -66,6 +66,13 @@
     <Compile Include="ABM de Usuario\FormABMUsuario.Designer.cs">
       <DependentUpon>FormABMUsuario.cs</DependentUpon>
     </Compile>
+    <Compile Include="ABM de Usuario\FormABMUsuarioModify.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ABM de Usuario\FormABMUsuarioModify.Designer.cs">
+      <DependentUpon>FormABMUsuarioModify.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ABM de Usuario\UsuarioDatos.cs" />
     <Compile Include="ABM de Usuario\UsuarioHelper.cs" />
     <Compile Include="ABM Rol\FormABMRol.cs">
       <SubType>Form</SubType>
@@ -149,6 +156,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ABM de Usuario\FormABMUsuario.resx">
       <DependentUpon>FormABMUsuario.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ABM de Usuario\FormABMUsuarioModify.resx">
+      <DependentUpon>FormABMUsuarioModify.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ABM Rol\FormABMRol.resx">
       <DependentUpon>FormABMRol.cs</DependentUpon>
