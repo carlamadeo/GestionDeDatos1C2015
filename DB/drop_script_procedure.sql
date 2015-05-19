@@ -1,6 +1,8 @@
 --PROCEDIMIENTOS
 DROP PROCEDURE SQL_SERVANT.sp_login_check_valid_user
 
+DROP PROCEDURE SQL_SERVANT.sp_login_get_answer_question_secret
+
 DROP PROCEDURE SQL_SERVANT.sp_password_check_ok
 
 DROP PROCEDURE SQL_SERVANT.sp_password_change
@@ -25,20 +27,18 @@ DROP PROCEDURE SQL_SERVANT.sp_rol_functionality_add
 
 DROP PROCEDURE SQL_SERVANT.sp_rol_functionality_remove
 
+DROP PROCEDURE SQL_SERVANT.sp_user_search
+
+DROP PROCEDURE SQL_SERVANT.sp_user_enable_disable
+
+DROP PROCEDURE SQL_SERVANT.sp_user_get_by_user
+
+DROP PROCEDURE SQL_SERVANT.sp_user_save_update
+
+DROP PROCEDURE SQL_SERVANT.sp_user_clean_login
+
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_country_movement
 
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_cli_more_pay_commission
 
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_cli_trans_own_count
-
-DROP PROCEDURE SQL_SERVANT.sp_client_search
-
-DROP PROCEDURE SQL_SERVANT.sp_client_enable_disable
-
-DROP PROCEDURE SQL_SERVANT.sp_client_data_get_by_id_client
-
-DROP PROCEDURE SQL_SERVANT.sp_client_check_exist_identification
-
-DROP PROCEDURE SQL_SERVANT.sp_client_check_exist_mail
-
-DROP PROCEDURE SQL_SERVANT.sp_client_save_update

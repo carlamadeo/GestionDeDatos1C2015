@@ -48,34 +48,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ABM Cliente\FormABMCliente.cs">
+    <Compile Include="ABM Cliente\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ABM Cliente\FormABMCliente.Designer.cs">
-      <DependentUpon>FormABMCliente.cs</DependentUpon>
+    <Compile Include="ABM Cliente\Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="ABM Cliente\Cliente.cs" />
-    <Compile Include="ABM Cliente\ClienteHelper.cs" />
-    <Compile Include="ABM Cliente\FormAltaModificacionCliente.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ABM Cliente\FormAltaModificacionCliente.Designer.cs">
-      <DependentUpon>FormAltaModificacionCliente.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ABM Cliente\Paises.cs" />
-    <Compile Include="ABM Cliente\TypeIdentification.cs" />
     <Compile Include="ABM Cuenta\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ABM Cuenta\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="ABM de Usuario\Form1.cs">
+    <Compile Include="ABM de Usuario\FormABMUsuario.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ABM de Usuario\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="ABM de Usuario\FormABMUsuario.Designer.cs">
+      <DependentUpon>FormABMUsuario.cs</DependentUpon>
     </Compile>
+    <Compile Include="ABM de Usuario\FormABMUsuarioModify.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ABM de Usuario\FormABMUsuarioModify.Designer.cs">
+      <DependentUpon>FormABMUsuarioModify.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ABM de Usuario\UsuarioDatos.cs" />
     <Compile Include="ABM de Usuario\UsuarioHelper.cs" />
     <Compile Include="ABM Rol\FormABMRol.cs">
       <SubType>Form</SubType>
@@ -141,16 +138,27 @@
       <DependentUpon>FormSeleccionRol.cs</DependentUpon>
     </Compile>
     <Compile Include="Login\Login.cs" />
+    <Compile Include="Seguridad\Password.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Seguridad\Password.Designer.cs">
+      <DependentUpon>Password.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Seguridad\PasswordHelper.cs" />
+    <Compile Include="Seguridad\PreguntaRespuesta.cs" />
     <Compile Include="Menu\MenuHelper.cs" />
     <Compile Include="Menu\MenuValidateHelper.cs" />
     <Compile Include="Menu\OpcionMenu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="ABM Cliente\FormABMCliente.resx">
-      <DependentUpon>FormABMCliente.cs</DependentUpon>
+    <EmbeddedResource Include="ABM Cliente\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ABM Cliente\FormAltaModificacionCliente.resx">
-      <DependentUpon>FormAltaModificacionCliente.cs</DependentUpon>
+    <EmbeddedResource Include="ABM de Usuario\FormABMUsuario.resx">
+      <DependentUpon>FormABMUsuario.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ABM de Usuario\FormABMUsuarioModify.resx">
+      <DependentUpon>FormABMUsuarioModify.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ABM Rol\FormABMRol.resx">
       <DependentUpon>FormABMRol.cs</DependentUpon>
@@ -172,6 +180,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Login\FormSeleccionRol.resx">
       <DependentUpon>FormSeleccionRol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Seguridad\Password.resx">
+      <DependentUpon>Password.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

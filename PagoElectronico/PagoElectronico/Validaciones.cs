@@ -84,5 +84,17 @@ namespace PagoElectronico
                 MessageBox.Show(error, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
+        public static Boolean differentValues(string value1, string value2, string error)
+        {
+            if (value1.Equals(value2))
+            {
+                MessageBox.Show(error, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }

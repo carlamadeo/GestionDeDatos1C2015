@@ -13,6 +13,19 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [SQL_SERVANT].[sp_login_get_answer_question_secret](
+@p_id as varchar(255) = null,
+@p_question as varchar(255) = null OUTPUT,
+@p_answer as varchar(255) = null OUTPUT
+)
+AS
+BEGIN
+	SELECT @p_question = Pregunta_Secreta, @p_answer = Respuesta_Secreta
+	FROM SQL_SERVANT.Usuario
+	WHERE Id_Usuario = @p_id
+END
+GO
+
 CREATE PROCEDURE [SQL_SERVANT].[sp_password_check_ok](
 @p_id varchar(255) = null,
 @p_pass varchar(255) = null,
@@ -31,12 +44,16 @@ GO
 
 CREATE PROCEDURE [SQL_SERVANT].[sp_password_change](
 @p_id varchar(255) = null,
-@p_pass varchar(255) = null
+@p_pass varchar(255) = null,
+@p_question varchar(255) = null,
+@p_answer varchar(255) = null
 )
 AS
 BEGIN
 	UPDATE SQL_SERVANT.Usuario
-		SET Password = @p_pass
+		SET Password = @p_pass,
+		Pregunta_Secreta = @p_question,
+		Respuesta_Secreta = @p_answer
 	WHERE Id_Usuario = @p_id
 END
 GO
@@ -221,6 +238,101 @@ BEGIN
 END
 GO
 
+--PROCEDIMIENTOS DE USUARIOS
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_search](
+@p_user_name varchar(255) = null,
+@p_id_rol int = null,
+@p_id_hotel int = null
+)
+AS
+BEGIN
+	SELECT DISTINCT
+				
+		u.Id_Usuario 'Usuario',
+		u.Ultima_Fecha 'Ultimo Login',
+		u.Fecha_Creacion 'Fecha Creacion',
+		u.Ultima_Modificacion 'Ultima Modificacion',
+		r.Id_Rol 'Id Rol',
+		r.Descripcion 'Rol',
+		ur.Habilitado 'Habilitado'
+		
+		FROM SQL_SERVANT.Usuario u
+			INNER JOIN SQL_SERVANT.Usuario_Rol ur
+				ON u.Id_Usuario = ur.Id_Usuario
+			INNER JOIN SQL_SERVANT.Rol r
+				ON ur.Id_Rol = r.Id_Rol
+
+		WHERE
+		((@p_id_rol IS NULL) OR ( ur.Id_Rol = @p_id_rol))
+		AND  ((@p_user_name IS NULL) OR (u.Id_Usuario like @p_user_name + '%'))
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_enable_disable](
+@p_user_name varchar(255),
+@p_id_rol int,
+@p_enable_disable int,
+@p_time datetime
+)
+AS
+BEGIN
+	UPDATE SQL_SERVANT.Usuario_Rol SET Habilitado = @p_enable_disable,
+		Fecha_Ultima_Modificacion = @p_time
+		WHERE Id_Usuario = @p_user_name
+		AND Id_Rol = @p_id_rol
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_get_by_user](
+@p_user_name varchar(255)
+)
+AS
+BEGIN
+	SELECT * FROM SQL_SERVANT.Usuario u
+		WHERE u.Id_Usuario = @p_user_name
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_clean_login](
+@p_user_name varchar(255)
+)
+AS
+BEGIN
+	UPDATE SQL_SERVANT.Usuario SET Cantidad_Login = 0
+	WHERE Id_Usuario = @p_user_name
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_save_update](
+@p_user_name varchar(255),
+@p_password varchar(255) = null,
+@p_user_question_secret varchar(255) = null,
+@p_user_answer_secret varchar(255) = null,
+@p_user_creation_date datetime,
+@p_user_modify_date datetime,
+@p_enabled bit
+)
+AS
+BEGIN
+	IF ( EXISTS(SELECT 1 FROM SQL_SERVANT.Usuario WHERE Id_Usuario = @p_user_name))
+	BEGIN
+		UPDATE SQL_SERVANT.Usuario SET Password = @p_password,
+		Fecha_Creacion = @p_user_creation_date,
+		Ultima_Modificacion = @p_user_modify_date,
+		Pregunta_Secreta = @p_user_question_secret,
+		Respuesta_Secreta = @p_user_answer_secret,
+		Habilitado = @p_enabled
+		WHERE Id_Usuario = @p_user_name
+	END
+	ELSE
+	BEGIN
+		INSERT INTO SQL_SERVANT.Usuario (Id_Usuario, Password, Cantidad_Login, Ultima_Fecha, Fecha_Creacion, Ultima_Modificacion,
+		Pregunta_Secreta, Respuesta_Secreta, Habilitado)
+		VALUES (@p_user_name, @p_password, 0, null, @p_user_creation_date, @p_user_modify_date, @p_user_question_secret, @p_user_answer_secret,
+		@p_enabled)
+	END
+END
+GO
 
 --PROCEDIMIENTOS ESTADISTICOS
 CREATE PROCEDURE [SQL_SERVANT].[sp_estadistic_top_5_country_movement](
@@ -306,225 +418,3 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [SQL_SERVANT].[sp_client_search](
-@p_client_name varchar(255) = null,
-@p_client_lastname varchar(255) = null,
-@p_id_type_identification int = null,
-@p_client_identification_number varchar(255) = null,
-@p_client_mail varchar(255) = null
-)
-
-AS
-BEGIN
-	SELECT
-		
-		cd.Id_Cliente 'Id Cliente',
-		cd.Nombre 'Nombre',
-		cd.Apellido 'Apellido',
-		cd.Fecha_Nacimiento 'Nacimiento',
-		p.Descripcion 'Pais',
-		cd.Mail 'Mail',
-		ti.Descripcion 'Tipo Identificacion',
-		cl.Nro_Identificacion 'Nro Identificacion',
-		cl.Habilitado 'Habilitado'
-		
-		FROM SQL_SERVANT.Cliente_Datos cd
-			INNER JOIN SQL_SERVANT.Cliente cl
-				ON cl.Id_Cliente = cl.Id_Cliente
-			INNER JOIN SQL_SERVANT.Tipo_Identificacion ti
-				ON  cl.Id_Tipo_Identificacion = ti.Id_Tipo_Identificacion
-			INNER JOIN SQL_SERVANT.Pais p
-				ON cd.Id_Pais = p.Id_Pais
-
-		WHERE
-		( (@p_client_name IS NULL) OR (UPPER(cd.Nombre) like UPPER(@p_client_name) + '%'))
-		AND ((@p_client_lastname IS NULL) OR (UPPER(cd.Apellido) like UPPER(@p_client_lastname) + '%'))
-		AND ((@p_id_type_Identification IS NULL) OR (cl.Id_Tipo_Identificacion = @p_id_type_identification))
-		AND ((@p_client_identification_number IS NULL) OR (LTRIM(RTRIM(STR(cl.Nro_Identificacion))) like @p_client_identification_number + '%'))
-		AND ((@p_client_mail IS NULL) OR (UPPER(cd.Mail) like UPPER(@p_client_mail) + '%'))
-
-END
-GO
-
-CREATE PROCEDURE [SQL_SERVANT].[sp_client_enable_disable](
-@p_client_id int,
-@p_enable_disable int
-)
-AS
-BEGIN
-	UPDATE SQL_SERVANT.Cliente SET Habilitado = @p_enable_disable
-		WHERE Id_Cliente = @p_client_id
-END
-GO
-
-CREATE PROCEDURE [SQL_SERVANT].[sp_client_data_get_by_id_client](
-@p_id_client varchar(255)
-)
-AS
-BEGIN
-	SELECT 
-		c.Id_Cliente 'Id_Cliente',
-		uc.Id_Usuario 'Username',
-		u.Password 'Password',
-		ur.Id_Rol 'Id_Rol',
-		r.Descripcion 'Rol',
-		u.Pregunta_Secreta 'Pregunta Secreta',
-		u.Respuesta_Secreta 'Respuesta Secreta',
-		cd.Nombre 'Nombre',
-		cd.Apellido 'Apellido',
-		ti.Id_Tipo_Identificacion 'Tipo_Identificacion',
-		ti.Descripcion 'Identificacion_Descripcion',
-		c.Nro_Identificacion 'Nro_Identificacion',
-		cd.Mail 'Mail',
-		cd.Calle 'Direccion',
-		cd.Calle_Nro 'Calle_Nro',
-		cd.Piso 'Piso',
-		cd.Depto 'Depto',
-		cd.Id_Nacionalidad 'Id_Nacionalidad',
-		p.Descripcion 'Nacionalidad_Descripcion',
-		cd.Fecha_Nacimiento 'Fecha_Nacimiento',
-		cd.Localidad 'Localidad',
-		cd.Id_Pais 'Id_Pais',
-		p.Descripcion 'Pais',
-		c.Habilitado 'Habilitado'
-
-	 FROM SQL_SERVANT.Cliente c
-		INNER JOIN SQL_SERVANT.Tipo_Identificacion ti
-			ON ti.Id_Tipo_Identificacion = c.Id_Tipo_Identificacion
-		INNER JOIN SQL_SERVANT.Cliente_Datos cd
-			ON cd.Id_Cliente = c.Id_Cliente
-		INNER JOIN SQL_SERVANT.Usuario_Cliente uc
-			ON uc.Id_Cliente = c.Id_Cliente
-		INNER JOIN SQL_SERVANT.Usuario u
-			ON u.Id_Usuario = uc.Id_Usuario
-		INNER JOIN SQL_SERVANT.Usuario_Rol ur
-			ON ur.Id_Usuario = uc.Id_Usuario
-		INNER JOIN SQL_SERVANT.Rol r
-			ON r.Id_Rol = ur.Id_Rol
-		INNER JOIN SQL_SERVANT.Pais p
-			ON (p.Id_Pais = cd.Id_Pais) 
-		WHERE c.Id_Cliente = @p_id_client
-END
-GO
-
-CREATE PROCEDURE [SQL_SERVANT].[sp_client_check_exist_identification](
-@p_client_id int = 0,
-@p_client_type_identification varchar(255),
-@p_client_identification_number int,
-@p_isValid bit = 0 OUTPUT
-)
-AS
-BEGIN
-	Declare @p_client_type_identification_id int
-
-	SELECT @p_client_type_identification_id = Id_Tipo_Identificacion FROM SQL_SERVANT.Tipo_Identificacion
-		WHERE UPPER(LTRIM(RTRIM(Descripcion))) = UPPER(LTRIM(RTRIM(@p_client_type_identification)))
-
-	IF EXISTS (SELECT 1 FROM SQL_SERVANT.Cliente
-		WHERE Id_Tipo_Identificacion = @p_client_type_identification_id
-			AND Nro_Identificacion = @p_client_identification_number
-			AND Id_Cliente != @p_client_id)
-		SET @p_isValid = 1
-	ELSE
-		SET @p_isValid = 0
-END
-GO
-
-CREATE PROCEDURE [SQL_SERVANT].[sp_client_check_exist_mail](
-@p_client_id int = 0,
-@p_client_mail varchar(255),
-@p_isValid bit = 0 OUTPUT
-)
-AS
-BEGIN
-	IF EXISTS (SELECT 1 FROM SQL_SERVANT.Cliente_Datos
-		WHERE Mail = @p_client_mail
-			AND Id_Cliente != @p_client_id)
-		SET @p_isValid = 1
-	ELSE
-		SET @p_isValid = 0
-END
-GO
-
-CREATE PROCEDURE [SQL_SERVANT].[sp_client_save_update](
-@p_client_id int = 0 OUTPUT,
-@p_client_name varchar(255),
-@p_client_lastname varchar(255),
-@p_client_type_identification varchar(255),
-@p_client_identification_number int,
-@p_client_country varchar (100),
-@p_client_mail varchar(255),
-@p_client_address_name varchar(255),
-@p_client_address_number int,
-@p_client_address_floor int = null,
-@p_client_address_dept varchar(2) = null,
-@p_client_localidad varchar(50) = null,
-@p_client_nationality varchar(255),
-@p_client_birthdate datetime,
-@p_user_password varchar(64) = 0,
-@p_user_username varchar (20) = 0,
-@p_user_secret_question varchar(30) = '',
-@p_user_secret_answer varchar(30) = ''
-)
-
-AS
-BEGIN
-	Declare @p_client_type_identification_id int
-	Declare @p_client_nationality_id int
-	Declare @p_client_country_id int
-
-	SELECT @p_client_nationality_id = Id_Pais FROM SQL_SERVANT.Pais
-		WHERE UPPER(LTRIM(RTRIM(Descripcion))) = UPPER(LTRIM(RTRIM(@p_client_nationality)))
-
-	SELECT @p_client_type_identification_id = Id_Tipo_Identificacion FROM SQL_SERVANT.Tipo_Identificacion
-		WHERE UPPER(LTRIM(RTRIM(Descripcion))) = UPPER(LTRIM(RTRIM(@p_client_type_identification)))
-		
-	SELECT @p_client_country_id = Id_Pais FROM SQL_SERVANT.Pais
-		WHERE UPPER(LTRIM(RTRIM(Descripcion))) = UPPER(LTRIM(RTRIM(@p_client_country)))
-
-	BEGIN TRANSACTION
-		IF ( @p_client_id = 0)
-		BEGIN
-		
-			INSERT INTO SQL_SERVANT.Cliente_Datos (Nombre, Apellido, Mail, Id_Pais, Calle,
-				Calle_Nro, Piso, Depto, Localidad, Id_Nacionalidad, Fecha_Nacimiento)
-			VALUES (@p_client_name, @p_client_lastname, @p_client_mail, @p_client_country_id, 
-			@p_client_address_name, @p_client_address_number, @p_client_address_floor, @p_client_address_dept,
-				@p_client_localidad, @p_client_nationality_id, @p_client_birthdate)
-				
-			SET @p_client_id = @@IDENTITY
-				
-			INSERT INTO SQL_SERVANT.Cliente (Id_Cliente, Nro_Identificacion, Id_Tipo_Identificacion,
-				Habilitado, Fecha_Creacion, Fecha_Ultima_Modificacion)
-			VALUES (@p_client_id, @p_client_identification_number, @p_client_type_identification_id,
-			1, CAST(GETDATE() AS DATE), CAST(GETDATE() AS DATE))
-			
-			INSERT INTO SQL_SERVANT.Usuario (Id_Usuario, Password, Cantidad_Login, Pregunta_Secreta,
-				Respuesta_Secreta, Habilitado)
-			VALUES (@p_user_username, @p_user_password, 0, @p_user_secret_question, @p_user_secret_answer, 1)
-		
-			INSERT INTO SQL_SERVANT.Usuario_Cliente (Id_Usuario, Id_Cliente)
-			VALUES (@p_user_username, @p_client_id)
-
-			INSERT INTO SQL_SERVANT.Usuario_Rol (Id_Usuario, Id_Rol, Habilitado)
-			VALUES (@p_user_username, 2, 1)
-			
-		END
-		
-		ELSE
-		BEGIN
-		
-			UPDATE SQL_SERVANT.Cliente_Datos SET Nombre = @p_client_name, Apellido = @p_client_lastname, 
-				Mail = @p_client_mail, Id_Pais = @p_client_country_id, Calle = @p_client_address_name,
-				Calle_Nro = @p_client_address_number, Piso = @p_client_address_floor, Depto = @p_client_address_dept,
-				Localidad = @p_client_localidad, Id_Nacionalidad = @p_client_nationality_id, Fecha_Nacimiento = @p_client_birthdate
-			WHERE Id_Cliente = @p_client_id
-			
-			UPDATE SQL_SERVANT.Cliente SET Nro_Identificacion = @p_client_identification_number, 
-				Id_Tipo_Identificacion = @p_client_type_identification_id, Fecha_Ultima_Modificacion = CAST(GETDATE() AS DATE)
-			
-		END
-		
-	COMMIT TRANSACTION
-END
-GO

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using PagoElectronico.ABM_Rol;
-using System.Data.SqlClient;
 
 namespace PagoElectronico.Login
 {
@@ -63,7 +62,6 @@ namespace PagoElectronico.Login
 
                 goToMenu();
             }
-
             else
             {
                 MessageBox.Show("Debe ser seleccionar un tipo de rol");

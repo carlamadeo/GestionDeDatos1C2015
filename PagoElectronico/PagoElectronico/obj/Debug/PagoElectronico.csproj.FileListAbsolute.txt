@@ -7,6 +7,9 @@ C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElec
 C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.pdb
 C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\bin\Debug\PagoElectronico.exe.config
 C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Login.FormLogin.resources
+C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cliente.Form1.resources
+C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Login.FormBlockedUser.resources
+C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Login.FormSelectRol.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\bin\Debug\PagoElectronico.exe.config
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.pdb
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\bin\Debug\PagoElectronico.exe
@@ -26,11 +29,6 @@ C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\P
 C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.pdb
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Consulta_Saldos.FormConsultaSaldos.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Listados.FormListadoEstadistico.resources
-C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Rol.FormABMRol.resources
-C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Rol.FormABMRolModify.resources
-C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Consulta_Saldos.FormConsultaSaldos.resources
-C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.FormMenu.resources
-C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Listados.FormListadoEstadistico.resources
-C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Login.FormSeleccionRol.resources
-C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cliente.FormABMCliente.resources
-C:\Documents and Settings\UsuarioAdmin\Escritorio\gdd_1c_2015.git\trunk\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cliente.FormAltaModificacionCliente.resources
+C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Seguridad.Password.resources
+C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_de_Usuario.FormABMUsuario.resources
+C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_de_Usuario.FormABMUsuarioModify.resources
