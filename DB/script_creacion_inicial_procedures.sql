@@ -68,6 +68,7 @@ BEGIN
 	IF EXISTS (SELECT 1 FROM SQL_SERVANT.Usuario WHERE Id_Usuario = @p_id AND Password = @p_pass AND Habilitado = 1)
 	BEGIN
 		UPDATE SQL_SERVANT.Usuario SET Cantidad_Login = 0, Ultima_Fecha = getDate()
+		WHERE Id_Usuario = @p_id
 		SET @p_intentos = 0
 	END
 	ELSE
@@ -78,9 +79,10 @@ BEGIN
 
 		IF ( @p_intentos >= 3 )
 			UPDATE SQL_SERVANT.Usuario SET Cantidad_Login = @p_intentos, Ultima_Fecha = getDate(), Habilitado = 0
+			WHERE Id_Usuario = @p_id
 		ELSE
 			UPDATE SQL_SERVANT.Usuario SET Cantidad_Login = @p_intentos, Ultima_Fecha = getDate()
-
+			WHERE Id_Usuario = @p_id
 	END
 END
 GO
@@ -316,13 +318,22 @@ AS
 BEGIN
 	IF ( EXISTS(SELECT 1 FROM SQL_SERVANT.Usuario WHERE Id_Usuario = @p_user_name))
 	BEGIN
-		UPDATE SQL_SERVANT.Usuario SET Password = @p_password,
-		Fecha_Creacion = @p_user_creation_date,
-		Ultima_Modificacion = @p_user_modify_date,
-		Pregunta_Secreta = @p_user_question_secret,
-		Respuesta_Secreta = @p_user_answer_secret,
-		Habilitado = @p_enabled
-		WHERE Id_Usuario = @p_user_name
+		IF (@p_password IS NULL)		
+			UPDATE SQL_SERVANT.Usuario SET 
+			Fecha_Creacion = @p_user_creation_date,
+			Ultima_Modificacion = @p_user_modify_date,
+			Pregunta_Secreta = @p_user_question_secret,
+			Respuesta_Secreta = @p_user_answer_secret,
+			Habilitado = @p_enabled
+			WHERE Id_Usuario = @p_user_name
+		ELSE
+			UPDATE SQL_SERVANT.Usuario SET Password = @p_password,
+			Fecha_Creacion = @p_user_creation_date,
+			Ultima_Modificacion = @p_user_modify_date,
+			Pregunta_Secreta = @p_user_question_secret,
+			Respuesta_Secreta = @p_user_answer_secret,
+			Habilitado = @p_enabled
+			WHERE Id_Usuario = @p_user_name
 	END
 	ELSE
 	BEGIN
@@ -331,6 +342,28 @@ BEGIN
 		VALUES (@p_user_name, @p_password, 0, null, @p_user_creation_date, @p_user_modify_date, @p_user_question_secret, @p_user_answer_secret,
 		@p_enabled)
 	END
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_get_not_user_rol](
+@p_user_name varchar(255) = null
+)
+AS
+BEGIN
+	SELECT r.Id_Rol, r.Descripcion FROM SQL_SERVANT.Rol r
+	WHERE NOT EXISTS(SELECT 1 FROM SQL_SERVANT.Usuario_Rol ur
+		WHERE ur.Id_Usuario = @p_user_name AND ur.Id_Rol = r.Id_Rol)
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_get_user_rol](
+@p_user_name varchar(255) = null
+)
+AS
+BEGIN
+	SELECT r.Id_Rol, r.Descripcion FROM SQL_SERVANT.Rol r
+	WHERE EXISTS(SELECT 1 FROM SQL_SERVANT.Usuario_Rol ur
+		WHERE ur.Id_Usuario = @p_user_name AND ur.Id_Rol = r.Id_Rol)
 END
 GO
 
