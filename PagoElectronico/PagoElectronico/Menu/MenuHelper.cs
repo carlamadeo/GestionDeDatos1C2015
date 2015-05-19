@@ -57,10 +57,6 @@ namespace PagoElectronico.Menu
                     func.folder = "ABM_Rol";
                     func.form = "FormABMRol";
                     break;
-                case "Login y Seguridad":
-                    func.folder = "Seguridad";
-                    func.form = "Password";
-                    break;
                 case "ABM de Usuario":
                     func.folder = "ABM_de_Usuario";
                     func.form = "FormABMUsuario";
@@ -68,6 +64,10 @@ namespace PagoElectronico.Menu
                 case "Listado Estadistico":
                     func.folder = "Listados";
                     func.form = "FormListadoEstadistico";
+                    break;
+                case "ABM de Cliente":
+                    func.folder = "ABM_Cliente";
+                    func.form = "FormABMCliente";
                     break;
             }
             return func;
