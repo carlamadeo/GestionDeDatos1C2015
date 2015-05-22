@@ -46,3 +46,15 @@ DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_country_movement
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_cli_more_pay_commission
 
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_cli_trans_own_count
+
+DROP PROCEDURE SQL_SERVANT.sp_client_search
+
+DROP PROCEDURE SQL_SERVANT.sp_client_enable_disable
+
+DROP PROCEDURE SQL_SERVANT.sp_client_data_get_by_id_client
+
+DROP PROCEDURE SQL_SERVANT.sp_client_check_exist_identification
+
+DROP PROCEDURE SQL_SERVANT.sp_client_check_exist_mail
+
+DROP PROCEDURE SQL_SERVANT.sp_client_save_update

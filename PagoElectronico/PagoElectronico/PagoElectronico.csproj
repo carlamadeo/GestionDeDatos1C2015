@@ -48,12 +48,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ABM Cliente\Form1.cs">
+    <Compile Include="ABM Cliente\Cliente.cs" />
+    <Compile Include="ABM Cliente\ClienteHelper.cs" />
+    <Compile Include="ABM Cliente\FormABMCliente.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ABM Cliente\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="ABM Cliente\FormABMCliente.Designer.cs">
+      <DependentUpon>FormABMCliente.cs</DependentUpon>
     </Compile>
+    <Compile Include="ABM Cliente\FormAltaModificacionCliente.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ABM Cliente\FormAltaModificacionCliente.Designer.cs">
+      <DependentUpon>FormAltaModificacionCliente.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ABM Cliente\Paises.cs" />
+    <Compile Include="ABM Cliente\TypeIdentification.cs" />
     <Compile Include="ABM Cuenta\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,8 +161,11 @@
     <Compile Include="Menu\OpcionMenu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="ABM Cliente\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="ABM Cliente\FormABMCliente.resx">
+      <DependentUpon>FormABMCliente.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ABM Cliente\FormAltaModificacionCliente.resx">
+      <DependentUpon>FormAltaModificacionCliente.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ABM de Usuario\FormABMUsuario.resx">
       <DependentUpon>FormABMUsuario.cs</DependentUpon>

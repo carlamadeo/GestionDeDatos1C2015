@@ -12,3 +12,4 @@ C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoE
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Release\PagoElectronico.csproj.GenerateResource.Cache
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Release\PagoElectronico.ABM_de_Usuario.FormABMUsuario.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Release\PagoElectronico.ABM_de_Usuario.FormABMUsuarioModify.resources
+C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Release\ResolveAssemblyReference.cache
