@@ -16,14 +16,9 @@ namespace PagoElectronico.ABM_Cliente
             InitializeComponent();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
+            
         }
 
         private void FormABMCliente_Load (object sender, EventArgs e)
@@ -47,6 +42,7 @@ namespace PagoElectronico.ABM_Cliente
         {
             Cliente clientToSearch = this.getDataToSearch();
             ClienteHelper.search(clientToSearch, dgvClient);
+            checkClientEnableDisable();
         }
 
         private Cliente getDataToSearch()
@@ -113,6 +109,8 @@ namespace PagoElectronico.ABM_Cliente
             DataGridViewHelper.clean(dgvClient);
             ComboBoxHelper.fill(comboBoxTipoId, "SQL_SERVANT.TIPO_IDENTIFICACION ti",
                 "ti.Id_Tipo_Identificacion", "ti.Descripcion", "", null);
+            buttonDeshabilitar.Enabled = false;
+            buttonHabilitar.Enabled = false;
         }
 
         private void buttonAlta_Click(object sender, EventArgs e)
@@ -138,6 +136,31 @@ namespace PagoElectronico.ABM_Cliente
             {
                 MessageBox.Show("Debe seleccionar un usuario a modificar");
             }
+        }
+
+        private void checkClientEnableDisable()
+        {
+            Boolean enabled = ClienteHelper.isEnabled(Convert.ToInt32(dgvClient.CurrentRow.Cells[0].Value));
+            if (enabled)
+            {
+                this.buttonDeshabilitar.Enabled = true;
+                this.buttonHabilitar.Enabled = false;
+            }
+            else
+            {
+                this.buttonHabilitar.Enabled = true;
+                this.buttonDeshabilitar.Enabled = false;
+            }
+        }
+
+        private void dgvClient_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            checkClientEnableDisable();
+        }
+
+        private void labelApellido_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

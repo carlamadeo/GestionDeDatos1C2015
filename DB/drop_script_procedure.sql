@@ -58,3 +58,11 @@ DROP PROCEDURE SQL_SERVANT.sp_client_check_exist_identification
 DROP PROCEDURE SQL_SERVANT.sp_client_check_exist_mail
 
 DROP PROCEDURE SQL_SERVANT.sp_client_save_update
+
+DROP PROCEDURE SQL_SERVANT.sp_client_tarjeta_disable
+
+DROP PROCEDURE SQL_SERVANT.sp_client_is_enabled
+
+DROP PROCEDURE SQL_SERVANT.sp_client_tarjeta_get_by_id_client
+
+DROP PROCEDURE SQL_SERVANT.sp_tarjeta_save

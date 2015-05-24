@@ -86,6 +86,7 @@
             this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(205, 20);
             this.textBoxPassword.TabIndex = 3;
+            this.textBoxPassword.TextChanged += new System.EventHandler(this.textBoxPassword_TextChanged);
             // 
             // checkBoxEnable
             // 

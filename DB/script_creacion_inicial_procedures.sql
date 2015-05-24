@@ -475,7 +475,7 @@ BEGIN
 		
 		FROM SQL_SERVANT.Cliente_Datos cd
 			INNER JOIN SQL_SERVANT.Cliente cl
-				ON cl.Id_Cliente = cl.Id_Cliente
+				ON cd.Id_Cliente = cl.Id_Cliente
 			INNER JOIN SQL_SERVANT.Tipo_Identificacion ti
 				ON  cl.Id_Tipo_Identificacion = ti.Id_Tipo_Identificacion
 			INNER JOIN SQL_SERVANT.Pais p
@@ -511,8 +511,6 @@ BEGIN
 		c.Id_Cliente 'Id_Cliente',
 		uc.Id_Usuario 'Username',
 		u.Password 'Password',
-		ur.Id_Rol 'Id_Rol',
-		r.Descripcion 'Rol',
 		u.Pregunta_Secreta 'Pregunta Secreta',
 		u.Respuesta_Secreta 'Respuesta Secreta',
 		cd.Nombre 'Nombre',
@@ -542,10 +540,6 @@ BEGIN
 			ON uc.Id_Cliente = c.Id_Cliente
 		INNER JOIN SQL_SERVANT.Usuario u
 			ON u.Id_Usuario = uc.Id_Usuario
-		INNER JOIN SQL_SERVANT.Usuario_Rol ur
-			ON ur.Id_Usuario = uc.Id_Usuario
-		INNER JOIN SQL_SERVANT.Rol r
-			ON r.Id_Rol = ur.Id_Rol
 		INNER JOIN SQL_SERVANT.Pais p
 			ON (p.Id_Pais = cd.Id_Pais) 
 		WHERE c.Id_Cliente = @p_id_client
@@ -674,3 +668,76 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [SQL_SERVANT].[sp_client_tarjeta_disable](
+@p_client_id int,
+@p_tarjeta_id numeric
+)
+AS
+BEGIN
+	UPDATE SQL_SERVANT.Cliente_Tarjeta SET Habilitada = 0
+		WHERE Id_Cliente = @p_client_id AND Id_Tarjeta = @p_tarjeta_id
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_client_is_enabled](
+@p_client_id int = 0,
+@p_isEnabled bit = 0 OUTPUT
+)
+AS
+BEGIN
+
+	SELECT @p_isEnabled = Habilitado FROM SQL_SERVANT.Cliente
+	WHERE Id_Cliente = @p_client_id
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_client_tarjeta_get_by_id_client](
+@p_id_client varchar(255),
+@p_id_tarjeta numeric(16,0)
+)
+AS
+BEGIN
+	SELECT
+		t.Id_Tarjeta_Empresa 'Id_Empresa'
+		te.Descripcion 'Empresa',
+		t.Fecha_Emision 'Fecha_Emision',
+		t.Fecha_Vencimiento 'Fecha_Vencimiento',
+		t.Codigo_Seguridad 'Codigo_Seguridad'
+
+	 FROM SQL_SERVANT.Cliente_Tarjeta ct
+		INNER JOIN SQL_SERVANT.Tarjeta t
+			ON ct.Id_Tarjeta = t.Id_tarjeta
+		INNER JOIN SQL_SERVANT.Tarjeta_Empresa te
+			ON t.Id_Tarjeta_Empresa = te.Id_Tarjeta_Empresa
+		
+	WHERE ct.Id_Cliente = @p_id_client AND
+	ct.Id_Tarjeta = @p_Id_tarjeta
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_tarjeta_save](
+
+@p_tarjeta_id numeric(16,0) OUTPUT,
+@p_tarjeta_empresa varchar(50),
+@p_tarjeta_fecha_vencimiento datetime,
+@p_tarjeta_fecha_emision datetime,
+@p_tarjeta_codigo_seguridad varchar(64)
+)
+
+AS
+BEGIN
+	Declare @p_tarjeta_empresa_id int
+
+	SELECT @p_tarjeta_empresa_id = Id_Tarjeta_Empresa FROM SQL_SERVANT.Tarjeta_Empresa
+		WHERE UPPER(LTRIM(RTRIM(Descripcion))) = UPPER(LTRIM(RTRIM(@p_tarjeta_empresa)))
+
+	BEGIN TRANSACTION
+		
+			UPDATE SQL_SERVANT.Tarjeta SET Fecha_Emision = @p_tarjeta_fecha_emision, 
+			Fecha_Vencimiento = @p_tarjeta_fecha_vencimiento, Id_Tarjeta_Empresa = @p_tarjeta_empresa_id,
+			Codigo_Seguridad = @p_tarjeta_codigo_seguridad
+			WHERE Id_Tarjeta = @p_tarjeta_id
+		
+	COMMIT TRANSACTION
+END
+GO

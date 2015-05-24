@@ -320,7 +320,9 @@ CREATE TABLE [SQL_SERVANT].[Cliente_Datos](
 	),
 	CONSTRAINT UQ_Cliente_Datos_Mail UNIQUE (Mail),
 	CONSTRAINT [FK_Cliente_Id_Pais] FOREIGN KEY (Id_Pais)
-		REFERENCES [SQL_SERVANT].[Pais] (Id_Pais)
+		REFERENCES [SQL_SERVANT].[Pais] (Id_Pais),
+	CONSTRAINT [FK_Cliente_Id_Nacionalidad] FOREIGN KEY (Id_Nacionalidad)
+	REFERENCES [SQL_SERVANT].[Pais] (Id_Pais)
 )
 INSERT INTO SQL_SERVANT.Cliente_Datos (Nombre, Apellido, Mail, Id_Pais, Calle, Calle_Nro, Piso, Depto, Localidad, Id_Nacionalidad, Fecha_Nacimiento)
 SELECT DISTINCT LTRIM(RTRIM(m.Cli_Nombre)), LTRIM(RTRIM(m.Cli_Apellido)), 
@@ -350,8 +352,8 @@ CREATE TABLE [SQL_SERVANT].[Cliente](
 	CONSTRAINT [FK_Cliente_Tipo_Identificacion] FOREIGN KEY (Id_Tipo_Identificacion)
 		REFERENCES [SQL_SERVANT].[Tipo_Identificacion] (Id_Tipo_Identificacion)
 )
-INSERT INTO SQL_SERVANT.Cliente (Id_Cliente,Id_Tipo_Identificacion, Habilitado, Fecha_Creacion, Fecha_Ultima_Modificacion)
-SELECT DISTINCT cd.Id_Cliente, m.Cli_Tipo_Doc_Cod, 1, CAST(GETDATE() AS DATE), CAST(GETDATE() AS DATE)
+INSERT INTO SQL_SERVANT.Cliente (Id_Cliente, Nro_Identificacion, Id_Tipo_Identificacion, Habilitado, Fecha_Creacion, Fecha_Ultima_Modificacion)
+SELECT DISTINCT cd.Id_Cliente, m.Cli_Nro_Doc, m.Cli_Tipo_Doc_Cod, 1, CAST(GETDATE() AS DATE), CAST(GETDATE() AS DATE)
 FROM gd_esquema.Maestra m
 	INNER JOIN SQL_SERVANT.Cliente_Datos cd ON 
 		cd.Nombre = LTRIM(RTRIM(m.Cli_Nombre))

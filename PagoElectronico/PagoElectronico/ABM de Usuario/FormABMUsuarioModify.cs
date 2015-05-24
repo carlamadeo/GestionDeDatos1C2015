@@ -156,5 +156,10 @@ namespace PagoElectronico.ABM_de_Usuario
                 }
             }
         }
+
+        private void textBoxPassword_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

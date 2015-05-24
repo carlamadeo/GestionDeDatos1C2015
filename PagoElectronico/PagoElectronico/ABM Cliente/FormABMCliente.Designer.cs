@@ -57,21 +57,21 @@
             this.labelNombre.Size = new System.Drawing.Size(44, 13);
             this.labelNombre.TabIndex = 0;
             this.labelNombre.Text = "Nombre";
-            this.labelNombre.Click += new System.EventHandler(this.label1_Click);
             // 
             // labelApellido
             // 
             this.labelApellido.AutoSize = true;
-            this.labelApellido.Location = new System.Drawing.Point(42, 67);
+            this.labelApellido.Location = new System.Drawing.Point(382, 28);
             this.labelApellido.Name = "labelApellido";
             this.labelApellido.Size = new System.Drawing.Size(44, 13);
             this.labelApellido.TabIndex = 1;
             this.labelApellido.Text = "Apellido";
+            this.labelApellido.Click += new System.EventHandler(this.labelApellido_Click);
             // 
             // labelTipoId
             // 
             this.labelTipoId.AutoSize = true;
-            this.labelTipoId.Location = new System.Drawing.Point(393, 28);
+            this.labelTipoId.Location = new System.Drawing.Point(42, 67);
             this.labelTipoId.Name = "labelTipoId";
             this.labelTipoId.Size = new System.Drawing.Size(94, 13);
             this.labelTipoId.TabIndex = 2;
@@ -80,7 +80,7 @@
             // labelId
             // 
             this.labelId.AutoSize = true;
-            this.labelId.Location = new System.Drawing.Point(393, 67);
+            this.labelId.Location = new System.Drawing.Point(382, 67);
             this.labelId.Name = "labelId";
             this.labelId.Size = new System.Drawing.Size(110, 13);
             this.labelId.TabIndex = 3;
@@ -88,24 +88,24 @@
             // 
             // textBoxNombre
             // 
-            this.textBoxNombre.Location = new System.Drawing.Point(96, 25);
+            this.textBoxNombre.Location = new System.Drawing.Point(153, 25);
             this.textBoxNombre.Name = "textBoxNombre";
-            this.textBoxNombre.Size = new System.Drawing.Size(157, 20);
-            this.textBoxNombre.TabIndex = 4;
+            this.textBoxNombre.Size = new System.Drawing.Size(165, 20);
+            this.textBoxNombre.TabIndex = 0;
             // 
             // textBoxApellido
             // 
-            this.textBoxApellido.Location = new System.Drawing.Point(96, 64);
+            this.textBoxApellido.Location = new System.Drawing.Point(509, 25);
             this.textBoxApellido.Name = "textBoxApellido";
-            this.textBoxApellido.Size = new System.Drawing.Size(157, 20);
-            this.textBoxApellido.TabIndex = 5;
+            this.textBoxApellido.Size = new System.Drawing.Size(164, 20);
+            this.textBoxApellido.TabIndex = 1;
             // 
             // textBoxNumeroId
             // 
             this.textBoxNumeroId.Location = new System.Drawing.Point(509, 64);
             this.textBoxNumeroId.Name = "textBoxNumeroId";
             this.textBoxNumeroId.Size = new System.Drawing.Size(164, 20);
-            this.textBoxNumeroId.TabIndex = 6;
+            this.textBoxNumeroId.TabIndex = 3;
             // 
             // labelEmail
             // 
@@ -118,25 +118,25 @@
             // 
             // textBoxMail
             // 
-            this.textBoxMail.Location = new System.Drawing.Point(96, 103);
+            this.textBoxMail.Location = new System.Drawing.Point(153, 103);
             this.textBoxMail.Name = "textBoxMail";
-            this.textBoxMail.Size = new System.Drawing.Size(157, 20);
-            this.textBoxMail.TabIndex = 8;
+            this.textBoxMail.Size = new System.Drawing.Size(165, 20);
+            this.textBoxMail.TabIndex = 4;
             // 
             // comboBoxTipoId
             // 
             this.comboBoxTipoId.FormattingEnabled = true;
-            this.comboBoxTipoId.Location = new System.Drawing.Point(509, 25);
+            this.comboBoxTipoId.Location = new System.Drawing.Point(153, 64);
             this.comboBoxTipoId.Name = "comboBoxTipoId";
             this.comboBoxTipoId.Size = new System.Drawing.Size(165, 21);
-            this.comboBoxTipoId.TabIndex = 9;
+            this.comboBoxTipoId.TabIndex = 2;
             // 
             // buttonLimpiar
             // 
             this.buttonLimpiar.Location = new System.Drawing.Point(45, 143);
             this.buttonLimpiar.Name = "buttonLimpiar";
             this.buttonLimpiar.Size = new System.Drawing.Size(75, 23);
-            this.buttonLimpiar.TabIndex = 10;
+            this.buttonLimpiar.TabIndex = 7;
             this.buttonLimpiar.Text = "Limpiar";
             this.buttonLimpiar.UseVisualStyleBackColor = true;
             this.buttonLimpiar.Click += new System.EventHandler(this.buttonLimpiar_Click);
@@ -146,18 +146,22 @@
             this.buttonBuscar.Location = new System.Drawing.Point(599, 143);
             this.buttonBuscar.Name = "buttonBuscar";
             this.buttonBuscar.Size = new System.Drawing.Size(75, 23);
-            this.buttonBuscar.TabIndex = 11;
+            this.buttonBuscar.TabIndex = 5;
             this.buttonBuscar.Text = "Buscar";
             this.buttonBuscar.UseVisualStyleBackColor = true;
             this.buttonBuscar.Click += new System.EventHandler(this.buttonBuscar_Click);
             // 
             // dgvClient
             // 
+            this.dgvClient.AllowUserToAddRows = false;
+            this.dgvClient.AllowUserToDeleteRows = false;
+            this.dgvClient.AllowUserToResizeRows = false;
             this.dgvClient.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvClient.Location = new System.Drawing.Point(45, 186);
             this.dgvClient.Name = "dgvClient";
             this.dgvClient.Size = new System.Drawing.Size(629, 198);
             this.dgvClient.TabIndex = 12;
+            this.dgvClient.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvClient_CellMouseClick);
             this.dgvClient.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // buttonVolver
@@ -165,7 +169,7 @@
             this.buttonVolver.Location = new System.Drawing.Point(45, 403);
             this.buttonVolver.Name = "buttonVolver";
             this.buttonVolver.Size = new System.Drawing.Size(75, 23);
-            this.buttonVolver.TabIndex = 13;
+            this.buttonVolver.TabIndex = 11;
             this.buttonVolver.Text = "Volver";
             this.buttonVolver.UseVisualStyleBackColor = true;
             this.buttonVolver.Click += new System.EventHandler(this.buttonVolver_Click);
@@ -175,7 +179,7 @@
             this.buttonDeshabilitar.Location = new System.Drawing.Point(320, 402);
             this.buttonDeshabilitar.Name = "buttonDeshabilitar";
             this.buttonDeshabilitar.Size = new System.Drawing.Size(75, 23);
-            this.buttonDeshabilitar.TabIndex = 14;
+            this.buttonDeshabilitar.TabIndex = 9;
             this.buttonDeshabilitar.Text = "Deshabilitar";
             this.buttonDeshabilitar.UseVisualStyleBackColor = true;
             this.buttonDeshabilitar.Click += new System.EventHandler(this.buttonDeshabilitar_Click);
@@ -185,7 +189,7 @@
             this.buttonHabilitar.Location = new System.Drawing.Point(467, 402);
             this.buttonHabilitar.Name = "buttonHabilitar";
             this.buttonHabilitar.Size = new System.Drawing.Size(75, 23);
-            this.buttonHabilitar.TabIndex = 15;
+            this.buttonHabilitar.TabIndex = 8;
             this.buttonHabilitar.Text = "Habilitar";
             this.buttonHabilitar.UseVisualStyleBackColor = true;
             this.buttonHabilitar.Click += new System.EventHandler(this.buttonHabilitar_Click);
@@ -195,7 +199,7 @@
             this.buttonModificar.Location = new System.Drawing.Point(598, 402);
             this.buttonModificar.Name = "buttonModificar";
             this.buttonModificar.Size = new System.Drawing.Size(75, 23);
-            this.buttonModificar.TabIndex = 16;
+            this.buttonModificar.TabIndex = 6;
             this.buttonModificar.Text = "Modificar";
             this.buttonModificar.UseVisualStyleBackColor = true;
             this.buttonModificar.Click += new System.EventHandler(this.buttonModificar_Click);
@@ -205,13 +209,14 @@
             this.buttonAlta.Location = new System.Drawing.Point(178, 402);
             this.buttonAlta.Name = "buttonAlta";
             this.buttonAlta.Size = new System.Drawing.Size(75, 23);
-            this.buttonAlta.TabIndex = 17;
+            this.buttonAlta.TabIndex = 10;
             this.buttonAlta.Text = "Alta";
             this.buttonAlta.UseVisualStyleBackColor = true;
             this.buttonAlta.Click += new System.EventHandler(this.buttonAlta_Click);
             // 
             // FormABMCliente
             // 
+            this.AcceptButton = this.buttonBuscar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(719, 448);

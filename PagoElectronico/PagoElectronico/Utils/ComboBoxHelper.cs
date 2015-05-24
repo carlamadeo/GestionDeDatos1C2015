@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Data;
 using System;
+using PagoElectronico.ABM_Cliente;
 namespace PagoElectronico
 {
     public class ComboBoxHelper
@@ -56,5 +57,6 @@ namespace PagoElectronico
 
             Connection.close(conn);
         }
+
     }
 }

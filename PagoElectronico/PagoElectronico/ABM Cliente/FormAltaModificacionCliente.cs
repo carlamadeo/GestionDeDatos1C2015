@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using PagoElectronico.ABM_Rol;
 using PagoElectronico.ABM_de_Usuario;
 using PagoElectronico.Seguridad;
+using PagoElectronico.DB;
 
 namespace PagoElectronico.ABM_Cliente
 {
@@ -33,7 +34,6 @@ namespace PagoElectronico.ABM_Cliente
             this.WindowState = FormWindowState.Maximized;
 
             Usuario user = VarGlobal.usuario;
-            Roles.fillComboBoxByUser(comboBoxRol, user);
             TypeIdentification.fillComboBox(comboBoxIdentificationType);
             Paises.fillComboBox(comboBoxNacionalidad);
             Paises.fillComboBox(comboBoxPais);
@@ -41,12 +41,13 @@ namespace PagoElectronico.ABM_Cliente
             if (edit)
             {
                 Cliente clientData = ClienteHelper.getClientData(client);
+                Tarjeta.fillTarjetaByClient(comboBoxTarjetas, clientData.id);
+                Empresa.fillEmpresa(comboBoxEmpresa);
 
                 this.textBoxUsername.ReadOnly = true;
                 this.textBoxPassword.ReadOnly = true;
                 this.textBoxPregSecreta.ReadOnly = true;
                 this.textBoxRespSecreta.ReadOnly = true;
-                this.comboBoxRol.Enabled = false;
 
                 this.textBoxName.Text = clientData.name;
                 this.textBoxLastname.Text = clientData.lastname;
@@ -61,7 +62,11 @@ namespace PagoElectronico.ABM_Cliente
                 this.textBoxLocalidad.Text = clientData.localidad;
                 this.comboBoxNacionalidad.SelectedIndex = this.comboBoxNacionalidad.FindStringExact(clientData.nationality);
                 this.dtBrithdate.Value = clientData.birthdate;
-                this.comboBoxRol.SelectedIndex = this.comboBoxRol.FindStringExact(clientData.rol);
+            }
+
+            else
+            {
+                this.Tab.TabPages.Remove(tabTarjetas);
             }
 
         }
@@ -92,40 +97,44 @@ namespace PagoElectronico.ABM_Cliente
 
         private void buttonGuardar_Click(object sender, EventArgs e)
         {
-            Cliente clientData = this.getClientDataFromForm();
             UsuarioDatos userData = this.getUserDataFromForm();
 
-            if (clientData != null && userData != null)
+            if (userData != null)
             {
+                Cliente clientData = this.getClientDataFromForm();
 
-                if (textBoxPassword.Text != "" || edit)
+                if (clientData != null)
                 {
-                    if (!edit && UsuarioHelper.existUser(textBoxUsername.Text))
+
+                    if (textBoxPassword.Text != "" || edit)
                     {
-                        MessageBox.Show("Ya existe un usuario con ese username", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (!edit && UsuarioHelper.existUser(textBoxUsername.Text))
+                        {
+                            MessageBox.Show("Ya existe un usuario con ese Username.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+
+                    Boolean existEqualTypeAndIdentificationNumber = ClienteHelper.checkTypeAndIdentificationNumber(clientData.id,
+                        clientData.typeIdentification, clientData.identificationNumber);
+
+                    if (!edit && existEqualTypeAndIdentificationNumber)
+                    {
+                        DialogResult dialogIdentification = MessageBox.Show("Ya existe un usuario con ese Tipo y Numero de Identificacion.",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
+
+                    Boolean existAnEqualMail = ClienteHelper.checkMail(clientData.id, clientData.mail);
+                    if (!edit && existAnEqualMail)
+                    {
+                        DialogResult dialogMail = MessageBox.Show("Ya existe un usuario con ese Mail.",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    this.saveOrUpdateClient(clientData, userData);
                 }
-
-                Boolean existEqualTypeAndIdentificationNumber = ClienteHelper.checkTypeAndIdentificationNumber(clientData.id, 
-                    clientData.typeIdentification, clientData.identificationNumber);
-
-                if (existEqualTypeAndIdentificationNumber)
-                {
-                    DialogResult dialogIdentification = MessageBox.Show("Ya existe un usuario con ese tipo y numero de identificacion.",
-                        "Mensaje importante", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                Boolean existAnEqualMail = ClienteHelper.checkMail(clientData.id, clientData.mail);
-                if (existAnEqualMail)
-                {
-                    DialogResult dialogMail = MessageBox.Show("Ya existe un usuario con ese mail.",
-                        "Mensaje importante", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                this.saveOrUpdateClient(clientData, userData);
             }
         }
 
@@ -151,23 +160,23 @@ namespace PagoElectronico.ABM_Cliente
 
             if (!edit)
             {
-                isValid = Validaciones.requiredString(textBoxUsername.Text, "El username es necesario");
+                isValid = Validaciones.requiredString(textBoxUsername.Text, "El campo Username no puede ser vacio");
                 if (isValid)
                     userData.username = textBoxUsername.Text;
                 else
                     return null;
 
-                isValid = Validaciones.requiredString(textBoxPassword.Text, "El password es necesario");
+                isValid = Validaciones.requiredString(textBoxPassword.Text, "El campo Password no puede ser vacio");
                 if (isValid)
                     userData.password = Encrypt.Sha256(textBoxPassword.Text);
                 else
                     return null;
 
-                isValid = Validaciones.requiredString(textBoxPregSecreta.Text, "La pregunta secreta es necesaria")
-                    && Validaciones.requiredString(textBoxRespSecreta.Text, "La respuesta secreta es necesaria");
+                isValid = Validaciones.requiredString(textBoxPregSecreta.Text, "El campo Pregunta Secreta no puede ser vacio")
+                    && Validaciones.requiredString(textBoxRespSecreta.Text, "El campo Respuesta Secreta no puede ser vacio");
                 if (isValid)
                 {
-                    var questionAnswer = new PreguntaRespuesta(textBoxPregSecreta.Text, textBoxRespSecreta.Text);
+                    var questionAnswer = new PreguntaRespuesta(textBoxPregSecreta.Text, Encrypt.Sha256(textBoxRespSecreta.Text));
                     userData.questionAnswer = questionAnswer;
                 }
                 else
@@ -192,54 +201,53 @@ namespace PagoElectronico.ABM_Cliente
 
             Boolean isValid;
 
-            isValid = Validaciones.requiredString(textBoxLocalidad.Text, "La localidad es necesaria");
-            if (isValid)
-                clientData.localidad = textBoxLocalidad.Text;
-            else
-                return null;
-
-            isValid = Validaciones.requiredString(textBoxLocalidad.Text, "La localidad es necesaria");
-            if (isValid)
-                clientData.localidad = textBoxLocalidad.Text;
-            else
-                return null;
-
-            isValid = Validaciones.requiredString(textBoxName.Text, "El nombre es necesario");
+            isValid = (Validaciones.requiredString(textBoxName.Text, "El campo Nombre no puede ser vacio") &&
+                Validaciones.validAndRequiredString(textBoxName.Text, "El campo Nombre debe contener unicamente letras"));
             if (isValid)
                 clientData.name = textBoxName.Text;
             else
                 return null;
 
-            isValid = Validaciones.requiredString(textBoxLastname.Text, "El apellido es necesario");
+            isValid = (Validaciones.requiredString(textBoxLastname.Text, "El campo Apellido no puede ser vacio") &&
+                Validaciones.validAndRequiredString(textBoxLastname.Text, "El campo Apellido debe contener unicamente letras"));
             if (isValid)
                 clientData.lastname = textBoxLastname.Text;
             else
                 return null;
 
-            isValid = Validaciones.requiredString(comboBoxIdentificationType.Text.ToString(), "El tipo de identificacion es necesario");
+            isValid = Validaciones.requiredString(comboBoxIdentificationType.Text.ToString(), "Por favor seleccione el tipo de indentificacion");
             if (isValid)
                 clientData.typeIdentification = comboBoxIdentificationType.Text.ToString();
             else
                 return null;
 
+            isValid = (Validaciones.validInt32(textBoxIdentificationNumber.Text, "El Numero de identificacion no puede ser vacio") &&
+                Validaciones.validAndRequiredInt32(textBoxIdentificationNumber.Text, "El Numero de identificacion debe contener unicamente numeros"));
             if (isValid)
                 clientData.identificationNumber = Convert.ToInt32(textBoxIdentificationNumber.Text);
             else
                 return null;
 
-            isValid = Validaciones.validAndRequiredMail(textBoxMail.Text, "El mail debe ser valido");
+            isValid = Validaciones.validAndRequiredMail(textBoxMail.Text, "El mail debe ser valido. Ej: pago@electronico.com");
             if (isValid)
                 clientData.mail = textBoxMail.Text;
             else
                 return null;
 
-            isValid = Validaciones.requiredString(textBoxAddress.Text, "La direccion es obligatoria");
+            isValid = Validaciones.requiredString(this.comboBoxPais.Text.ToString(), "Por favor seleccione el pais");
+            if (isValid)
+                clientData.country = this.comboBoxPais.Text.ToString();
+            else
+                return null;
+
+            isValid = Validaciones.requiredString(textBoxAddress.Text, "El campo Direccion no puede ser vacio");
             if (isValid)
                 clientData.addressName = textBoxAddress.Text;
             else
                 return null;
 
-            isValid = Validaciones.validAndRequiredInt32(textBoxAddressNumber.Text, "El numero de la direccion es obligatorio");
+            isValid = (Validaciones.validInt32(textBoxAddressNumber.Text, "El campo Numero de Direccion no puede ser vacio") &&
+                Validaciones.validAndRequiredInt32(textBoxAddressNumber.Text, "El campo Numero de Direccion debe contener unicamente numeros"));
             if (isValid)
                 clientData.addressNum = Convert.ToInt32(textBoxAddressNumber.Text);
             else
@@ -247,30 +255,34 @@ namespace PagoElectronico.ABM_Cliente
 
             if (textBoxAddressFloor.Text != "" && textBoxAddressFloor.Text != String.Empty)
             {
-                isValid = Validaciones.validAndRequiredInt32(textBoxAddressFloor.Text, "El piso debe ser numerico");
-                clientData.addressFloor = Convert.ToInt32(textBoxAddressFloor.Text);
+                isValid = Validaciones.validAndRequiredInt32(textBoxAddressFloor.Text, "El campo Piso debe contener unicamente numeros");
+                if (isValid)
+                    clientData.addressFloor = Convert.ToInt32(textBoxAddressFloor.Text);
+                else
+                    return null;
                 clientData.adressDeptName = textBoxAddressDept.Text;
             }
             else
             {
                 if (textBoxAddressDept.Text != "" && textBoxAddressFloor.Text != String.Empty)
                 {
-                    MessageBox.Show("Si completa el nombre de departamento debe colocar un piso");
+                    MessageBox.Show("Si completa el campo Departamento debe completar el campo Piso");
                     return null;
                 }
                 clientData.addressFloor = VarGlobal.NoAddressFloor;
                 clientData.adressDeptName = null;
             }
 
-            isValid = Validaciones.requiredString(this.comboBoxNacionalidad.Text.ToString(), "Debe seleccionar una nacionalidad");
+            isValid = (Validaciones.requiredString(textBoxLocalidad.Text, "El campo Localidad no puede ser vacio") &&
+                Validaciones.validAndRequiredString(textBoxLocalidad.Text, "El campo Localidad debe contener unicamente letras"));
             if (isValid)
-                clientData.nationality = this.comboBoxNacionalidad.Text.ToString();
+                clientData.localidad = textBoxLocalidad.Text;
             else
                 return null;
 
-            isValid = Validaciones.requiredString(this.comboBoxPais.Text.ToString(), "Debe seleccionar un pais");
+            isValid = Validaciones.requiredString(this.comboBoxNacionalidad.Text.ToString(), "El campo nacionalidad no puede ser vacio");
             if (isValid)
-                clientData.country = this.comboBoxPais.Text.ToString();
+                clientData.nationality = this.comboBoxNacionalidad.Text.ToString();
             else
                 return null;
 
@@ -282,9 +294,74 @@ namespace PagoElectronico.ABM_Cliente
             return clientData;
         }
 
-        private void textBoxPregSecreta_TextChanged(object sender, EventArgs e)
+        private Tarjeta getTarjetaDataFromForm()
         {
+            Tarjeta tarjetaData = new Tarjeta();
 
+            Boolean isValid;
+
+            isValid = Validaciones.validAndRequiredDecimal(this.comboBoxTarjetas.Text, "Debe seleccionar una tarjeta");
+            if (isValid)
+                tarjetaData.id = Convert.ToDecimal(this.comboBoxTarjetas.Text.ToString());
+            else
+                return null;
+
+            isValid = Validaciones.requiredString(this.comboBoxTarjetas.Text, "Debe seleccionar una empresa");
+            if (isValid)
+                tarjetaData.empresa = this.comboBoxEmpresa.Text.ToString();
+            else
+                return null;
+
+            isValid = Validaciones.validAndRequiredInt32(textBoxCodSeguridad.Text, "El codigo de seguridad es obligatorio");
+            if (isValid)
+                tarjetaData.codSeguridad = Convert.ToInt32(textBoxCodSeguridad.Text);
+            else
+                return null;
+
+            DateTime fechaEmision = dateTimeEmision.Value;
+
+            DateHelper.truncate(fechaEmision);
+            tarjetaData.fechaEmision = fechaEmision;
+
+            DateTime fechaVencimiento = dateTimeVencimiento.Value;
+
+            DateHelper.truncate(fechaVencimiento);
+            tarjetaData.fechaVencimiento = fechaVencimiento;
+
+            return tarjetaData;
+        }
+
+        private void buttonDesvincular_Click(object sender, EventArgs e)
+        {
+            ClienteHelper.desvincularTarjeta(Convert.ToInt32(client), Convert.ToDecimal(this.comboBoxTarjetas.Text.ToString()));
+            Tarjeta.fillTarjetaByClient(this.comboBoxTarjetas, Convert.ToInt32(client));
+        }
+
+        private void comboBoxTarjetas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Tarjeta tarjeta = new Tarjeta();
+            if (comboBoxTarjetas.SelectedIndex != 0)
+            {
+                tarjeta = TarjetaHelper.getClientTarjetaData(Convert.ToInt32(client), Convert.ToDecimal(this.comboBoxTarjetas.Text.ToString()));
+                this.textBoxCodSeguridad.Text = tarjeta.codSeguridad.ToString();
+                this.dateTimeEmision.Value = tarjeta.fechaEmision;
+                this.dateTimeVencimiento.Value = tarjeta.fechaVencimiento;
+                this.comboBoxEmpresa.SelectedIndex = this.comboBoxEmpresa.FindStringExact(tarjeta.empresa);
+                
+            }
+        }
+
+        private void buttonGuardarT_Click(object sender, EventArgs e)
+        {
+            Tarjeta tarjeta = this.getTarjetaDataFromForm();
+            this.updateTarjeta(tarjeta);
+        }
+
+        private void updateTarjeta(Tarjeta tarjeta)
+        {
+            TarjetaHelper.save(tarjeta);
+            MessageBox.Show("Modificacion de tarjeta realizada con exito");
+           
         }
     }
 }

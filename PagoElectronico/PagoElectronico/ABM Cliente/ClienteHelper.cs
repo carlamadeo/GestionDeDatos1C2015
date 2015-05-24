@@ -107,7 +107,6 @@ namespace PagoElectronico.ABM_Cliente
                     clientData.adressDeptName = Convert.ToString(reader["Depto"]);
                 clientData.idNacionality = Convert.ToInt32(reader["Id_Nacionalidad"]);
                 clientData.nationality = Convert.ToString(reader["Nacionalidad_Descripcion"]);
-                clientData.rol = Convert.ToString(reader["Rol"]);
                 clientData.birthdate = Convert.ToDateTime(reader["Fecha_Nacimiento"]);
                 if (reader["Localidad"] != DBNull.Value)
                     clientData.localidad = Convert.ToString(reader["Localidad"]);
@@ -224,5 +223,44 @@ namespace PagoElectronico.ABM_Cliente
 
             return Convert.ToInt32(returnParameterClientId.Value);
         }
+
+        public static void desvincularTarjeta(Int32 idCliente, Decimal idTarjeta)
+        {
+            SqlCommand command = new SqlCommand();
+            command.CommandText = "SQL_SERVANT.sp_client_tarjeta_disable";
+
+            command.Parameters.Add(new SqlParameter("@p_client_id", SqlDbType.Int));
+            command.Parameters["@p_client_id"].Value = idCliente;
+
+            command.Parameters.Add(new SqlParameter("@p_tarjeta_id", SqlDbType.Decimal));
+            command.Parameters["@p_tarjeta_id"].Value = idTarjeta;
+
+            ProcedureHelper.execute(command, "Desvincular Tarjeta", false);
+        }
+
+        public static Boolean isEnabled(Int32 idCliente)
+        {
+            SqlCommand sp_client_is_enabled = new SqlCommand();
+            sp_client_is_enabled.CommandText = "SQL_SERVANT.sp_client_is_enabled";
+            sp_client_is_enabled.Parameters.Add(new SqlParameter("@p_client_id", SqlDbType.Int));
+            sp_client_is_enabled.Parameters["@p_client_id"].Value = idCliente;
+
+            var returnParametersIsValid = sp_client_is_enabled.Parameters.Add(new SqlParameter("@p_isEnabled", SqlDbType.Int));
+            returnParametersIsValid.Direction = ParameterDirection.InputOutput;
+
+            ProcedureHelper.execute(sp_client_is_enabled, "chequear estado cliente", false);
+
+            if (Convert.ToInt16(returnParametersIsValid.Value) == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        
+
     }
 }

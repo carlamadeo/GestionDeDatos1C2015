@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="ABM Cliente\Cliente.cs" />
     <Compile Include="ABM Cliente\ClienteHelper.cs" />
+    <Compile Include="ABM Cliente\Empresa.cs" />
     <Compile Include="ABM Cliente\FormABMCliente.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,6 +64,8 @@
       <DependentUpon>FormAltaModificacionCliente.cs</DependentUpon>
     </Compile>
     <Compile Include="ABM Cliente\Paises.cs" />
+    <Compile Include="ABM Cliente\Tarjeta.cs" />
+    <Compile Include="ABM Cliente\TarjetaHelper.cs" />
     <Compile Include="ABM Cliente\TypeIdentification.cs" />
     <Compile Include="ABM Cuenta\Form1.cs">
       <SubType>Form</SubType>
