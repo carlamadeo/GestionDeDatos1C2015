@@ -698,7 +698,7 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_client_tarjeta_get_by_id_client](
 AS
 BEGIN
 	SELECT
-		t.Id_Tarjeta_Empresa 'Id_Empresa'
+		t.Id_Tarjeta_Empresa 'Id_Empresa',
 		te.Descripcion 'Empresa',
 		t.Fecha_Emision 'Fecha_Emision',
 		t.Fecha_Vencimiento 'Fecha_Vencimiento',
