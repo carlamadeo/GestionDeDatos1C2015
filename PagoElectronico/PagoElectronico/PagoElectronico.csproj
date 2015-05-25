@@ -87,6 +87,7 @@
     </Compile>
     <Compile Include="ABM de Usuario\UsuarioDatos.cs" />
     <Compile Include="ABM de Usuario\UsuarioHelper.cs" />
+    <Compile Include="ABM de Usuario\UsuarioRolHelper.cs" />
     <Compile Include="ABM Rol\FormABMRol.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -23,6 +23,21 @@ namespace PagoElectronico.ABM_de_Usuario
             this.user = user;
         }
 
+        private void reloadGrid()
+        {
+            UsuarioRolHelper.fill_dgv_user_rol(user, dgvOwnRol);
+            UsuarioRolHelper.fill_dgv_not_user_rol(user, dgvAvailableRol);
+        }
+
+        private void disableEditableField()
+        {
+            this.textBoxUsername.Enabled = false;
+            this.textBoxPassword.Enabled = false;
+            this.dateTimeCreation.Enabled = false;
+            this.dateTimeModification.Enabled = false;
+            this.buttonClean.Enabled = true;
+        }
+
         private void FormABMUsuarioModify_Load(object sender, EventArgs e)
         {
             this.ControlBox = false;
@@ -34,34 +49,26 @@ namespace PagoElectronico.ABM_de_Usuario
             this.labelModificationDate.Visible = false;
             this.dateTimeCreation.Visible = false;
             this.dateTimeModification.Visible = false;
+            this.buttonClean.Enabled = false;
 
-            UsuarioHelper.fill_dgv_user_rol(user, dgvOwnRol);
-            UsuarioHelper.fill_dgv_not_user_rol(user, dgvAvailableRol);
+            reloadGrid();
 
             if (edit)
             {
+                
                 UsuarioDatos userData = UsuarioHelper.getUserData(user);
                 this.textBoxUsername.Text = userData.username;
-                this.textBoxUsername.Enabled = false;
                 this.textBoxPassword.Text = userData.password;
-                this.textBoxPassword.Enabled = false;
                 this.textBoxAnswer.Text = userData.questionAnswer.respuesta;
                 this.textBoxQuestion.Text = userData.questionAnswer.pregunta;
-                //this.comboBoxDocumentType.SelectedIndex = this.comboBoxDocumentType.FindStringExact(userData.typeDocumentDescription);
                 this.checkBoxEnable.Checked = userData.enabled;
                 this.dateTimeCreation.Value = userData.creationDate;
                 this.dateTimeModification.Value = userData.modifyDate;
                 this.labelModificationDate.Visible = true;
                 this.labelCreationDate.Visible = true;
-                this.dateTimeModification.Enabled = false;
-                this.dateTimeCreation.Enabled = false;
                 this.dateTimeCreation.Visible = true;
                 this.dateTimeModification.Visible = true;
-
-                //this.dtBirthDate.Value = userData.birthDate;
-
-                //Rol rolUsuario = UsuarioHelper.getRolByUserHotel(user, VarGlobal.usuario.hotel);
-                //this.comboBoxRol.SelectedIndex = this.comboBoxRol.FindStringExact(rolUsuario.description);
+                disableEditableField();
             }
         }
 
@@ -152,14 +159,59 @@ namespace PagoElectronico.ABM_de_Usuario
                     else
                     {
                         MessageBox.Show("Creacion de usuario realizada con exito");
+                        disableEditableField();
                     }
                 }
             }
         }
 
-        private void textBoxPassword_TextChanged(object sender, EventArgs e)
+        private void buttonAddRol_Click(object sender, EventArgs e)
         {
+            if (validationUserExist())
+            {
+                if (dgvAvailableRol.CurrentRow != null)
+                {
+                    Int32 idRol = Convert.ToInt32(dgvAvailableRol.CurrentRow.Cells[0].Value);
+                    UsuarioRolHelper.addRolToUser(textBoxUsername.Text, idRol);
+                    MessageBox.Show("Se agrego rol al usuario correctamente");
+                    reloadGrid();
+                }
+                else
+                {
+                    MessageBox.Show("Debe seleccionar una rol a agregar al usuario");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Primero debe grabar el usuario", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
+        private void buttonRemoveRol_Click(object sender, EventArgs e)
+        {
+            if (validationUserExist())
+            {
+                if (dgvOwnRol.CurrentRow != null)
+                {
+                    Int32 idRol = Convert.ToInt32(dgvOwnRol.CurrentRow.Cells[0].Value);
+                    UsuarioRolHelper.removeRolToUser(textBoxUsername.Text, idRol);
+                    MessageBox.Show("Se quito rol al usuario correctamente");
+                    reloadGrid();
+                }
+                else
+                {
+                    MessageBox.Show("Debe seleccionar una rol a remover al usuario");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Primero debe grabar el usuario", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private Boolean validationUserExist()
+        {
+            return UsuarioHelper.existUser(textBoxUsername.Text);
         }
     }
 }

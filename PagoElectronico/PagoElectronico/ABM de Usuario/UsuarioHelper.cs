@@ -157,21 +157,5 @@ namespace PagoElectronico.ABM_de_Usuario
 
             ProcedureHelper.execute(sp_save_or_update_user, "save or update user data", false);
         }
-
-        public static void fill_dgv_user_rol(String user, DataGridView dgv)
-        {
-            SqlCommand command = new SqlCommand();
-            command.CommandText = "SQL_SERVANT.sp_user_get_user_rol";
-            command.Parameters.AddWithValue("@p_user_name", user);
-            DataGridViewHelper.fill(command, dgv);
-        }
-
-        public static void fill_dgv_not_user_rol(String user, DataGridView dgv)
-        {
-            SqlCommand command = new SqlCommand();
-            command.CommandText = "SQL_SERVANT.sp_user_get_not_user_rol";
-            command.Parameters.AddWithValue("@p_user_name", user);
-            DataGridViewHelper.fill(command, dgv);
-        }
     }
 }

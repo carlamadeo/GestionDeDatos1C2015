@@ -352,7 +352,8 @@ AS
 BEGIN
 	SELECT r.Id_Rol, r.Descripcion FROM SQL_SERVANT.Rol r
 	WHERE NOT EXISTS(SELECT 1 FROM SQL_SERVANT.Usuario_Rol ur
-		WHERE ur.Id_Usuario = @p_user_name AND ur.Id_Rol = r.Id_Rol)
+		WHERE ur.Id_Usuario = @p_user_name AND ur.Id_Rol = r.Id_Rol
+		AND ur.Habilitado = 1)
 END
 GO
 
@@ -363,7 +364,42 @@ AS
 BEGIN
 	SELECT r.Id_Rol, r.Descripcion FROM SQL_SERVANT.Rol r
 	WHERE EXISTS(SELECT 1 FROM SQL_SERVANT.Usuario_Rol ur
-		WHERE ur.Id_Usuario = @p_user_name AND ur.Id_Rol = r.Id_Rol)
+		WHERE ur.Id_Usuario = @p_user_name AND ur.Id_Rol = r.Id_Rol
+		AND ur.Habilitado = 1)
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_rol_add](
+@p_user_name varchar(255) = null,
+@p_rol_id int,
+@p_date datetime
+)
+AS
+BEGIN
+	IF EXISTS(SELECT 1 FROM SQL_SERVANT.Usuario_Rol ur WHERE ur.Id_Usuario = @p_user_name
+		AND ur.Id_Rol = @p_rol_id)
+		UPDATE SQL_SERVANT.Usuario_Rol SET Habilitado = 1, Fecha_Ultima_Modificacion = @p_date
+		WHERE Id_Usuario = @p_user_name AND Id_Rol = @p_rol_id
+	ELSE
+		INSERT INTO SQL_SERVANT.Usuario_Rol (Id_Usuario, Id_Rol, Fecha_Creacion, Fecha_Ultima_Modificacion, Habilitado)
+		VALUES (@p_user_name, @p_rol_id, @p_date, @p_date, 1)
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_user_rol_remove](
+@p_user_name varchar(255) = null,
+@p_rol_id int,
+@p_date datetime
+)
+AS
+BEGIN
+	IF EXISTS(SELECT 1 FROM SQL_SERVANT.Usuario_Rol ur WHERE ur.Id_Usuario = @p_user_name
+		AND ur.Id_Rol = @p_rol_id)
+		UPDATE SQL_SERVANT.Usuario_Rol SET Habilitado = 0, Fecha_Ultima_Modificacion = @p_date
+		WHERE Id_Usuario = @p_user_name AND Id_Rol = @p_rol_id
+	ELSE
+		INSERT INTO SQL_SERVANT.Usuario_Rol (Id_Usuario, Id_Rol, Fecha_Creacion, Fecha_Ultima_Modificacion, Habilitado)
+		VALUES (@p_user_name, @p_rol_id, @p_date, @p_date, 0)
 END
 GO
 

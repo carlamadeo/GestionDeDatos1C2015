@@ -86,7 +86,6 @@
             this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(205, 20);
             this.textBoxPassword.TabIndex = 3;
-            this.textBoxPassword.TextChanged += new System.EventHandler(this.textBoxPassword_TextChanged);
             // 
             // checkBoxEnable
             // 
@@ -216,6 +215,7 @@
             this.buttonAddRol.TabIndex = 19;
             this.buttonAddRol.Text = "->";
             this.buttonAddRol.UseVisualStyleBackColor = true;
+            this.buttonAddRol.Click += new System.EventHandler(this.buttonAddRol_Click);
             // 
             // buttonRemoveRol
             // 
@@ -225,6 +225,7 @@
             this.buttonRemoveRol.TabIndex = 20;
             this.buttonRemoveRol.Text = "<-";
             this.buttonRemoveRol.UseVisualStyleBackColor = true;
+            this.buttonRemoveRol.Click += new System.EventHandler(this.buttonRemoveRol_Click);
             // 
             // label5
             // 

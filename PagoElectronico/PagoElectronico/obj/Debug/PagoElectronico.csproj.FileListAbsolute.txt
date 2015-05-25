@@ -15,7 +15,6 @@ C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoE
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\bin\Debug\PagoElectronico.exe
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\bin\Debug\PagoElectronico.pdb
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\ResolveAssemblyReference.cache
-C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cliente.Form1.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Login.FormLogin.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Properties.Resources.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.csproj.GenerateResource.Cache
@@ -52,3 +51,5 @@ C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\P
 C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Seguridad.Password.resources
 C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Properties.Resources.resources
 C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.csproj.GenerateResource.Cache
+C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cliente.FormABMCliente.resources
+C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cliente.FormAltaModificacionCliente.resources

@@ -41,6 +41,10 @@ DROP PROCEDURE SQL_SERVANT.sp_user_get_user_rol
 
 DROP PROCEDURE SQL_SERVANT.sp_user_get_not_user_rol
 
+DROP PROCEDURE SQL_SERVANT.sp_user_rol_add
+
+DROP PROCEDURE SQL_SERVANT.sp_user_rol_remove
+
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_country_movement
 
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_cli_more_pay_commission
