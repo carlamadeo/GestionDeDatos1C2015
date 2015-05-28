@@ -51,6 +51,10 @@ DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_cli_more_pay_commission
 
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_cli_trans_own_count
 
+DROP PROCEDURE SQL_SERVANT.sp_account_search
+
+DROP PROCEDURE SQL_SERVANT.sp_client_search_by_lastname
+
 DROP PROCEDURE SQL_SERVANT.sp_client_search
 
 DROP PROCEDURE SQL_SERVANT.sp_client_enable_disable
@@ -77,4 +81,4 @@ DROP PROCEDURE SQL_SERVANT.sp_tarjeta_not_expired
 
 DROP PROCEDURE SQL_SERVANT.sp_save_deposito
 
-DROP PROCEDURE SQL_SERVANT.sp_get_tipo_moneda
+--DROP PROCEDURE SQL_SERVANT.sp_get_tipo_moneda

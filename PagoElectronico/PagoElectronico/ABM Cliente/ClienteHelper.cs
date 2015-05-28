@@ -11,8 +11,22 @@ using PagoElectronico.Seguridad;
 
 namespace PagoElectronico.ABM_Cliente
 {
-    class ClienteHelper
-    { 
+    public class ClienteHelper
+    {
+        public static void searchAllClient(string lastname, DataGridView dgv)
+        {
+            SqlCommand command = new SqlCommand();
+            command.CommandText = "SQL_SERVANT.sp_client_search_by_lastname";
+
+            command.Parameters.Add(new SqlParameter("@p_client_lastname", SqlDbType.VarChar, 255));
+            if (lastname == string.Empty)
+                command.Parameters["@p_client_lastname"].Value = null;
+            else
+                command.Parameters["@p_client_lastname"].Value = lastname;
+
+            DataGridViewHelper.fill(command, dgv);
+        }
+
         public static void search(Cliente client, DataGridView dgvClient)
         {
             SqlCommand command = new SqlCommand();

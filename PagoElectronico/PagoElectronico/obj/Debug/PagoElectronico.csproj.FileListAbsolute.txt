@@ -53,5 +53,6 @@ C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\P
 C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.csproj.GenerateResource.Cache
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cliente.FormABMCliente.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cliente.FormAltaModificacionCliente.resources
-C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Depositos.FormDeposito.resources
 C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Depositos.Depositos.resources
+C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cuenta.FormABMCuenta.resources
+C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Depositos.Depositos.resources

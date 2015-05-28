@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PagoElectronico.ABM_Cliente
 {
-    class Cliente
+    public class Cliente
     {
         public Int32 id { get; set; }
         public String name { get; set; }

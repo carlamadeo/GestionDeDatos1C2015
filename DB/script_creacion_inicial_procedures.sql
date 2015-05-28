@@ -243,8 +243,7 @@ GO
 --PROCEDIMIENTOS DE USUARIOS
 CREATE PROCEDURE [SQL_SERVANT].[sp_user_search](
 @p_user_name varchar(255) = null,
-@p_id_rol int = null,
-@p_id_hotel int = null
+@p_id_rol int = null
 )
 AS
 BEGIN
@@ -484,6 +483,65 @@ BEGIN
 		AND t.Fecha_Transferencia BETWEEN @truncateFrom AND @truncateTo 
 	GROUP BY cc1.Id_Cliente, cd.Nombre, cd.Apellido
 	ORDER BY 4 DESC
+END
+GO
+
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_account_search](
+@p_account_lastname varchar(255) = null,
+@p_account_type_id int = null,
+@p_account_client_id int = null
+)
+AS
+BEGIN
+	SELECT DISTINCT 
+	cd.Id_Cliente 'Id Cliente',
+	cd.Nombre 'Nombre',
+	cd.Apellido 'Apellido',
+	cc.Id_Cuenta 'Cuenta Numero Identificacion',
+	tp.Descripcion 'Tipo Cuenta',
+	cu.Fecha_Creacion 'Fecha Creacion',
+	cu.Fecha_Vencimiento 'Fecha Vencimiento',
+	ec.Descripcion 'Estado',
+	mo.Descripcion 'Moneda',
+	pa.Descripcion 'Pais'
+	FROM SQL_SERVANT.Cliente c
+		INNER JOIN SQL_SERVANT.Cliente_Datos cd
+			ON cd.Id_Cliente = c.Id_Cliente
+		INNER JOIN SQL_SERVANT.Cliente_Cuenta cc
+			ON c.Id_Cliente = cc.Id_Cliente
+		INNER JOIN SQL_SERVANT.Cuenta cu
+			ON cc.Id_Cuenta = cu.Id_Cuenta
+		INNER JOIN SQL_SERVANT.Tipo_Cuenta tp
+			ON cu.Id_Tipo_Cuenta = tp.Id_Tipo_Cuenta
+		INNER JOIN SQL_SERVANT.Estado_Cuenta ec
+			ON cu.Id_Estado_Cuenta = ec.Id_Estado_Cuenta
+		INNER JOIN SQL_SERVANT.Moneda mo
+			ON mo.Id_Moneda = cu.Id_Moneda
+		INNER JOIN SQL_SERVANT.Pais pa
+			ON cu.Id_Pais_Registro = pa.Id_Pais
+		WHERE
+		((@p_account_type_id IS NULL) OR ( tp.Id_Tipo_Cuenta = @p_account_type_id))
+		AND  ((@p_account_lastname IS NULL) OR (UPPER(cd.Apellido) like UPPER('%' + LTRIM(RTRIM(@p_account_lastname)) + '%')))
+		AND ((@p_account_client_id IS NULL) OR (c.Id_Cliente = @p_account_client_id))
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_client_search_by_lastname](
+@p_client_lastname varchar(255) = null
+)
+AS
+BEGIN
+	SELECT
+		cd.Id_Cliente 'Id Cliente',
+		cd.Nombre 'Nombre',
+		cd.Apellido 'Apellido'
+		FROM SQL_SERVANT.Cliente_Datos cd
+			INNER JOIN SQL_SERVANT.Cliente cl
+				ON cd.Id_Cliente = cl.Id_Cliente
+
+		WHERE
+		((@p_client_lastname IS NULL) OR (UPPER(cd.Apellido) like UPPER(LTRIM(RTRIM(@p_client_lastname))) + '%'))
 END
 GO
 
