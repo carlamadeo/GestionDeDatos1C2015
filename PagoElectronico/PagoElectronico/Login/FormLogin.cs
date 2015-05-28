@@ -42,7 +42,7 @@ namespace PagoElectronico.Login
                 }
                 else if (intentos < 3)
                 {
-                    MessageBox.Show("La contraseña es erronea. Lleva intentos : " + intentos);
+                    MessageBox.Show("La contraseña es erronea. Lleva " + intentos + "intento(s)" );
                 }
                 else
                 {

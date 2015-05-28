@@ -41,7 +41,7 @@ namespace PagoElectronico.ABM_Cliente
             if (edit)
             {
                 Cliente clientData = ClienteHelper.getClientData(client);
-                Tarjeta.fillTarjetaByClient(comboBoxTarjetas, clientData.id);
+                Tarjeta.fillTarjetasByClient(comboBoxTarjetas, clientData.id);
                 Empresa.fillEmpresa(comboBoxEmpresa);
 
                 this.textBoxUsername.ReadOnly = true;
@@ -334,7 +334,7 @@ namespace PagoElectronico.ABM_Cliente
         private void buttonDesvincular_Click(object sender, EventArgs e)
         {
             ClienteHelper.desvincularTarjeta(Convert.ToInt32(client), Convert.ToDecimal(this.comboBoxTarjetas.Text.ToString()));
-            Tarjeta.fillTarjetaByClient(this.comboBoxTarjetas, Convert.ToInt32(client));
+            Tarjeta.fillTarjetasByClient(this.comboBoxTarjetas, Convert.ToInt32(client));
         }
 
         private void comboBoxTarjetas_SelectedIndexChanged(object sender, EventArgs e)

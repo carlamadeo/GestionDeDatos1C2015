@@ -34,10 +34,10 @@ namespace PagoElectronico.DB
             return result;
         }
 
-        public static int execute(SqlCommand command, String actionDescription, Boolean showMessage)
+        public static Decimal execute(SqlCommand command, String actionDescription, Boolean showMessage)
         {
             int affectedRows = -1;
-            int identity = -1;
+            Decimal identity = -1;
             SqlConnection conn = Connection.getConnection();
             command.Connection = conn;
             command.CommandType = CommandType.StoredProcedure;
@@ -49,7 +49,7 @@ namespace PagoElectronico.DB
                 using (SqlCommand cmdIdentity = new SqlCommand(sqlIdentity, conn))
                 {
                     if (!(cmdIdentity.ExecuteScalar() is DBNull))
-                        identity = Convert.ToInt32(cmdIdentity.ExecuteScalar());
+                        identity = Convert.ToDecimal(cmdIdentity.ExecuteScalar());
                 }
             }
 

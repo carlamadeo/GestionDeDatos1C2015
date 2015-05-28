@@ -67,6 +67,7 @@
     <Compile Include="ABM Cliente\Tarjeta.cs" />
     <Compile Include="ABM Cliente\TarjetaHelper.cs" />
     <Compile Include="ABM Cliente\TypeIdentification.cs" />
+    <Compile Include="ABM Cuenta\Cuenta.cs" />
     <Compile Include="ABM Cuenta\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,17 +115,12 @@
     </Compile>
     <Compile Include="DB\Connection.cs" />
     <Compile Include="DB\ProcedureHelper.cs" />
-    <Compile Include="Depositos\Form1.cs">
+    <Compile Include="Depositos\Deposito.cs" />
+    <Compile Include="Depositos\Depositos.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Depositos\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Depositos\FormDeposito.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Depositos\FormDeposito.Designer.cs">
-      <DependentUpon>FormDeposito.cs</DependentUpon>
+    <Compile Include="Depositos\Depositos.Designer.cs">
+      <DependentUpon>Depositos.cs</DependentUpon>
     </Compile>
     <Compile Include="Facturacion\Form1.cs">
       <SubType>Form</SubType>
@@ -192,8 +188,8 @@
     <EmbeddedResource Include="Consulta Saldos\FormConsultaSaldos.resx">
       <DependentUpon>FormConsultaSaldos.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Depositos\FormDeposito.resx">
-      <DependentUpon>FormDeposito.cs</DependentUpon>
+    <EmbeddedResource Include="Depositos\Depositos.resx">
+      <DependentUpon>Depositos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMenu.resx">
       <DependentUpon>FormMenu.cs</DependentUpon>
@@ -249,6 +245,7 @@
     <Compile Include="Utils\DateHelper.cs" />
     <Compile Include="Utils\Encrypt.cs" />
     <Compile Include="Utils\FormHelper.cs" />
+    <Compile Include="Utils\ListBoxHelper.cs" />
     <Compile Include="Utils\TextBoxHelper.cs" />
     <Compile Include="Validaciones.cs" />
     <Compile Include="VarGlobal.cs" />

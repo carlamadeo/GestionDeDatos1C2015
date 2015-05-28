@@ -245,12 +245,12 @@ namespace PagoElectronico.ABM_Cliente
             sp_client_is_enabled.Parameters.Add(new SqlParameter("@p_client_id", SqlDbType.Int));
             sp_client_is_enabled.Parameters["@p_client_id"].Value = idCliente;
 
-            var returnParametersIsValid = sp_client_is_enabled.Parameters.Add(new SqlParameter("@p_isEnabled", SqlDbType.Int));
-            returnParametersIsValid.Direction = ParameterDirection.InputOutput;
+            var returnParametersIsEnabled = sp_client_is_enabled.Parameters.Add(new SqlParameter("@p_isEnabled", SqlDbType.Int));
+            returnParametersIsEnabled.Direction = ParameterDirection.InputOutput;
 
             ProcedureHelper.execute(sp_client_is_enabled, "chequear estado cliente", false);
 
-            if (Convert.ToInt16(returnParametersIsValid.Value) == 0)
+            if (Convert.ToInt16(returnParametersIsEnabled.Value) == 0)
             {
                 return false;
             }
@@ -260,7 +260,21 @@ namespace PagoElectronico.ABM_Cliente
             }
         }
 
-        
+        public static void getClientIdByUserId()
+        {
+            SqlCommand sp_client_get_by_user = new SqlCommand();
+            sp_client_get_by_user.CommandText = "SQL_SERVANT.sp_client_get_by_user";
+            sp_client_get_by_user.Parameters.Add(new SqlParameter("@p_user_id", SqlDbType.VarChar));
+            sp_client_get_by_user.Parameters["@p_user_id"].Value = VarGlobal.usuario.id;
+
+            var returnParameter = sp_client_get_by_user.Parameters.Add(new SqlParameter("@p_client_id", SqlDbType.Int));
+            returnParameter.Direction = ParameterDirection.InputOutput;
+
+            ProcedureHelper.execute(sp_client_get_by_user, "conocer id cliente", false);
+
+            VarGlobal.usuario.clientId = Convert.ToInt16(returnParameter.Value);
+
+        }
 
     }
 }

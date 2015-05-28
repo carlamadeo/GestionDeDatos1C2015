@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
 using System.Data;
+using PagoElectronico.ABM_Cliente;
 
 namespace PagoElectronico.Menu
 {
@@ -20,6 +21,9 @@ namespace PagoElectronico.Menu
             command.Connection = conn;
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@p_id_rol", idRol);
+
+            if (idRol == 2)
+                ClienteHelper.getClientIdByUserId();
 
             SqlDataReader reader = command.ExecuteReader() as SqlDataReader;
 
@@ -67,7 +71,7 @@ namespace PagoElectronico.Menu
                     break;
                 case "Depositos":
                     func.folder = "Depositos";
-                    func.form = "FormDeposito";
+                    func.form = "Depositos";
                     break;
                 case "Listado Estadistico":
                     func.folder = "Listados";

@@ -106,11 +106,11 @@ BEGIN
 
 	IF ( @count_rol = 1 )
 	BEGIN
-		SELECT @p_id_rol = ur.Id_Rol, @p_rol_desc = r.Descripcion FROM LA_MAYORIA.Usuario_Rol ur
+		SELECT @p_id_rol = ur.Id_Rol, @p_rol_desc = r.Descripcion FROM SQL_SERVANT.Usuario_Rol ur
 			INNER JOIN SQL_SERVANT.Rol r ON ur.Id_Rol = r.Id_Rol 
 		WHERE ur.Id_Usuario = @p_id 
 			AND r.Habilitado = 1
-			AND urh.Habilitado = 1
+			AND ur.Habilitado = 1
 	END
 	ELSE
 	BEGIN
@@ -775,5 +775,59 @@ BEGIN
 			WHERE Id_Tarjeta = @p_tarjeta_id
 		
 	COMMIT TRANSACTION
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_client_get_by_user](
+@p_client_id int = 0 OUTPUT,
+@p_user_id varchar(20)
+)
+
+AS
+BEGIN
+
+	SELECT @p_client_id = Id_Cliente FROM Usuario_Cliente 
+	WHERE Id_Usuario = @p_user_id
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_tarjeta_not_expired](
+@p_tarjeta_id numeric(16,0) = 0,
+@p_notExpired bit = 1 OUTPUT
+)
+AS
+BEGIN
+
+	Declare @p_fecha_vencimiento datetime
+
+	SELECT @p_fecha_vencimiento = Fecha_Vencimiento FROM SQL_SERVANT.Tarjeta
+	WHERE Id_Tarjeta = @p_tarjeta_id
+	
+	IF (@p_fecha_vencimiento < CAST(GETDATE() AS DATE))
+		SET @p_notExpired = 0
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_save_deposito](
+@p_deposito_cuenta numeric(18,0),
+@p_deposito_importe numeric(10,2),
+@p_deposito_moneda int,
+@p_deposito_tarjeta numeric(16,0),
+@p_deposito_fecha datetime
+)
+
+AS
+BEGIN
+
+		Declare @importe_actual numeric(18,2)
+		
+		SELECT @importe_actual = Importe FROM SQL_SERVANT.Cuenta c
+		WHERE @p_deposito_cuenta = c.Id_Cuenta
+		
+		INSERT INTO SQL_SERVANT.Deposito (Id_Cuenta, Importe, Id_Moneda, Id_Tarjeta, Fecha_Deposito)
+		VALUES (@p_deposito_cuenta, @p_deposito_importe, @p_deposito_moneda, @p_deposito_tarjeta, @p_deposito_fecha)
+		
+		INSERT INTO SQL_SERVANT.Cuenta (Importe)
+		VALUES (@importe_actual + @p_deposito_importe)
 END
 GO

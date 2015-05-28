@@ -67,6 +67,14 @@ DROP PROCEDURE SQL_SERVANT.sp_client_tarjeta_disable
 
 DROP PROCEDURE SQL_SERVANT.sp_client_is_enabled
 
+DROP PROCEDURE SQL_SERVANT.sp_client_get_by_user
+
 DROP PROCEDURE SQL_SERVANT.sp_client_tarjeta_get_by_id_client
 
 DROP PROCEDURE SQL_SERVANT.sp_tarjeta_save
+
+DROP PROCEDURE SQL_SERVANT.sp_tarjeta_not_expired
+
+DROP PROCEDURE SQL_SERVANT.sp_save_deposito
+
+DROP PROCEDURE SQL_SERVANT.sp_get_tipo_moneda

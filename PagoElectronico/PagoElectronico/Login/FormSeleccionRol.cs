@@ -64,7 +64,7 @@ namespace PagoElectronico.Login
             }
             else
             {
-                MessageBox.Show("Debe ser seleccionar un tipo de rol");
+                MessageBox.Show("Debe seleccionar un tipo de rol");
             }
         }
     }

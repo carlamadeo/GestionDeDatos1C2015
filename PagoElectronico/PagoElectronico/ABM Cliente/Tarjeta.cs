@@ -15,11 +15,10 @@ namespace PagoElectronico.ABM_Cliente
         public DateTime fechaVencimiento { get; set; }
         public int codSeguridad { get; set; }
 
-        public static void fillTarjetaByClient(ComboBox comboBoxTarjetas, Int32 idClient)
+        public static void fillTarjetasByClient(ComboBox comboBoxTarjetas, Int32 idClient)
         {
             ComboBoxHelper.fill(comboBoxTarjetas, "SQL_SERVANT.Cliente_Tarjeta ct",
                 "ct.Id_Tarjeta", "ct.Id_Tarjeta", "ct.Id_Cliente = '" + idClient + "' AND ct.Habilitada = 1", null);
-
         }
 
         public static string tc4UltimosDigitos(Decimal unDecimal)

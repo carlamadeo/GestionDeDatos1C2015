@@ -36,7 +36,7 @@ namespace PagoElectronico.ABM_Rol
         public static void setFunctionalityToRol(Int32 idRol, Int32 idFunctionality)
         {
             SqlCommand command = new SqlCommand();
-            command.CommandText = "LA_MAYORIA.sp_rol_functionality_add";
+            command.CommandText = "SQL_SERVANT.sp_rol_functionality_add";
 
             command.Parameters.Add(new SqlParameter("@p_id_rol", SqlDbType.Int));
             command.Parameters["@p_id_rol"].Value = idRol;
@@ -49,7 +49,7 @@ namespace PagoElectronico.ABM_Rol
         public static void removeFunctionalityToRol(Int32 idRol, Int32 idFunctionality)
         {
             SqlCommand command = new SqlCommand();
-            command.CommandText = "LA_MAYORIA.sp_rol_functionality_remove";
+            command.CommandText = "SQL_SERVANT.sp_rol_functionality_remove";
 
             command.Parameters.Add(new SqlParameter("@p_id_rol", SqlDbType.Int));
             command.Parameters["@p_id_rol"].Value = idRol;
