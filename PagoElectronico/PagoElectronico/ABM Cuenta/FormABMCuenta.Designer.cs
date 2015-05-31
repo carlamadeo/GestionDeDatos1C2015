@@ -61,6 +61,7 @@
             this.buttonCreate.TabIndex = 1;
             this.buttonCreate.Text = "Crear";
             this.buttonCreate.UseVisualStyleBackColor = true;
+            this.buttonCreate.Click += new System.EventHandler(this.buttonCreate_Click);
             // 
             // buttonModify
             // 
@@ -70,6 +71,7 @@
             this.buttonModify.TabIndex = 2;
             this.buttonModify.Text = "Modificar";
             this.buttonModify.UseVisualStyleBackColor = true;
+            this.buttonModify.Click += new System.EventHandler(this.buttonModify_Click);
             // 
             // textBoxLastname
             // 
@@ -139,6 +141,7 @@
             this.dgvClient.Name = "dgvClient";
             this.dgvClient.Size = new System.Drawing.Size(402, 76);
             this.dgvClient.TabIndex = 10;
+            this.dgvClient.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvClient_SelectionChanged);
             // 
             // FormABMCuenta
             // 

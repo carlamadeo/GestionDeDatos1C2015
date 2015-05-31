@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace PagoElectronico.ABM_Cliente
 {
-    class Paises
+    public class PaisHelper
     {
         public static void fillComboBox(ComboBox comboBox)
         {

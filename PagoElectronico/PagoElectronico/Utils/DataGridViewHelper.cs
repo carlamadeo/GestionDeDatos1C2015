@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
+using System;
 namespace PagoElectronico
 {
     public class DataGridViewHelper
@@ -12,6 +13,11 @@ namespace PagoElectronico
                 DataTable dt = (DataTable)dgv.DataSource;
                 dt.Clear();
             }
+        }
+
+        public static Boolean hasElementSelected(DataGridView dgv)
+        {
+            return dgv.SelectedRows.Count > 0;
         }
 
         public static DataTable fill(SqlCommand command, DataGridView dataGridView)

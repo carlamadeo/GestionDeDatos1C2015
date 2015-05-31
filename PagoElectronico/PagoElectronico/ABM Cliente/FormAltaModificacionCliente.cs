@@ -35,8 +35,8 @@ namespace PagoElectronico.ABM_Cliente
 
             Usuario user = VarGlobal.usuario;
             TypeIdentification.fillComboBox(comboBoxIdentificationType);
-            Paises.fillComboBox(comboBoxNacionalidad);
-            Paises.fillComboBox(comboBoxPais);
+            PaisHelper.fillComboBox(comboBoxNacionalidad);
+            PaisHelper.fillComboBox(comboBoxPais);
 
             if (edit)
             {

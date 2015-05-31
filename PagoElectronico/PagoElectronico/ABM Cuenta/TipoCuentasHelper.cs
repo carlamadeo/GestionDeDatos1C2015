@@ -30,7 +30,7 @@ namespace PagoElectronico.ABM_Cuenta
             DataGridViewHelper.fill(command, dgvAccount);
         }
 
-        public static void searchByClient(string idTypeAccount, DataGridView dgvAccount)
+        public static void searchByClient(Int16 clientId, string idTypeAccount, DataGridView dgvAccount)
         {
             SqlCommand command = new SqlCommand();
             command.CommandText = "SQL_SERVANT.sp_account_search";
@@ -45,10 +45,16 @@ namespace PagoElectronico.ABM_Cuenta
                 command.Parameters["@p_account_type_id"].Value = Convert.ToInt16(idTypeAccount);
 
             command.Parameters.Add(new SqlParameter("@p_account_client_id", SqlDbType.Int));
-            command.Parameters["@p_account_client_id"].Value = VarGlobal.usuario.clientId;
+            command.Parameters["@p_account_client_id"].Value = clientId;
 
 
             DataGridViewHelper.fill(command, dgvAccount);
+        }
+
+        public static void fillTypeAccount(ComboBox cmb)
+        {
+            ComboBoxHelper.fill(cmb, "SQL_SERVANT.Tipo_Cuenta tc",
+                "tc.Id_Tipo_Cuenta", "tc.Descripcion", "", null);
         }
     }
 }
