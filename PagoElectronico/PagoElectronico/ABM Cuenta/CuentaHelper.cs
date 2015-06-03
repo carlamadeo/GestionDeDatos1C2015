@@ -73,6 +73,8 @@ namespace PagoElectronico.ABM_Cuenta
                 accountData.currencyDescription = Convert.ToString(reader["Moneda"]);
                 accountData.idTypeAccount = Convert.ToInt16(reader["Id_Tipo_Cuenta"]);
                 accountData.typeAccountDescription = Convert.ToString(reader["Tipo_Cuenta"]);
+                accountData.creationDate = Convert.ToDateTime(reader["Fecha_Creacion"]);
+                accountData.expirationDate = Convert.ToDateTime(reader["Fecha_Vencimiento"]);
             }
 
             conn.Close();

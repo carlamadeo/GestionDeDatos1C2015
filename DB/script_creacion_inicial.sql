@@ -484,7 +484,7 @@ SET IDENTITY_INSERT [SQL_SERVANT].Cuenta ON
 INSERT INTO SQL_SERVANT.Cuenta (Id_Cuenta, Id_Pais_Registro, Id_Moneda, Fecha_Creacion, Fecha_Vencimiento, Id_Tipo_Cuenta, Id_Estado_Cuenta)
 SELECT DISTINCT m.Cuenta_Numero, m.Cuenta_Pais_Codigo, 
 mo.Id_Moneda, m.Cuenta_Fecha_Creacion, 
-DATEADD(DAY, ptc.Dias, m.Cuenta_Fecha_Creacion)), tc.Id_Tipo_Cuenta, ec.Id_Estado_Cuenta
+DATEADD(DAY, ptc.Dias, m.Cuenta_Fecha_Creacion), tc.Id_Tipo_Cuenta, ec.Id_Estado_Cuenta
 FROM gd_esquema.Maestra m 
 	INNER JOIN SQL_SERVANT.Moneda mo ON 'USD' = mo.Descripcion 
 	INNER JOIN SQL_SERVANT.Tipo_Cuenta tc ON 'Gratuita' = tc.Descripcion

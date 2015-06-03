@@ -500,6 +500,7 @@ BEGIN
 	cd.Apellido 'Apellido',
 	cc.Id_Cuenta 'Cuenta Numero Identificacion',
 	tp.Descripcion 'Tipo Cuenta',
+	cu.Fecha_Creacion 'Fecha Creacion',
 	cu.Fecha_Vencimiento 'Fecha Vencimiento',
 	ec.Descripcion 'Estado',
 	mo.Descripcion 'Moneda',
@@ -537,20 +538,32 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_account_save_update](
 AS
 BEGIN
 	BEGIN TRANSACTION
+		declare @type_account_day int
+		SELECT @type_account_day = ptc.Dias FROM SQL_SERVANT.Periodo_Tipo_Cuenta ptc WHERE ptc.Id_Tipo_Cuenta = @p_account_type_account_id
 		IF (@p_account_id IS NOT NULL)
 		BEGIN
-			UPDATE SQL_SERVANT.Cuenta 
-				SET Id_Pais_Registro = @p_account_country_id,
-					Id_Moneda = @p_account_currency_id,
-					Id_Tipo_Cuenta = @p_account_type_account_id
-				WHERE	Id_Cuenta = @p_account_id
+			declare @actual_type_account int
+			SELECT @actual_type_account = c.Id_Tipo_Cuenta FROM SQL_SERVANT.Cuenta c WHERE c.Id_Cuenta = @p_account_id
+			IF (@actual_type_account = @p_account_type_account_id)
+				UPDATE SQL_SERVANT.Cuenta 
+					SET Id_Pais_Registro = @p_account_country_id,
+						Id_Moneda = @p_account_currency_id
+					WHERE	Id_Cuenta = @p_account_id
+			ELSE
+				UPDATE SQL_SERVANT.Cuenta 
+					SET Id_Pais_Registro = @p_account_country_id,
+						Id_Moneda = @p_account_currency_id,
+						Id_Tipo_Cuenta = @p_account_type_account_id,
+						Fecha_Vencimiento = DATEADD(DAY, @type_account_day, Fecha_Creacion)
+					WHERE	Id_Cuenta = @p_account_id
 		END
 		ELSE
 		BEGIN
+			
 			INSERT INTO SQL_SERVANT.Cuenta (Id_Pais_Registro, Id_Moneda, Fecha_Creacion, Fecha_Vencimiento, Importe,
 				Id_Tipo_Cuenta, Id_Estado_Cuenta)
-				VALUES(@p_account_country_id, @p_account_currency_id, @p_account_date, @p_account_date, 0.00,
-				@p_account_type_account_id, 4)
+				VALUES(@p_account_country_id, @p_account_currency_id, @p_account_date, DATEADD(DAY, @type_account_day, @p_account_date),
+				0.00, @p_account_type_account_id, 4)
 			Declare @account_id numeric(18,0)
 			SET @account_id = @@IDENTITY
 			INSERT INTO SQL_SERVANT.Cliente_Cuenta (Id_Cliente, Id_Cuenta)
@@ -572,7 +585,9 @@ BEGIN
 		mo.Id_Moneda "Id_Moneda",
 		mo.Descripcion "Moneda",
 		tc.Id_Tipo_Cuenta "Id_Tipo_Cuenta",
-		tc.Descripcion "Tipo_Cuenta"
+		tc.Descripcion "Tipo_Cuenta",
+		cu.Fecha_Creacion "Fecha_Creacion",
+		cu.Fecha_Vencimiento "Fecha_Vencimiento"
 
 		FROM SQL_SERVANT.Cliente_Cuenta cc
 			INNER JOIN SQL_SERVANT.Cuenta cu

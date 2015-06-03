@@ -34,12 +34,17 @@ namespace PagoElectronico.ABM_Cuenta
             PaisHelper.fillComboBox(comboBoxCountry);
             TipoCuentasHelper.fillTypeAccount(comboBoxTypeAccount);
 
+            this.dtpCreationDate.Enabled = false;
+            this.dtpExpirationDate.Enabled = false;
+
             if (isEdition)
             {
                 Cuenta accountData = CuentaHelper.getAccountData(idClient, idAccount);
                 this.comboBoxCountry.SelectedIndex = this.comboBoxCountry.FindStringExact(accountData.countryDescription);
                 this.comboBoxCurrency.SelectedIndex = this.comboBoxCurrency.FindStringExact(accountData.currencyDescription);
                 this.comboBoxTypeAccount.SelectedIndex = this.comboBoxTypeAccount.FindStringExact(accountData.typeAccountDescription);
+                this.dtpCreationDate.Value = accountData.creationDate;
+                this.dtpExpirationDate.Value = accountData.expirationDate;
             }
         }
 
