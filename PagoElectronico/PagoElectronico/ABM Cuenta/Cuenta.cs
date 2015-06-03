@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 
 namespace PagoElectronico.ABM_Cuenta
 {
-    class Cuenta
+    public class Cuenta
     {
-        public static void fillCuentasHabilitadasByClient(ComboBox comboBoxCuenta, Int32 idClient)
-        {
-            ComboBoxHelper.fill(comboBoxCuenta, "SQL_SERVANT.Cliente_Cuenta cc INNER JOIN SQL_SERVANT.Cuenta c ON cc.Id_Cuenta = c.Id_Cuenta",
-                "c.Id_Cuenta", "c.Id_Cuenta", "cc.Id_Cliente = '" + idClient + "' AND c.Id_Estado_Cuenta = 4", null);
-        }
+        public String id { get; set; }
+        public long idClient { get; set; }
+        public int idTypeAccount { get; set; }
+        public string typeAccountDescription { get; set; }
+        public int idCountry { get; set; }
+        public string countryDescription { get; set; }
+        public int idCurrency { get; set; }
+        public string currencyDescription { get; set; }
+        public DateTime creationDate { get; set; }
+        public DateTime expirationDate { get; set; }
+        public DateTime closeDate { get; set; }
     }
 }

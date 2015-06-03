@@ -436,7 +436,7 @@ INSERT INTO SQL_SERVANT.Estado_Cuenta(Descripcion) VALUES('Habilitada')
 */
 --NOTA VER DE AGREGAR EL VALOR ACTUAL DE CADA CUENTA
 CREATE TABLE [SQL_SERVANT].[Cuenta](
-	[Id_Cuenta][numeric](18,0) NOT NULL,
+	[Id_Cuenta][numeric](18,0)IDENTITY(1,1) NOT NULL,
 	[Id_Pais_Registro][Int] NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
 	[Fecha_Creacion][datetime] NOT NULL,
@@ -462,6 +462,8 @@ CREATE TABLE [SQL_SERVANT].[Cuenta](
 	CONSTRAINT [FK_Cuenta_Id_Estado_Cuenta] FOREIGN KEY (Id_Estado_Cuenta)
 		REFERENCES [SQL_SERVANT].[Estado_Cuenta] (Id_Estado_Cuenta)
 )
+SET IDENTITY_INSERT [SQL_SERVANT].Cuenta ON
+
 INSERT INTO SQL_SERVANT.Cuenta (Id_Cuenta, Id_Pais_Registro, Id_Moneda, Fecha_Creacion, Fecha_Vencimiento, Id_Tipo_Cuenta, Id_Estado_Cuenta)
 SELECT DISTINCT m.Cuenta_Numero, m.Cuenta_Pais_Codigo, 
 mo.Id_Moneda, m.Cuenta_Fecha_Creacion, 
@@ -471,6 +473,8 @@ FROM gd_esquema.Maestra m
 	INNER JOIN SQL_SERVANT.Tipo_Cuenta tc ON 'Gratuita' = tc.Descripcion
 	INNER JOIN SQL_SERVANT.Estado_Cuenta ec ON 'Habilitada' = ec.Descripcion
 WHERE m.Cuenta_Numero IS NOT NULL
+
+SET IDENTITY_INSERT [SQL_SERVANT].Cuenta OFF
 
 --TABLA CLIENTE_CUENTA
 CREATE TABLE [SQL_SERVANT].[Cliente_Cuenta](
@@ -751,6 +755,7 @@ ON      cuenta.Id_Cuenta = receptor.Id_Cuenta_Destino
 CREATE TABLE [SQL_SERVANT].[Facturacion_Pendiente](
 	[Id_Facturacion_Pendiente][Int]IDENTITY(1,1) NOT NULL,
 	[Id_Cuenta][numeric](18,0) NOT NULL,
+	[Id_Tipo_Cuenta][Int] NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
 	[Fecha][datetime] NOT NULL,
 	[Importe][Numeric](10,2) NOT NULL,
@@ -763,11 +768,15 @@ CREATE TABLE [SQL_SERVANT].[Facturacion_Pendiente](
 	CONSTRAINT [FK_Facturacion_Pendiente_Id_Moneda] FOREIGN KEY (Id_Moneda)
 		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
 )
-INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Id_Moneda, Fecha, Importe, Id_Referencia, Descripcion)
-SELECT m.Cuenta_Numero, mo.Id_Moneda, m.Transf_Fecha, m.Trans_Importe, 0, 'Comisión por transferencia.' 
+INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Id_Moneda, Fecha, Importe, Id_Tipo_Cuenta, Id_Referencia, Descripcion)
+SELECT m.Cuenta_Numero, mo.Id_Moneda, m.Transf_Fecha, m.Trans_Importe, tc.Id_Tipo_Cuenta, 0, 'Comisión por transferencia.' 
 FROM gd_esquema.Maestra m 
 INNER JOIN SQL_SERVANT.Moneda mo
 	ON mo.Descripcion = 'USD'
+INNER JOIN SQL_SERVANT.Cuenta cu
+	ON cu.Id_Cuenta = m.Cuenta_Numero
+INNER JOIN SQL_SERVANT.Tipo_Cuenta tc
+	ON cu.Id_Tipo_Cuenta = tc.Id_Tipo_Cuenta
 WHERE m.Transf_Fecha IS NOT NULL 
 	AND m.Factura_Numero IS NULL 
 	AND NOT EXISTS(SELECT 1 FROM gd_esquema.Maestra m1
@@ -784,6 +793,7 @@ CREATE TABLE [SQL_SERVANT].[Facturacion](
 	[Fecha][datetime] NOT NULL,	
 	[Id_Cliente][Int] NOT NULL,
 	[Id_Cuenta][numeric](18,0) NOT NULL,
+	[Id_Tipo_Cuenta][Int] NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
 	[Importe][numeric](10,2) NOT NULL
 
@@ -793,13 +803,15 @@ CREATE TABLE [SQL_SERVANT].[Facturacion](
 	CONSTRAINT [FK_Facturacion_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
 		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
 	CONSTRAINT [FK_Facturacion_Id_Moneda] FOREIGN KEY (Id_Moneda)
-		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
+		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda),
+	CONSTRAINT [FK_Facturacion_Id_Tipo_Cuenta] FOREIGN KEY (Id_Tipo_Cuenta)
+		REFERENCES [SQL_SERVANT].[Tipo_Cuenta] (Id_Tipo_Cuenta)
 )
 
 SET IDENTITY_INSERT SQL_SERVANT.Facturacion ON
 
-INSERT INTO SQL_SERVANT.Facturacion (Id_Factura, Fecha, Id_Cliente, Id_Cuenta, Id_Moneda, Importe)
-SELECT m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente, cc.Id_Cuenta, mo.Id_Moneda, SUM(Item_Factura_Importe)
+INSERT INTO SQL_SERVANT.Facturacion (Id_Factura, Fecha, Id_Cliente, Id_Cuenta, Id_Moneda, Id_Tipo_Cuenta, Importe)
+SELECT m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente, cc.Id_Cuenta, mo.Id_Moneda, tc.Id_Tipo_Cuenta, SUM(Item_Factura_Importe)
 FROM gd_esquema.Maestra m
 	INNER JOIN SQL_SERVANT.Cliente_Datos cd
 		ON UPPER(LTRIM(RTRIM(m.Cli_Nombre))) = UPPER(LTRIM(RTRIM(cd.Nombre)))
@@ -809,8 +821,12 @@ FROM gd_esquema.Maestra m
 	INNER JOIN SQL_SERVANT.Cliente_Cuenta cc
 		ON cc.Id_Cuenta = m.Cuenta_Numero
 		AND cc.Id_Cliente = cd.Id_Cliente
+	INNER JOIN SQL_SERVANT.Cuenta cu
+		ON cu.Id_Cuenta = cc.Id_Cuenta
+	INNER JOIN SQL_SERVANT.Tipo_Cuenta tc
+		ON cu.Id_Tipo_Cuenta = tc.Id_Tipo_Cuenta
 WHERE m.Factura_Numero IS NOT NULL
-GROUP BY m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente, cc.Id_Cuenta, mo.Id_Moneda
+GROUP BY m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente, cc.Id_Cuenta, mo.Id_Moneda, tc.Id_Tipo_Cuenta
 
 SET IDENTITY_INSERT SQL_SERVANT.Facturacion OFF
 
@@ -890,6 +906,28 @@ INSERT INTO SQL_SERVANT.Ano (Ano) VALUES (2015)
 INSERT INTO SQL_SERVANT.Ano (Ano) VALUES (2016)
 INSERT INTO SQL_SERVANT.Ano (Ano) VALUES (2017)
 
+CREATE TABLE [SQL_SERVANT].[Motivo_Log] (
+	[Id_Motivo][Int]IDENTITY(1,1) NOT NULL,
+	[Descripcion][varchar](255) NOT NULL
+
+	CONSTRAINT [UQ_Motivo_Log] UNIQUE (Id_Motivo)
+)
+
+INSERT INTO SQL_SERVANT.Motivo_Log (Descripcion) VALUES ('INHABILITACION CUENTA POR NO PAGO')
+
+CREATE TABLE [SQL_SERVANT].[Log] (
+	[Id_Cliente][Int] NOT NULL,
+	[Id_Cuenta][numeric](18,0) NOT NULL,
+	[Fecha][datetime] NOT NULL,
+	[Id_Motivo][Int] NOT NULL
+
+	CONSTRAINT [FK_Log_Id_Cliente] FOREIGN KEY (Id_Cliente)
+		REFERENCES [SQL_SERVANT].[Cliente] (Id_Cliente),
+	CONSTRAINT [FK_Log_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
+		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
+	CONSTRAINT [FK_Log_Id_Motivo] FOREIGN KEY (Id_Motivo)
+		REFERENCES [SQL_SERVANT].[Motivo_Log] (Id_Motivo)
+)
 /* NOTA 
 	SEGUN EL TP: 
 	-además de generar (durante el proceso de migración) todos los usuarios

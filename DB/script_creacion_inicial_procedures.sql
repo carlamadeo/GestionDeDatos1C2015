@@ -527,6 +527,68 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [SQL_SERVANT].[sp_account_save_update](
+@p_account_id numeric(18,0) = null,
+@p_account_client_id int,
+@p_account_country_id int,
+@p_account_type_account_id int,
+@p_account_currency_id int,
+@p_account_date datetime
+)
+AS
+BEGIN
+	BEGIN TRANSACTION
+		IF (@p_account_id IS NOT NULL)
+		BEGIN
+			UPDATE SQL_SERVANT.Cuenta 
+				SET Id_Pais_Registro = @p_account_country_id,
+					Id_Moneda = @p_account_currency_id,
+					Id_Tipo_Cuenta = @p_account_type_account_id
+				WHERE	Id_Cuenta = @p_account_id
+		END
+		ELSE
+		BEGIN
+			INSERT INTO SQL_SERVANT.Cuenta (Id_Pais_Registro, Id_Moneda, Fecha_Creacion, Fecha_Vencimiento, Fecha_Cierre, Importe,
+				Id_Tipo_Cuenta, Id_Estado_Cuenta)
+				VALUES(@p_account_country_id, @p_account_currency_id, @p_account_date, @p_account_date, @p_account_date, 0.00,
+				@p_account_type_account_id, 4)
+			Declare @account_id numeric(18,0)
+			SET @account_id = @@IDENTITY
+			INSERT INTO SQL_SERVANT.Cliente_Cuenta (Id_Cliente, Id_Cuenta)
+				VALUES (@p_account_client_id, @account_id)
+		END
+	COMMIT TRANSACTION
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_account_get_data](
+@p_account_id numeric(18,0),
+@p_account_client_id varchar(255)
+)
+AS
+BEGIN
+	SELECT TOP 1
+		pa.Id_Pais "Id_Pais",
+		pa.Descripcion "Pais",
+		mo.Id_Moneda "Id_Moneda",
+		mo.Descripcion "Moneda",
+		tc.Id_Tipo_Cuenta "Id_Tipo_Cuenta",
+		tc.Descripcion "Tipo_Cuenta"
+
+		FROM SQL_SERVANT.Cliente_Cuenta cc
+			INNER JOIN SQL_SERVANT.Cuenta cu
+				ON cc.Id_Cuenta = cu.Id_Cuenta
+			INNER JOIN SQL_SERVANT.Pais pa
+				ON pa.Id_Pais = cu.Id_Pais_Registro
+			INNER JOIN SQL_SERVANT.Moneda mo
+				ON mo.Id_Moneda = cu.Id_Moneda
+			INNER JOIN SQL_SERVANT.Tipo_Cuenta tc
+				ON tc.Id_Tipo_Cuenta = cu.Id_Tipo_Cuenta
+			WHERE cc.Id_Cliente = @p_account_client_id
+				AND cc.Id_Cuenta = @p_account_id
+END
+GO
+
 CREATE PROCEDURE [SQL_SERVANT].[sp_client_search_by_lastname](
 @p_client_lastname varchar(255) = null
 )

@@ -53,6 +53,10 @@ DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_cli_trans_own_count
 
 DROP PROCEDURE SQL_SERVANT.sp_account_search
 
+DROP PROCEDURE SQL_SERVANT.sp_account_save_update
+
+DROP PROCEDURE SQL_SERVANT.sp_account_get_data
+
 DROP PROCEDURE SQL_SERVANT.sp_client_search_by_lastname
 
 DROP PROCEDURE SQL_SERVANT.sp_client_search

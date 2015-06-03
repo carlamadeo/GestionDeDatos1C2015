@@ -33,7 +33,7 @@ namespace PagoElectronico.Depositos
             this.WindowState = FormWindowState.Maximized;
 
             Tarjeta.fillTarjetasByClient(comboBoxTarjetas, VarGlobal.usuario.clientId);
-            Cuenta.fillCuentasHabilitadasByClient(comboBoxCuentas, VarGlobal.usuario.clientId);
+            CuentaHelper.fillCuentasHabilitadasByClient(comboBoxCuentas, VarGlobal.usuario.clientId);
             this.fillListBoxMonedas();
         }
 
