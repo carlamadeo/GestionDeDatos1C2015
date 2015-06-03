@@ -500,7 +500,6 @@ BEGIN
 	cd.Apellido 'Apellido',
 	cc.Id_Cuenta 'Cuenta Numero Identificacion',
 	tp.Descripcion 'Tipo Cuenta',
-	cu.Fecha_Creacion 'Fecha Creacion',
 	cu.Fecha_Vencimiento 'Fecha Vencimiento',
 	ec.Descripcion 'Estado',
 	mo.Descripcion 'Moneda',
@@ -548,9 +547,9 @@ BEGIN
 		END
 		ELSE
 		BEGIN
-			INSERT INTO SQL_SERVANT.Cuenta (Id_Pais_Registro, Id_Moneda, Fecha_Creacion, Fecha_Vencimiento, Fecha_Cierre, Importe,
+			INSERT INTO SQL_SERVANT.Cuenta (Id_Pais_Registro, Id_Moneda, Fecha_Creacion, Fecha_Vencimiento, Importe,
 				Id_Tipo_Cuenta, Id_Estado_Cuenta)
-				VALUES(@p_account_country_id, @p_account_currency_id, @p_account_date, @p_account_date, @p_account_date, 0.00,
+				VALUES(@p_account_country_id, @p_account_currency_id, @p_account_date, @p_account_date, 0.00,
 				@p_account_type_account_id, 4)
 			Declare @account_id numeric(18,0)
 			SET @account_id = @@IDENTITY

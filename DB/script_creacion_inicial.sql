@@ -403,6 +403,24 @@ INSERT INTO SQL_SERVANT.Tipo_Cuenta(Descripcion) VALUES('Plata')
 INSERT INTO SQL_SERVANT.Tipo_Cuenta(Descripcion) VALUES('Bronce')
 INSERT INTO SQL_SERVANT.Tipo_Cuenta(Descripcion) VALUES('Gratuita')
 
+--TABLA PERIODO_TIPO_CUENTA
+CREATE TABLE [SQL_SERVANT].[Periodo_Tipo_Cuenta](
+	[Id_Tipo_Cuenta][Int] NOT NULL,
+	[Dias][Int] NOT NULL
+
+	CONSTRAINT UQ_Periodo_Tipo_Cuenta UNIQUE (Id_Tipo_Cuenta),
+	CONSTRAINT [FK_Periodo_Tipo_Cuenta] FOREIGN KEY (Id_Tipo_Cuenta)
+		REFERENCES [SQL_SERVANT].[Tipo_Cuenta] (Id_Tipo_Cuenta)
+)
+INSERT INTO SQL_SERVANT.Periodo_Tipo_Cuenta (Id_Tipo_Cuenta, Dias)
+SELECT tc.Id_Tipo_Cuenta, 45 FROM SQL_SERVANT.Tipo_Cuenta tc WHERE tc.Descripcion = 'Oro'
+INSERT INTO SQL_SERVANT.Periodo_Tipo_Cuenta (Id_Tipo_Cuenta, Dias)
+SELECT tc.Id_Tipo_Cuenta, 45 FROM SQL_SERVANT.Tipo_Cuenta tc WHERE tc.Descripcion = 'Plata'
+INSERT INTO SQL_SERVANT.Periodo_Tipo_Cuenta (Id_Tipo_Cuenta, Dias)
+SELECT tc.Id_Tipo_Cuenta, 45 FROM SQL_SERVANT.Tipo_Cuenta tc WHERE tc.Descripcion = 'Bronce'
+INSERT INTO SQL_SERVANT.Periodo_Tipo_Cuenta (Id_Tipo_Cuenta, Dias)
+SELECT tc.Id_Tipo_Cuenta, 30 FROM SQL_SERVANT.Tipo_Cuenta tc WHERE tc.Descripcion = 'Gratuita'
+
 --TABLA COSTO_TIPO_CUENTA
 --VER SI HACE FALTA AGREGAR LA DE GRATUITA
 CREATE TABLE [SQL_SERVANT].[Costo_Tipo_Cuenta](
@@ -445,7 +463,6 @@ CREATE TABLE [SQL_SERVANT].[Cuenta](
 	--que puede estar habilitada o deshabilitida, pero me da a entender que esto puede ser
 	--porque las cuentas se pueden deshabilitar si no se paga su facturacion
 	[Fecha_Vencimiento][datetime],
-	[Fecha_Cierre][datetime] NULL,
 	[Importe][numeric](18,2) NOT NULL DEFAULT 0.00,
 	[Id_Tipo_Cuenta][Int] NOT NULL,
 	[Id_Estado_Cuenta][Int] NOT NULL
@@ -467,10 +484,11 @@ SET IDENTITY_INSERT [SQL_SERVANT].Cuenta ON
 INSERT INTO SQL_SERVANT.Cuenta (Id_Cuenta, Id_Pais_Registro, Id_Moneda, Fecha_Creacion, Fecha_Vencimiento, Id_Tipo_Cuenta, Id_Estado_Cuenta)
 SELECT DISTINCT m.Cuenta_Numero, m.Cuenta_Pais_Codigo, 
 mo.Id_Moneda, m.Cuenta_Fecha_Creacion, 
-m.Cuenta_Fecha_Cierre, tc.Id_Tipo_Cuenta, ec.Id_Estado_Cuenta
+DATEADD(DAY, ptc.Dias, m.Cuenta_Fecha_Creacion)), tc.Id_Tipo_Cuenta, ec.Id_Estado_Cuenta
 FROM gd_esquema.Maestra m 
 	INNER JOIN SQL_SERVANT.Moneda mo ON 'USD' = mo.Descripcion 
 	INNER JOIN SQL_SERVANT.Tipo_Cuenta tc ON 'Gratuita' = tc.Descripcion
+	INNER JOIN SQL_SERVANT.Periodo_Tipo_Cuenta ptc ON ptc.Id_Tipo_Cuenta = tc.Id_Tipo_Cuenta
 	INNER JOIN SQL_SERVANT.Estado_Cuenta ec ON 'Habilitada' = ec.Descripcion
 WHERE m.Cuenta_Numero IS NOT NULL
 

@@ -17,6 +17,5 @@ namespace PagoElectronico.ABM_Cuenta
         public string currencyDescription { get; set; }
         public DateTime creationDate { get; set; }
         public DateTime expirationDate { get; set; }
-        public DateTime closeDate { get; set; }
     }
 }
