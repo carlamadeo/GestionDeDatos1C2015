@@ -11,6 +11,7 @@ namespace PagoElectronico.ABM_Cliente
     {
         public Decimal id { get; set; }
         public string empresa { get; set; }
+        public int idEmpresa { get; set; }
         public DateTime fechaEmision { get; set; }
         public DateTime fechaVencimiento { get; set; }
         public int codSeguridad { get; set; }

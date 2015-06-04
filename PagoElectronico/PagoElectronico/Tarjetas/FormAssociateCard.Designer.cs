@@ -73,6 +73,7 @@
             this.buttonCreate.TabIndex = 3;
             this.buttonCreate.Text = "Crear";
             this.buttonCreate.UseVisualStyleBackColor = true;
+            this.buttonCreate.Click += new System.EventHandler(this.buttonCreate_Click);
             // 
             // buttonModify
             // 
@@ -82,6 +83,7 @@
             this.buttonModify.TabIndex = 4;
             this.buttonModify.Text = "Modificar";
             this.buttonModify.UseVisualStyleBackColor = true;
+            this.buttonModify.Click += new System.EventHandler(this.buttonModify_Click);
             // 
             // buttonAssociate
             // 

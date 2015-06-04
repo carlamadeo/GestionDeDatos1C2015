@@ -90,5 +90,35 @@ namespace PagoElectronico.ABM_Cliente
 
             ProcedureHelper.execute(command, "Se asocio/desasocio la tarjeta", false);
         }
+
+        public static Tarjeta getData(String id)
+        {
+            Tarjeta card = new Tarjeta();
+
+            SqlConnection conn = Connection.getConnection();
+
+            SqlCommand command = new SqlCommand();
+            command.Connection = conn;
+            command.CommandText = "SQL_SERVANT.sp_card_get_data";
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@p_card_id", id);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                reader.Read();
+                card.id = Convert.ToDecimal(reader["Id_Tarjeta"]);
+                card.empresa = Convert.ToString(reader["Tarjeta_Descripcion"]);
+                card.idEmpresa = Convert.ToInt16(reader["Id_Tarjeta_Empresa"]);
+                card.fechaEmision = Convert.ToDateTime(reader["Fecha_Emision"]);
+                card.fechaVencimiento = Convert.ToDateTime(reader["Fecha_Vencimiento"]);
+                card.codSeguridad = Convert.ToInt32(reader["Codigo_Seguridad"]);
+            }
+
+            conn.Close();
+
+            return card;
+        }
     }
 }

@@ -885,6 +885,26 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [SQL_SERVANT].[sp_card_get_data](
+@p_card_id numeric(18,0)
+)
+AS
+BEGIN
+	SELECT
+		t.Id_Tarjeta,
+		te.Descripcion "Tarjeta_Descripcion",
+		t.Id_Tarjeta_Empresa,
+		t.Fecha_Emision,
+		t.Fecha_Vencimiento,
+		t.Codigo_Seguridad
+
+	FROM SQL_SERVANT.Tarjeta t
+		INNER JOIN SQL_SERVANT.te
+			ON t.Id_Tarjeta_Empresa = te.Id_Tarjeta_Empresa
+	WHERE t.Id_Tarjeta = @p_card_id
+END
+GO
+
 CREATE PROCEDURE [SQL_SERVANT].[sp_card_by_client_id](
 @p_card_client_id int
 )

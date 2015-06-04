@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace PagoElectronico.ABM_Cliente
 {
-    class Empresa
+    public class Empresa
     {
         public static void fillEmpresa(ComboBox comboBoxEmpresa)
         {

@@ -61,5 +61,32 @@ namespace PagoElectronico.Tarjetas
                 MessageBox.Show("Debe seleccionar una cuenta a modificar");
             }
         }
+
+        private void buttonCreate_Click(object sender, EventArgs e)
+        {
+            FormAssociateCardModify formABMAssociateCardModify = new FormAssociateCardModify(true, "");
+            formABMAssociateCardModify.MdiParent = this.MdiParent;
+            MdiParent.Size = formABMAssociateCardModify.Size;
+            formABMAssociateCardModify.Show();
+            this.Close();
+        }
+
+        private void buttonModify_Click(object sender, EventArgs e)
+        {
+            Boolean dgvCardSelected = DataGridViewHelper.hasElementSelected(dgvCard);
+            if (dgvCardSelected)
+            {
+                String idCard = dgvCard.CurrentRow.Cells[0].Value.ToString();
+                FormAssociateCardModify formABMAssociateCardModify = new FormAssociateCardModify(false, idCard);
+                formABMAssociateCardModify.MdiParent = this.MdiParent;
+                MdiParent.Size = formABMAssociateCardModify.Size;
+                formABMAssociateCardModify.Show();
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Debe seleccionar una tarjeta ha modificar");
+            }
+        }
     }
 }

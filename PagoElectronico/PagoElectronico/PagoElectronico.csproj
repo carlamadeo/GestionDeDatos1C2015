@@ -229,6 +229,9 @@
     <EmbeddedResource Include="Tarjetas\FormAssociateCard.resx">
       <DependentUpon>FormAssociateCard.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tarjetas\FormAssociateCardModify.resx">
+      <DependentUpon>FormAssociateCardModify.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -255,6 +258,12 @@
     </Compile>
     <Compile Include="Tarjetas\FormAssociateCard.Designer.cs">
       <DependentUpon>FormAssociateCard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tarjetas\FormAssociateCardModify.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tarjetas\FormAssociateCardModify.Designer.cs">
+      <DependentUpon>FormAssociateCardModify.cs</DependentUpon>
     </Compile>
     <Compile Include="Transferencias\Form1.cs">
       <SubType>Form</SubType>
