@@ -302,7 +302,7 @@ namespace PagoElectronico.ABM_Cliente
 
             isValid = Validaciones.validAndRequiredDecimal(this.comboBoxTarjetas.Text, "Debe seleccionar una tarjeta");
             if (isValid)
-                tarjetaData.id = Convert.ToDecimal(this.comboBoxTarjetas.Text.ToString());
+                tarjetaData.id = this.comboBoxTarjetas.Text.ToString();
             else
                 return null;
 
@@ -342,7 +342,7 @@ namespace PagoElectronico.ABM_Cliente
             Tarjeta tarjeta = new Tarjeta();
             if (comboBoxTarjetas.SelectedIndex != 0)
             {
-                tarjeta = TarjetaHelper.getClientTarjetaData(Convert.ToInt32(client), Convert.ToDecimal(this.comboBoxTarjetas.Text.ToString()));
+                tarjeta = TarjetaHelper.getClientTarjetaData(Convert.ToInt32(client), this.comboBoxTarjetas.Text.ToString());
                 this.textBoxCodSeguridad.Text = tarjeta.codSeguridad.ToString();
                 this.dateTimeEmision.Value = tarjeta.fechaEmision;
                 this.dateTimeVencimiento.Value = tarjeta.fechaVencimiento;

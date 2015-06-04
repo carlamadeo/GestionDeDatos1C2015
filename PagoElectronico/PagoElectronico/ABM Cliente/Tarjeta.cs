@@ -9,7 +9,7 @@ namespace PagoElectronico.ABM_Cliente
 {
     public class Tarjeta
     {
-        public Decimal id { get; set; }
+        public String id { get; set; }
         public string empresa { get; set; }
         public int idEmpresa { get; set; }
         public DateTime fechaEmision { get; set; }
@@ -22,9 +22,8 @@ namespace PagoElectronico.ABM_Cliente
                 "ct.Id_Tarjeta", "ct.Id_Tarjeta", "ct.Id_Cliente = '" + idClient + "' AND ct.Habilitada = 1", null);
         }
 
-        public static string tc4UltimosDigitos(Decimal unDecimal)
+        public static string tc4UltimosDigitos(string unString)
         {
-            string unString = unDecimal.ToString();
             char[] splitString;
             string cenpw = null;
             int NtoShow;

@@ -1,6 +1,8 @@
 --FUNCIONES
 DROP FUNCTION SQL_SERVANT.Crear_Nombre_Usuario
 
+DROP FUNCTION SQL_SERVANT.Validar_Tarjeta_Habilitacion
+
 DROP FUNCTION SQL_SERVANT.Es_Fecha_Anterior
 
 --CON FOREIGN KEY

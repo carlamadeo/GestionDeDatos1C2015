@@ -43,6 +43,23 @@ namespace PagoElectronico.Tarjetas
             this.dtpCreation.CustomFormat = "MM yyyy";
             this.dtpExpiration.Format = DateTimePickerFormat.Custom;
             this.dtpExpiration.CustomFormat = "MM yyyy";
+
+            if (isEdition)
+            {
+                textBoxID.Text = idCard;
+                Tarjeta card = TarjetaHelper.getData(idCard);
+                textBoxSecurityCod.Text = card.codSeguridad.ToString();
+                this.comboBoxCompany.SelectedIndex = this.comboBoxCompany.FindStringExact(card.empresa);
+                this.dtpCreation.Value = card.fechaEmision;
+                this.dtpExpiration.Value = card.fechaVencimiento;
+                if (idCard.Length == 16)
+                {
+                    textBoxID.Enabled = false;
+                    comboBoxCompany.Enabled = false;
+                    dtpCreation.Enabled = false;
+                    dtpExpiration.Enabled = false;
+                }
+            }
         }
     }
 }

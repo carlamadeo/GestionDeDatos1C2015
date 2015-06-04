@@ -840,7 +840,7 @@ GO
 
 CREATE PROCEDURE [SQL_SERVANT].[sp_client_tarjeta_disable](
 @p_client_id int,
-@p_tarjeta_id numeric
+@p_tarjeta_id varchar(16)
 )
 AS
 BEGIN
@@ -863,7 +863,7 @@ GO
 
 CREATE PROCEDURE [SQL_SERVANT].[sp_client_tarjeta_get_by_id_client](
 @p_id_client varchar(255),
-@p_id_tarjeta numeric(16,0)
+@p_id_tarjeta varchar(16)
 )
 AS
 BEGIN
@@ -886,7 +886,7 @@ END
 GO
 
 CREATE PROCEDURE [SQL_SERVANT].[sp_card_get_data](
-@p_card_id numeric(18,0)
+@p_card_id varchar(16)
 )
 AS
 BEGIN
@@ -899,7 +899,7 @@ BEGIN
 		t.Codigo_Seguridad
 
 	FROM SQL_SERVANT.Tarjeta t
-		INNER JOIN SQL_SERVANT.te
+		INNER JOIN SQL_SERVANT.Tarjeta_Empresa te
 			ON t.Id_Tarjeta_Empresa = te.Id_Tarjeta_Empresa
 	WHERE t.Id_Tarjeta = @p_card_id
 END
@@ -927,7 +927,7 @@ END
 GO
 
 CREATE PROCEDURE [SQL_SERVANT].[sp_card_associate](
-@p_card_id numeric(16,0),
+@p_card_id varchar(16),
 @p_card_client_id int,
 @p_card_associate bit
 )
@@ -940,8 +940,7 @@ END
 GO
 
 CREATE PROCEDURE [SQL_SERVANT].[sp_tarjeta_save](
-
-@p_tarjeta_id numeric(16,0) OUTPUT,
+@p_tarjeta_id varchar(16) OUTPUT,
 @p_tarjeta_empresa varchar(50),
 @p_tarjeta_fecha_vencimiento datetime,
 @p_tarjeta_fecha_emision datetime,
@@ -980,7 +979,7 @@ END
 GO
 
 CREATE PROCEDURE [SQL_SERVANT].[sp_tarjeta_not_expired](
-@p_tarjeta_id numeric(16,0) = 0,
+@p_tarjeta_id varchar(16) = 0,
 @p_notExpired bit = 1 OUTPUT
 )
 AS

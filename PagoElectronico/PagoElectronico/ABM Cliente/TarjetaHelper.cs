@@ -11,7 +11,7 @@ namespace PagoElectronico.ABM_Cliente
 {
     public class TarjetaHelper
     {
-        public static Tarjeta getClientTarjetaData(Int32 clientId, Decimal tarjetaId)
+        public static Tarjeta getClientTarjetaData(Int32 clientId, String tarjetaId)
         {
             Tarjeta tarjetaData = new Tarjeta();
 
@@ -29,7 +29,7 @@ namespace PagoElectronico.ABM_Cliente
             if (reader.HasRows)
             {
                 reader.Read();
-                tarjetaData.id = Convert.ToDecimal(tarjetaId);
+                tarjetaData.id = tarjetaId;
                 tarjetaData.empresa = Convert.ToString(reader["Empresa"]);
                 tarjetaData.fechaEmision = Convert.ToDateTime(reader["Fecha_Emision"]);
                 tarjetaData.fechaVencimiento = Convert.ToDateTime(reader["Fecha_Vencimiento"]);
@@ -47,7 +47,7 @@ namespace PagoElectronico.ABM_Cliente
             sp_save_tarjeta.CommandType = CommandType.StoredProcedure;
             sp_save_tarjeta.CommandText = "SQL_SERVANT.sp_tarjeta_save";
 
-            var returnParameterTarjetaId = sp_save_tarjeta.Parameters.Add(new SqlParameter("@p_tarjeta_id", SqlDbType.Decimal));
+            var returnParameterTarjetaId = sp_save_tarjeta.Parameters.Add(new SqlParameter("@p_tarjeta_id", SqlDbType.VarChar, 16));
             returnParameterTarjetaId.Direction = ParameterDirection.InputOutput;
 
             sp_save_tarjeta.Parameters["@p_tarjeta_id"].Value = tarjeta.id;
@@ -101,14 +101,16 @@ namespace PagoElectronico.ABM_Cliente
             command.Connection = conn;
             command.CommandText = "SQL_SERVANT.sp_card_get_data";
             command.CommandType = CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@p_card_id", id);
+
+            command.Parameters.Add(new SqlParameter("@p_card_id", SqlDbType.VarChar, 16));
+            command.Parameters["@p_card_id"].Value = id;
 
             SqlDataReader reader = command.ExecuteReader();
 
             if (reader.HasRows)
             {
                 reader.Read();
-                card.id = Convert.ToDecimal(reader["Id_Tarjeta"]);
+                card.id = Convert.ToString(reader["Id_Tarjeta"]);
                 card.empresa = Convert.ToString(reader["Tarjeta_Descripcion"]);
                 card.idEmpresa = Convert.ToInt16(reader["Id_Tarjeta_Empresa"]);
                 card.fechaEmision = Convert.ToDateTime(reader["Fecha_Emision"]);

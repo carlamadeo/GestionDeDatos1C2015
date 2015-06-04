@@ -64,7 +64,7 @@ namespace PagoElectronico.Tarjetas
 
         private void buttonCreate_Click(object sender, EventArgs e)
         {
-            FormAssociateCardModify formABMAssociateCardModify = new FormAssociateCardModify(true, "");
+            FormAssociateCardModify formABMAssociateCardModify = new FormAssociateCardModify(false, "");
             formABMAssociateCardModify.MdiParent = this.MdiParent;
             MdiParent.Size = formABMAssociateCardModify.Size;
             formABMAssociateCardModify.Show();
@@ -77,7 +77,7 @@ namespace PagoElectronico.Tarjetas
             if (dgvCardSelected)
             {
                 String idCard = dgvCard.CurrentRow.Cells[0].Value.ToString();
-                FormAssociateCardModify formABMAssociateCardModify = new FormAssociateCardModify(false, idCard);
+                FormAssociateCardModify formABMAssociateCardModify = new FormAssociateCardModify(true, idCard);
                 formABMAssociateCardModify.MdiParent = this.MdiParent;
                 MdiParent.Size = formABMAssociateCardModify.Size;
                 formABMAssociateCardModify.Show();

@@ -8,7 +8,6 @@ CREATE SCHEMA [SQL_SERVANT] AUTHORIZATION [gd]
 GO
 
 --FUNCIONES COMPLEMENTARIAS
-
 CREATE FUNCTION SQL_SERVANT.Crear_Nombre_Usuario(
 @p_cli_name as varchar(30),
 @p_cli_lastname as varchar(30)
@@ -42,6 +41,26 @@ BEGIN
 		SET @retorno_choto = 1
 	
 	RETURN @retorno_choto
+END
+GO
+
+CREATE FUNCTION SQL_SERVANT.Validar_Tarjeta_Habilitacion(
+@p_card_id as varchar(255),
+@p_fecha_a_evaluar as datetime,
+@p_fecha_a_tener_en_cuenta as datetime
+)
+RETURNS bit
+BEGIN
+	declare @valor bit
+	IF (LEN(RTRIM(LTRIM(@p_card_id))) != 16)
+	BEGIN
+		SET @valor = 0
+	END
+	ELSE
+	BEGIN
+		SET @valor = SQL_SERVANT.Es_Fecha_Anterior(@p_fecha_a_evaluar, @p_fecha_a_tener_en_cuenta)
+	END
+	RETURN @valor
 END
 GO
 
@@ -519,7 +538,7 @@ WHERE m.Cuenta_Numero IS NOT NULL
 	PD: Si se desvincula una tarjeta, se borra del sistema(?)
 */
 CREATE TABLE [SQL_SERVANT].[Tarjeta](
-	[Id_Tarjeta][numeric](16,0) NOT NULL,
+	[Id_Tarjeta][varchar](16) NOT NULL,
 	[Fecha_Emision][datetime] NOT NULL,
 	[Fecha_Vencimiento][datetime] NOT NULL,
 	[Id_Tarjeta_Empresa][Int] NOT NULL,
@@ -556,9 +575,9 @@ GROUP BY uc.Id_Cliente, m.Tarjeta_Numero
 */
 CREATE TABLE [SQL_SERVANT].[Cliente_Tarjeta](
 	[Id_Cliente][Int] NOT NULL,
-	[Id_Tarjeta][numeric](16,0) NOT NULL,
+	[Id_Tarjeta][varchar](16) NOT NULL,
 	--VER SI HAY QUE MOVER ESTA PROPERTY A LA TABLA DE LA TARJETA MISMA
-	[Habilitada][bit] NOT NULL DEFAULT 1
+	[Habilitada][bit] NOT NULL
 
 	CONSTRAINT [PK_Cliente_Tarjeta] PRIMARY KEY(
 		[Id_Cliente] ASC,
@@ -570,7 +589,7 @@ CREATE TABLE [SQL_SERVANT].[Cliente_Tarjeta](
 		REFERENCES [SQL_SERVANT].[Tarjeta] (Id_Tarjeta)
 )
 INSERT INTO SQL_SERVANT.Cliente_Tarjeta (Id_Cliente, Id_Tarjeta, Habilitada)
-SELECT DISTINCT uc.Id_Cliente, m.Tarjeta_Numero, SQL_SERVANT.Es_Fecha_Anterior(m.Tarjeta_Fecha_Vencimiento, GETDATE())
+SELECT DISTINCT uc.Id_Cliente, m.Tarjeta_Numero, SQL_SERVANT.Validar_Tarjeta_Habilitacion(CONVERT(VARCHAR,m.Tarjeta_Numero), m.Tarjeta_Fecha_Vencimiento, GETDATE()) 
 FROM gd_esquema.Maestra m
 INNER JOIN SQL_SERVANT.Usuario_Cliente uc
 	ON LTRIM(RTRIM(SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido))) = uc.Id_Usuario
@@ -587,7 +606,7 @@ CREATE TABLE [SQL_SERVANT].[Deposito](
 	[Id_Cuenta][numeric](18,0) NOT NULL,
 	[Importe][Numeric](10,2) NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
-	[Id_Tarjeta][numeric](16,0) NOT NULL,
+	[Id_Tarjeta][varchar](16) NOT NULL,
 	[Fecha_Deposito][datetime] NOT NULL
 
 	CONSTRAINT [PK_Deposito] PRIMARY KEY (Id_Deposito),
