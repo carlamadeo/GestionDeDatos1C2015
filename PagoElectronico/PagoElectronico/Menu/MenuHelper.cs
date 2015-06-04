@@ -73,6 +73,10 @@ namespace PagoElectronico.Menu
                     func.folder = "ABM_Cuenta";
                     func.form = "FormABMCuenta";
                     break;
+                case "Asociar Tarjeta":
+                    func.folder = "Tarjetas";
+                    func.form = "FormAssociateCard";
+                    break;
                 case "Depositos":
                     func.folder = "Depositos";
                     func.form = "Depositos";

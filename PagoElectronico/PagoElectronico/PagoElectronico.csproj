@@ -226,6 +226,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tarjetas\FormAssociateCard.resx">
+      <DependentUpon>FormAssociateCard.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -246,6 +249,12 @@
     </Compile>
     <Compile Include="Retiros\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tarjetas\FormAssociateCard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tarjetas\FormAssociateCard.Designer.cs">
+      <DependentUpon>FormAssociateCard.cs</DependentUpon>
     </Compile>
     <Compile Include="Transferencias\Form1.cs">
       <SubType>Form</SubType>

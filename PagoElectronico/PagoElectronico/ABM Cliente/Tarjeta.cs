@@ -7,7 +7,7 @@ using PagoElectronico.Seguridad;
 
 namespace PagoElectronico.ABM_Cliente
 {
-    class Tarjeta
+    public class Tarjeta
     {
         public Decimal id { get; set; }
         public string empresa { get; set; }

@@ -5,10 +5,11 @@ using System.Text;
 using System.Data.SqlClient;
 using System.Data;
 using PagoElectronico.DB;
+using System.Windows.Forms;
 
 namespace PagoElectronico.ABM_Cliente
 {
-    class TarjetaHelper
+    public class TarjetaHelper
     {
         public static Tarjeta getClientTarjetaData(Int32 clientId, Decimal tarjetaId)
         {
@@ -57,6 +58,37 @@ namespace PagoElectronico.ABM_Cliente
             sp_save_tarjeta.Parameters.AddWithValue("@p_tarjeta_codigo_seguridad", tarjeta.codSeguridad);
 
             ProcedureHelper.execute(sp_save_tarjeta, "save tarjeta data", false);
+        }
+
+        public static void getClientCard(Int16 idClient, DataGridView dgv)
+        {
+            SqlCommand command = new SqlCommand();
+            command.CommandText = "SQL_SERVANT.sp_card_by_client_id";
+
+            command.Parameters.Add(new SqlParameter("@p_card_client_id", SqlDbType.Int));
+            command.Parameters["@p_card_client_id"].Value = idClient;
+
+            DataGridViewHelper.fill(command, dgv);
+        }
+
+        public static void associate(String id, Int16 clientId, Boolean associate)
+        {
+            SqlCommand command = new SqlCommand();
+            command.CommandText = "SQL_SERVANT.sp_card_associate";
+
+            command.Parameters.Add(new SqlParameter("@p_card_id", SqlDbType.VarChar, 16));
+            command.Parameters["@p_card_id"].Value = id;
+
+            command.Parameters.Add(new SqlParameter("@p_card_client_id", SqlDbType.Int));
+            command.Parameters["@p_card_client_id"].Value = clientId;
+
+            command.Parameters.Add(new SqlParameter("@p_card_associate", SqlDbType.Bit));
+            if (associate)
+                command.Parameters["@p_card_associate"].Value = 1;
+            else
+                command.Parameters["@p_card_associate"].Value = 0;
+
+            ProcedureHelper.execute(command, "Se asocio/desasocio la tarjeta", false);
         }
     }
 }

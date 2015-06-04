@@ -79,6 +79,10 @@ DROP PROCEDURE SQL_SERVANT.sp_client_get_by_user
 
 DROP PROCEDURE SQL_SERVANT.sp_client_tarjeta_get_by_id_client
 
+DROP PROCEDURE SQL_SERVANT.sp_card_by_client_id
+
+DROP PROCEDURE SQL_SERVANT.sp_card_associate
+
 DROP PROCEDURE SQL_SERVANT.sp_tarjeta_save
 
 DROP PROCEDURE SQL_SERVANT.sp_tarjeta_not_expired

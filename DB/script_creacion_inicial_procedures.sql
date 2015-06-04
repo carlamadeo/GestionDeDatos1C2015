@@ -885,6 +885,40 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [SQL_SERVANT].[sp_card_by_client_id](
+@p_card_client_id int
+)
+AS
+BEGIN
+	SELECT
+		t.Id_Tarjeta "Numero",
+		te.Descripcion 'Empresa',
+		t.Fecha_Emision "Fecha Emision",
+		t.Fecha_Vencimiento "Fecha Vencimiento",
+		CASE ct.Habilitada WHEN 1 THEN 'ASOCIADA' ELSE 'DESASOCIADA' END AS "Estado"
+
+		FROM SQL_SERVANT.Cliente_Tarjeta ct
+			INNER JOIN SQL_SERVANT.Tarjeta t
+				ON ct.Id_Tarjeta = t.Id_Tarjeta
+			INNER JOIN SQL_SERVANT.Tarjeta_Empresa te
+				ON t.Id_Tarjeta_Empresa = te.Id_Tarjeta_Empresa
+		WHERE ct.Id_Cliente = @p_card_client_id
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_card_associate](
+@p_card_id numeric(16,0),
+@p_card_client_id int,
+@p_card_associate bit
+)
+AS
+BEGIN
+	UPDATE SQL_SERVANT.Cliente_Tarjeta 
+		SET Habilitada = @p_card_associate
+	WHERE Id_Cliente = @p_card_client_id AND Id_Tarjeta = @p_card_id
+END
+GO
+
 CREATE PROCEDURE [SQL_SERVANT].[sp_tarjeta_save](
 
 @p_tarjeta_id numeric(16,0) OUTPUT,
