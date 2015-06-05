@@ -60,6 +60,30 @@ namespace PagoElectronico.ABM_Cliente
             ProcedureHelper.execute(sp_save_tarjeta, "save tarjeta data", false);
         }
 
+        public static Boolean existCard(string id)
+        {
+            SqlCommand sp_check_card_id = new SqlCommand();
+            sp_check_card_id.CommandText = "SQL_SERVANT.sp_card_exist";
+            sp_check_card_id.Parameters.Add(new SqlParameter("@p_card_id", SqlDbType.VarChar, 16));
+            sp_check_card_id.Parameters["@p_card_id"].Value = id;
+
+            var returnParameterIsValid = sp_check_card_id.Parameters.Add(new SqlParameter("@p_is_valid", SqlDbType.Bit));
+            returnParameterIsValid.Direction = ParameterDirection.InputOutput;
+
+            ProcedureHelper.execute(sp_check_card_id, "chequear existe tarjeta", false);
+
+            int isValid = Convert.ToInt16(returnParameterIsValid.Value);
+
+            if (isValid == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public static void getClientCard(Int16 idClient, DataGridView dgv)
         {
             SqlCommand command = new SqlCommand();
@@ -121,6 +145,35 @@ namespace PagoElectronico.ABM_Cliente
             conn.Close();
 
             return card;
+        }
+
+        public static void saveWithAssociation(Tarjeta card)
+        {
+            SqlCommand command = new SqlCommand();
+            command.CommandText = "SQL_SERVANT.sp_card_save_with_association";
+
+            command.Parameters.Add(new SqlParameter("@p_card_id", SqlDbType.VarChar, 16));
+            command.Parameters["@p_card_id"].Value = card.id;
+
+            command.Parameters.Add(new SqlParameter("@p_card_client_id", SqlDbType.Int));
+            command.Parameters["@p_card_client_id"].Value = VarGlobal.usuario.clientId;
+
+            command.Parameters.Add(new SqlParameter("@p_card_company_id", SqlDbType.Int));
+            command.Parameters["@p_card_company_id"].Value = card.idEmpresa;
+
+            command.Parameters.Add(new SqlParameter("@p_card_creation_date", SqlDbType.DateTime));
+            command.Parameters["@p_card_creation_date"].Value = card.fechaEmision;
+
+            command.Parameters.Add(new SqlParameter("@p_card_expiration_date", SqlDbType.DateTime));
+            command.Parameters["@p_card_expiration_date"].Value = card.fechaVencimiento;
+
+            command.Parameters.Add(new SqlParameter("@p_card_security_code", SqlDbType.VarChar, 64));
+            command.Parameters["@p_card_security_code"].Value = card.codSeguridad;
+
+            command.Parameters.Add(new SqlParameter("@p_card_date_to_considerate", SqlDbType.DateTime));
+            command.Parameters["@p_card_date_to_considerate"].Value = DateHelper.getToday();
+
+            ProcedureHelper.execute(command, "Se crea la tarjeta", false);
         }
     }
 }

@@ -939,6 +939,40 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [SQL_SERVANT].[sp_card_save_with_association](
+@p_card_id varchar(16),
+@p_card_client_id int,
+@p_card_company_id int,
+@p_card_creation_date datetime,
+@p_card_expiration_date datetime,
+@p_card_security_code varchar(64),
+@p_card_date_to_considerate datetime
+)
+AS
+BEGIN
+	BEGIN TRANSACTION
+		INSERT INTO SQL_SERVANT.Tarjeta (Id_Tarjeta, Fecha_Emision, Fecha_Vencimiento, Id_Tarjeta_Empresa, Codigo_Seguridad)
+		VALUES (@p_card_id, @p_card_creation_date, @p_card_expiration_date, @p_card_company_id, @p_card_security_code)
+
+		INSERT INTO SQL_SERVANT.Cliente_Tarjeta (Id_Cliente, Id_Tarjeta, Habilitada)
+		VALUES (@p_card_client_id, @p_card_id, SQL_SERVANT.Validar_Tarjeta_Habilitacion(@p_card_id, @p_card_expiration_date, @p_card_date_to_considerate))
+	COMMIT TRANSACTION
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_card_exist](
+@p_card_id varchar(16),
+@p_is_valid bit = 0 OUTPUT
+)
+AS
+BEGIN
+	IF EXISTS (SELECT 1 FROM SQL_SERVANT.Tarjeta WHERE Id_Tarjeta = @p_card_id)
+	BEGIN
+		SET @p_is_valid = 1
+	END
+END
+GO
+
 CREATE PROCEDURE [SQL_SERVANT].[sp_tarjeta_save](
 @p_tarjeta_id varchar(16) OUTPUT,
 @p_tarjeta_empresa varchar(50),

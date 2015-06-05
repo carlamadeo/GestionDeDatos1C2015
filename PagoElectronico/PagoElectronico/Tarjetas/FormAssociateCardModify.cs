@@ -61,5 +61,33 @@ namespace PagoElectronico.Tarjetas
                 }
             }
         }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            if (validate())
+            {
+                Tarjeta card = new Tarjeta();
+                card.id = textBoxID.Text;
+                card.fechaEmision = DateHelper.firstMonthDay(dtpCreation.Value);
+                card.fechaVencimiento = DateHelper.nextMonthFirstDay(dtpExpiration.Value);
+                card.codSeguridad = Convert.ToInt16(textBoxSecurityCod.Text);
+                card.idEmpresa = Convert.ToInt16(this.comboBoxCompany.SelectedValue.ToString());
+
+                TarjetaHelper.saveWithAssociation(card);
+
+                MessageBox.Show("Se guardo correctamente la tarjeta");
+
+                this.closeWindow();
+            }
+        }
+
+        private Boolean validate()
+        {
+            return Validaciones.validInt32(this.textBoxSecurityCod.Text, "El codigo de seguridad debe ser numerico") &&
+                Validaciones.requiredString(this.comboBoxCompany.Text, "Debe seleccionar una empresa") &&
+                Validaciones.condition(this.textBoxID.Text.Length == 16, "La cantidad de numeros de la tarjeta deben ser 16") &&
+                Validaciones.condition(this.textBoxSecurityCod.Text.Length == 3, "El codigo de seguridad debe tener un largo de 3") &&
+                Validaciones.condition(!TarjetaHelper.existCard(this.textBoxID.Text), "Ya existe una tarjeta con ese numero");
+        }
     }
 }

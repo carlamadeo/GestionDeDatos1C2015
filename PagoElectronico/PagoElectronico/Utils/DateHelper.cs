@@ -9,12 +9,28 @@ namespace PagoElectronico
             return fecha;
         }
 
-        public static void truncate(DateTime date)
+        public static DateTime truncate(DateTime date)
         {
-            date.AddHours(0 - date.Hour);
-            date.AddMinutes(0 - date.Minute);
-            date.AddSeconds(0 - date.Second);
-            date.AddMilliseconds(0 - date.Millisecond);
+            date = date.AddHours(-date.Hour);
+            date = date.AddMinutes(-date.Minute);
+            date = date.AddSeconds(-date.Second);
+            date = date.AddMilliseconds(-date.Millisecond);
+            return date;
+        }
+
+        public static DateTime firstMonthDay(DateTime date)
+        {
+            date = date.AddDays(1 - date.Day);
+            return truncate(date);
+        }
+
+        public static DateTime nextMonthFirstDay(DateTime date)
+        {
+            DateTime actual = date;
+            date = date.AddMonths(1);
+            date = date.AddDays(1 - date.Day);
+            date = date.AddYears(date.Year - actual.Year);
+            return truncate(date);
         }
 
         public static DateTime getToday()

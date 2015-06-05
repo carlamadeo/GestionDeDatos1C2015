@@ -98,6 +98,15 @@ namespace PagoElectronico
             }
         }
 
+        public static Boolean condition(Boolean value, string error)
+        {
+            if (!value)
+            {
+                MessageBox.Show(error, "Campo Obligatorio", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return value;
+        }
+
         public static Boolean requiredString(string value, string error)
         {
             if (value != "")

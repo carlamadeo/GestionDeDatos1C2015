@@ -288,8 +288,7 @@ namespace PagoElectronico.ABM_Cliente
 
             DateTime birthdate = dtBrithdate.Value;
 
-            DateHelper.truncate(birthdate);
-            clientData.birthdate = birthdate;
+            clientData.birthdate = DateHelper.truncate(birthdate);
 
             return clientData;
         }
@@ -320,13 +319,11 @@ namespace PagoElectronico.ABM_Cliente
 
             DateTime fechaEmision = dateTimeEmision.Value;
 
-            DateHelper.truncate(fechaEmision);
-            tarjetaData.fechaEmision = fechaEmision;
+            tarjetaData.fechaEmision = DateHelper.truncate(fechaEmision);
 
             DateTime fechaVencimiento = dateTimeVencimiento.Value;
 
-            DateHelper.truncate(fechaVencimiento);
-            tarjetaData.fechaVencimiento = fechaVencimiento;
+            tarjetaData.fechaVencimiento = DateHelper.truncate(fechaVencimiento);
 
             return tarjetaData;
         }
