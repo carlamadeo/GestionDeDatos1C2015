@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="ABM Cliente\Cliente.cs" />
     <Compile Include="ABM Cliente\ClienteHelper.cs" />
-    <Compile Include="ABM Cliente\Empresa.cs" />
+    <Compile Include="Tarjetas\Empresa.cs" />
     <Compile Include="ABM Cliente\FormABMCliente.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,8 +64,8 @@
       <DependentUpon>FormAltaModificacionCliente.cs</DependentUpon>
     </Compile>
     <Compile Include="ABM Cliente\PaisHelper.cs" />
-    <Compile Include="ABM Cliente\Tarjeta.cs" />
-    <Compile Include="ABM Cliente\TarjetaHelper.cs" />
+    <Compile Include="Tarjetas\Tarjeta.cs" />
+    <Compile Include="Tarjetas\TarjetaHelper.cs" />
     <Compile Include="ABM Cliente\TypeIdentification.cs" />
     <Compile Include="ABM Cuenta\Cuenta.cs" />
     <Compile Include="ABM Cuenta\CuentaHelper.cs" />
@@ -125,11 +125,11 @@
     <Compile Include="DB\Connection.cs" />
     <Compile Include="DB\ProcedureHelper.cs" />
     <Compile Include="Depositos\Deposito.cs" />
-    <Compile Include="Depositos\Depositos.cs">
+    <Compile Include="Depositos\FormDepositos.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Depositos\Depositos.Designer.cs">
-      <DependentUpon>Depositos.cs</DependentUpon>
+    <Compile Include="Depositos\FormDepositos.Designer.cs">
+      <DependentUpon>FormDepositos.cs</DependentUpon>
     </Compile>
     <Compile Include="Facturacion\Form1.cs">
       <SubType>Form</SubType>
@@ -203,8 +203,8 @@
     <EmbeddedResource Include="Consulta Saldos\FormConsultaSaldos.resx">
       <DependentUpon>FormConsultaSaldos.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Depositos\Depositos.resx">
-      <DependentUpon>Depositos.cs</DependentUpon>
+    <EmbeddedResource Include="Depositos\FormDepositos.resx">
+      <DependentUpon>FormDepositos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMenu.resx">
       <DependentUpon>FormMenu.cs</DependentUpon>

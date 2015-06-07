@@ -79,7 +79,7 @@ namespace PagoElectronico.Menu
                     break;
                 case "Depositos":
                     func.folder = "Depositos";
-                    func.form = "Depositos";
+                    func.form = "FormDepositos";
                     break;
                 case "Listado Estadistico":
                     func.folder = "Listados";

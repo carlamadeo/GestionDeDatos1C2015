@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using PagoElectronico.ABM_Rol;
 using PagoElectronico.ABM_de_Usuario;
 using PagoElectronico.Seguridad;
-using PagoElectronico.DB;
+using PagoElectronico.Tarjetas;
 
 namespace PagoElectronico.ABM_Cliente
 {
@@ -41,7 +34,7 @@ namespace PagoElectronico.ABM_Cliente
             if (edit)
             {
                 Cliente clientData = ClienteHelper.getClientData(client);
-                Tarjeta.fillTarjetasByClient(comboBoxTarjetas, clientData.id);
+                Tarjeta.fillTarjetasByClientWhithout4LastDigits(comboBoxTarjetas, clientData.id);
                 Empresa.fillEmpresa(comboBoxEmpresa);
 
                 this.textBoxUsername.ReadOnly = true;
@@ -110,7 +103,8 @@ namespace PagoElectronico.ABM_Cliente
                     {
                         if (!edit && UsuarioHelper.existUser(textBoxUsername.Text))
                         {
-                            MessageBox.Show("Ya existe un usuario con ese Username.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Ya existe un usuario con ese Username.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                     }
@@ -144,11 +138,11 @@ namespace PagoElectronico.ABM_Cliente
             this.client = clientId.ToString();
             if (edit)
             {
-                MessageBox.Show("Modificacion de cliente realizada con exito");
+                MessageBox.Show("Modificacion de cliente realizada con exito", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show("Creacion de cliente realizada con exito");
+                MessageBox.Show("Creacion de cliente realizada con exito", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             this.closeWindow();
         }
@@ -299,9 +293,9 @@ namespace PagoElectronico.ABM_Cliente
 
             Boolean isValid;
 
-            isValid = Validaciones.validAndRequiredDecimal(this.comboBoxTarjetas.Text, "Debe seleccionar una tarjeta");
+            isValid = Validaciones.requiredString(this.comboBoxTarjetas.Text, "Debe seleccionar una tarjeta");
             if (isValid)
-                tarjetaData.id = this.comboBoxTarjetas.Text.ToString();
+                tarjetaData.id = this.comboBoxTarjetas.SelectedValue.ToString();
             else
                 return null;
 
@@ -330,9 +324,10 @@ namespace PagoElectronico.ABM_Cliente
 
         private void buttonDesvincular_Click(object sender, EventArgs e)
         {
-            ClienteHelper.desvincularTarjeta(Convert.ToInt32(client), Convert.ToDecimal(this.comboBoxTarjetas.Text.ToString()));
-            MessageBox.Show("Tarjeta desvinculada correctamente");
-            Tarjeta.fillTarjetasByClient(this.comboBoxTarjetas, Convert.ToInt32(client));
+            ClienteHelper.desvincularTarjeta(Convert.ToInt32(client), Convert.ToDecimal(this.comboBoxTarjetas.SelectedValue.ToString()));
+            MessageBox.Show("Tarjeta desvinculada correctamente", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);           
+
+            Tarjeta.fillTarjetasByClientWhithout4LastDigits(this.comboBoxTarjetas, Convert.ToInt32(client));
         }
 
         private void comboBoxTarjetas_SelectedIndexChanged(object sender, EventArgs e)
@@ -340,7 +335,7 @@ namespace PagoElectronico.ABM_Cliente
             Tarjeta tarjeta = new Tarjeta();
             if (comboBoxTarjetas.SelectedIndex != 0)
             {
-                tarjeta = TarjetaHelper.getClientTarjetaData(Convert.ToInt32(client), this.comboBoxTarjetas.Text.ToString());
+                tarjeta = TarjetaHelper.getClientTarjetaData(Convert.ToInt32(client), this.comboBoxTarjetas.SelectedValue.ToString());
                 this.textBoxCodSeguridad.Text = tarjeta.codSeguridad.ToString();
                 this.dateTimeEmision.Value = tarjeta.fechaEmision;
                 this.dateTimeVencimiento.Value = tarjeta.fechaVencimiento;
@@ -358,8 +353,7 @@ namespace PagoElectronico.ABM_Cliente
         private void updateTarjeta(Tarjeta tarjeta)
         {
             TarjetaHelper.save(tarjeta);
-            MessageBox.Show("Modificacion de tarjeta realizada con exito");
-           
+            MessageBox.Show("Modificacion de tarjeta realizada con exito", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);           
         }
 
         private void buttonVolverT_Click(object sender, EventArgs e)

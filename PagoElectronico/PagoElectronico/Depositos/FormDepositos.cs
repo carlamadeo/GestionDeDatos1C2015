@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using PagoElectronico.ABM_Cliente;
-using PagoElectronico.ABM_Cuenta;
 using System.Data.SqlClient;
-using PagoElectronico.Utils;
+using System.Windows.Forms;
+using PagoElectronico.ABM_Cuenta;
 using PagoElectronico.DB;
+using PagoElectronico.Tarjetas;
+using PagoElectronico.Utils;
 
 namespace PagoElectronico.Depositos
 {
-    public partial class Depositos : Form
+    public partial class FormDepositos : Form
     {
-        public Depositos()
+        public FormDepositos()
         {
             InitializeComponent();
         }
@@ -61,9 +56,9 @@ namespace PagoElectronico.Depositos
             else
                 return null;
 
-            isValid = Validaciones.requiredString(this.comboBoxTarjetas.Text.ToString(), "Es necesario que seleccione una tarjeta");
+            isValid = Validaciones.requiredString(this.comboBoxTarjetas.SelectedValue.ToString(), "Es necesario que seleccione una tarjeta");
             if (isValid)
-                deposito.tarjeta = Convert.ToDecimal(this.comboBoxTarjetas.Text.ToString());
+                deposito.tarjeta = Convert.ToDecimal(this.comboBoxTarjetas.SelectedValue.ToString());
             else
                 return null;
 

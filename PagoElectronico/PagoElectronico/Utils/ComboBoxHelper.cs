@@ -2,7 +2,8 @@
 using System.Data.SqlClient;
 using System.Data;
 using System;
-using PagoElectronico.ABM_Cliente;
+using PagoElectronico.Tarjetas;
+
 namespace PagoElectronico
 {
     public class ComboBoxHelper

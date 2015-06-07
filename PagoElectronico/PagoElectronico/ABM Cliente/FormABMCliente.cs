@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PagoElectronico.ABM_Cliente
@@ -86,7 +80,7 @@ namespace PagoElectronico.ABM_Cliente
             }
             else
             {
-                MessageBox.Show("Debe seleccionar un cliente a deshabilitar");
+                MessageBox.Show("Debe seleccionar un usuario a deshabilitar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -99,7 +93,7 @@ namespace PagoElectronico.ABM_Cliente
             }
             else
             {
-                MessageBox.Show("Debe seleccionar un cliente a habilitar");
+                MessageBox.Show("Debe seleccionar un usuario a habilitar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -134,7 +128,7 @@ namespace PagoElectronico.ABM_Cliente
             }
             else
             {
-                MessageBox.Show("Debe seleccionar un usuario a modificar");
+                MessageBox.Show("Debe seleccionar un usuario a modificar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -156,11 +150,6 @@ namespace PagoElectronico.ABM_Cliente
         private void dgvClient_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             checkClientEnableDisable();
-        }
-
-        private void labelApellido_Click(object sender, EventArgs e)
-        {
-
         }
 
     }
