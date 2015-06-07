@@ -478,6 +478,7 @@
             this.buttonVolverT.TabIndex = 11;
             this.buttonVolverT.Text = "Volver";
             this.buttonVolverT.UseVisualStyleBackColor = true;
+            this.buttonVolverT.Click += new System.EventHandler(this.buttonVolverT_Click);
             // 
             // buttonGuardarT
             // 

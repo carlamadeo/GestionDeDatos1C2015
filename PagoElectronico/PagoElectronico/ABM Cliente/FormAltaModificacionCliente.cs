@@ -331,6 +331,7 @@ namespace PagoElectronico.ABM_Cliente
         private void buttonDesvincular_Click(object sender, EventArgs e)
         {
             ClienteHelper.desvincularTarjeta(Convert.ToInt32(client), Convert.ToDecimal(this.comboBoxTarjetas.Text.ToString()));
+            MessageBox.Show("Tarjeta desvinculada correctamente");
             Tarjeta.fillTarjetasByClient(this.comboBoxTarjetas, Convert.ToInt32(client));
         }
 
@@ -359,6 +360,11 @@ namespace PagoElectronico.ABM_Cliente
             TarjetaHelper.save(tarjeta);
             MessageBox.Show("Modificacion de tarjeta realizada con exito");
            
+        }
+
+        private void buttonVolverT_Click(object sender, EventArgs e)
+        {
+            this.closeWindow();
         }
     }
 }

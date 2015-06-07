@@ -1040,7 +1040,9 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_save_deposito](
 AS
 BEGIN
 
-		Declare @importe_actual numeric(18,2)
+	BEGIN TRANSACTION
+
+		Declare @importe_actual numeric(10,2)
 		
 		SELECT @importe_actual = Importe FROM SQL_SERVANT.Cuenta c
 		WHERE @p_deposito_cuenta = c.Id_Cuenta
@@ -1048,7 +1050,35 @@ BEGIN
 		INSERT INTO SQL_SERVANT.Deposito (Id_Cuenta, Importe, Id_Moneda, Id_Tarjeta, Fecha_Deposito)
 		VALUES (@p_deposito_cuenta, @p_deposito_importe, @p_deposito_moneda, @p_deposito_tarjeta, @p_deposito_fecha)
 		
-		INSERT INTO SQL_SERVANT.Cuenta (Importe)
-		VALUES (@importe_actual + @p_deposito_importe)
+		UPDATE SQL_SERVANT.Cuenta SET Importe = (@p_deposito_importe + @importe_actual)
+		WHERE @p_deposito_cuenta = SQL_SERVANT.Cuenta.Id_Cuenta
+		
+	COMMIT TRANSACTION
 END
 GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_get_importe_maximo_por_cuenta](
+@p_cuenta_id numeric(18,0) = 0,
+@p_importe_maximo numeric(18,2) = 0.00 OUTPUT
+)
+AS
+BEGIN
+
+	Declare @importe_cuenta numeric(18,2)
+	Declare @id_tipo_cuenta int
+	Declare @importe_costo_cuenta numeric(18,2)
+
+	SELECT @importe_cuenta = Importe, @id_tipo_cuenta = Id_Tipo_Cuenta FROM SQL_SERVANT.Cuenta
+	WHERE Id_Cuenta = @p_cuenta_id
+	
+	SELECT @importe_costo_cuenta = Costo FROM SQL_SERVANT.Costo_Tipo_Cuenta
+	WHERE Id_Tipo_Cuenta = @id_tipo_cuenta
+	
+	SET @p_importe_maximo = @importe_cuenta - @importe_costo_cuenta
+	
+	IF (@p_importe_maximo < 0)
+		SET @p_importe_maximo = 0
+	
+END
+GO
+

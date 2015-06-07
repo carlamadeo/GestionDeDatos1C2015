@@ -59,3 +59,8 @@ C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoE
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cuenta.FormABMCuentaModify.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Tarjetas.FormAssociateCard.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Tarjetas.FormAssociateCardModify.resources
+C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cuenta.FormABMCuenta.resources
+C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cuenta.FormABMCuentaModify.resources
+C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Tarjetas.FormAssociateCard.resources
+C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Tarjetas.FormAssociateCardModify.resources
+C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Transferencias.FormTransferencias.resources

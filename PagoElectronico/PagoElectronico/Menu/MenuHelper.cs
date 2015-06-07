@@ -23,7 +23,7 @@ namespace PagoElectronico.Menu
             command.Parameters.AddWithValue("@p_id_rol", idRol);
 
             if (idRol == 2)
-                ClienteHelper.getClientIdByUserId();
+                ClienteHelper.getClientIdByUserId(VarGlobal.usuario.id);
 
             SqlDataReader reader = command.ExecuteReader() as SqlDataReader;
 
@@ -88,6 +88,11 @@ namespace PagoElectronico.Menu
                 case "ABM de Cliente":
                     func.folder = "ABM_Cliente";
                     func.form = "FormABMCliente";
+                    break;
+
+                case "Transferencias entre cuentas":
+                    func.folder = "Transferencias";
+                    func.form = "FormTransferencias";
                     break;
             }
             return func;

@@ -39,7 +39,7 @@ namespace PagoElectronico.ABM_Cliente
                     cenpw += splitString[i];
             }
 
-            return unString;
+            return cenpw;
         }
 
     }
