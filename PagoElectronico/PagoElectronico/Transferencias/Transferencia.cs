@@ -7,9 +7,11 @@ namespace PagoElectronico.Transferencias
 {
     class Transferencia
     {
-        public Decimal importe { get; set; }
+        public Decimal monto { get; set; }
         public Decimal cuentaOrigen { get; set; }
         public Decimal cuentaDestino { get; set; }
         public DateTime fecha { get; set; }
+        public int mismoCliente { get; set; }
+        public int moneda = 1;
     }
 }

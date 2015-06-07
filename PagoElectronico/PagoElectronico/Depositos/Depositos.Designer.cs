@@ -30,7 +30,7 @@
         {
             this.labelCuenta = new System.Windows.Forms.Label();
             this.comboBoxCuentas = new System.Windows.Forms.ComboBox();
-            this.labelImporte = new System.Windows.Forms.Label();
+            this.labelMonto = new System.Windows.Forms.Label();
             this.textBoxImporte = new System.Windows.Forms.TextBox();
             this.labelMoneda = new System.Windows.Forms.Label();
             this.listBoxMoneda = new System.Windows.Forms.ListBox();
@@ -57,14 +57,14 @@
             this.comboBoxCuentas.Size = new System.Drawing.Size(152, 21);
             this.comboBoxCuentas.TabIndex = 1;
             // 
-            // labelImporte
+            // labelMonto
             // 
-            this.labelImporte.AutoSize = true;
-            this.labelImporte.Location = new System.Drawing.Point(309, 54);
-            this.labelImporte.Name = "labelImporte";
-            this.labelImporte.Size = new System.Drawing.Size(42, 13);
-            this.labelImporte.TabIndex = 2;
-            this.labelImporte.Text = "Importe";
+            this.labelMonto.AutoSize = true;
+            this.labelMonto.Location = new System.Drawing.Point(309, 54);
+            this.labelMonto.Name = "labelMonto";
+            this.labelMonto.Size = new System.Drawing.Size(37, 13);
+            this.labelMonto.TabIndex = 2;
+            this.labelMonto.Text = "Monto";
             // 
             // textBoxImporte
             // 
@@ -139,7 +139,7 @@
             this.Controls.Add(this.listBoxMoneda);
             this.Controls.Add(this.labelMoneda);
             this.Controls.Add(this.textBoxImporte);
-            this.Controls.Add(this.labelImporte);
+            this.Controls.Add(this.labelMonto);
             this.Controls.Add(this.comboBoxCuentas);
             this.Controls.Add(this.labelCuenta);
             this.Name = "Depositos";
@@ -154,7 +154,7 @@
 
         private System.Windows.Forms.Label labelCuenta;
         private System.Windows.Forms.ComboBox comboBoxCuentas;
-        private System.Windows.Forms.Label labelImporte;
+        private System.Windows.Forms.Label labelMonto;
         private System.Windows.Forms.TextBox textBoxImporte;
         private System.Windows.Forms.Label labelMoneda;
         private System.Windows.Forms.ListBox listBoxMoneda;

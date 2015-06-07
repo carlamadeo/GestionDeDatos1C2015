@@ -96,3 +96,9 @@ DROP PROCEDURE SQL_SERVANT.sp_tarjeta_not_expired
 DROP PROCEDURE SQL_SERVANT.sp_save_deposito
 
 --DROP PROCEDURE SQL_SERVANT.sp_get_tipo_moneda
+
+DROP PROCEDURE SQL_SERVANT.sp_get_importe_maximo_por_cuenta
+
+DROP PROCEDURE SQL_SERVANT.sp_check_account_same_client
+
+DROP PROCEDURE SQL_SERVANT.sp_save_transferencia

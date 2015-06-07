@@ -55,7 +55,7 @@ namespace PagoElectronico.Depositos
             else
                 return null;
 
-            isValid = Validaciones.validAndRequiredDoubleMoreThan0(this.textBoxImporte.Text.ToString(), "El importe a depositar debe ser mayor a 0");
+            isValid = Validaciones.validAndRequiredDoubleMoreThan0(this.textBoxImporte.Text.ToString(), "El monto a depositar debe ser mayor a 0");
             if (isValid)
                 deposito.importe = Convert.ToDecimal(this.textBoxImporte.Text.ToString());
             else
@@ -80,7 +80,7 @@ namespace PagoElectronico.Depositos
                 Validaciones.tarjetaNoVencida(deposito.tarjeta);
                 deposito.fecha = DateHelper.getToday();
                 this.saveDeposito(deposito);
-                MessageBox.Show("Se realizo el Deposito correctamente");
+                MessageBox.Show("Se ha realizado correctamente el deposito por un monto de " + String.Format("{0:C}", deposito.importe), "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

@@ -32,7 +32,7 @@
             this.buttonTransferencia = new System.Windows.Forms.Button();
             this.buttonVolver = new System.Windows.Forms.Button();
             this.labelCuentaOrigen = new System.Windows.Forms.Label();
-            this.labelImporte = new System.Windows.Forms.Label();
+            this.labelMonto = new System.Windows.Forms.Label();
             this.textBoxImporte = new System.Windows.Forms.TextBox();
             this.groupBoxDestino = new System.Windows.Forms.GroupBox();
             this.labelUsuario = new System.Windows.Forms.Label();
@@ -54,7 +54,7 @@
             this.comboBoxCuentaOrigen.Name = "comboBoxCuentaOrigen";
             this.comboBoxCuentaOrigen.Size = new System.Drawing.Size(165, 21);
             this.comboBoxCuentaOrigen.TabIndex = 0;
-            this.comboBoxCuentaOrigen.SelectionChangeCommitted += new System.EventHandler(this.comboBoxCuentaOrigen_SelectionChangeCommitted);
+            this.comboBoxCuentaOrigen.SelectionChangeCommitted += new System.EventHandler(this.comboBox_SelectionChangeCommitted);
             // 
             // buttonTransferencia
             // 
@@ -85,14 +85,14 @@
             this.labelCuentaOrigen.TabIndex = 3;
             this.labelCuentaOrigen.Text = "Cuenta Origen";
             // 
-            // labelImporte
+            // labelMonto
             // 
-            this.labelImporte.AutoSize = true;
-            this.labelImporte.Location = new System.Drawing.Point(29, 67);
-            this.labelImporte.Name = "labelImporte";
-            this.labelImporte.Size = new System.Drawing.Size(42, 13);
-            this.labelImporte.TabIndex = 4;
-            this.labelImporte.Text = "Importe";
+            this.labelMonto.AutoSize = true;
+            this.labelMonto.Location = new System.Drawing.Point(29, 67);
+            this.labelMonto.Name = "labelMonto";
+            this.labelMonto.Size = new System.Drawing.Size(37, 13);
+            this.labelMonto.TabIndex = 4;
+            this.labelMonto.Text = "Monto";
             // 
             // textBoxImporte
             // 
@@ -141,6 +141,8 @@
             this.comboBoxCuentaTercero.Name = "comboBoxCuentaTercero";
             this.comboBoxCuentaTercero.Size = new System.Drawing.Size(165, 21);
             this.comboBoxCuentaTercero.TabIndex = 3;
+            this.comboBoxCuentaTercero.SelectionChangeCommitted += new System.EventHandler(this.comboBox_SelectionChangeCommitted);
+            this.comboBoxCuentaTercero.SelectedValueChanged += new System.EventHandler(this.comboBoxCuentaTercero_SelectedValueChanged);
             // 
             // labelCuentaTercera
             // 
@@ -158,6 +160,8 @@
             this.comboBoxCuentaPropia.Name = "comboBoxCuentaPropia";
             this.comboBoxCuentaPropia.Size = new System.Drawing.Size(165, 21);
             this.comboBoxCuentaPropia.TabIndex = 1;
+            this.comboBoxCuentaPropia.SelectionChangeCommitted += new System.EventHandler(this.comboBox_SelectionChangeCommitted);
+            this.comboBoxCuentaPropia.SelectedValueChanged += new System.EventHandler(this.comboBoxCuentaPropia_SelectedValueChanged);
             // 
             // labelCuentaPropia
             // 
@@ -174,7 +178,7 @@
             this.groupBoxOrigen.Controls.Add(this.labelCuentaOrigen);
             this.groupBoxOrigen.Controls.Add(this.comboBoxCuentaOrigen);
             this.groupBoxOrigen.Controls.Add(this.textBoxImporte);
-            this.groupBoxOrigen.Controls.Add(this.labelImporte);
+            this.groupBoxOrigen.Controls.Add(this.labelMonto);
             this.groupBoxOrigen.Location = new System.Drawing.Point(44, 12);
             this.groupBoxOrigen.Name = "groupBoxOrigen";
             this.groupBoxOrigen.Size = new System.Drawing.Size(374, 102);
@@ -187,9 +191,9 @@
             this.labelMax.AutoSize = true;
             this.labelMax.Location = new System.Drawing.Point(256, 67);
             this.labelMax.Name = "labelMax";
-            this.labelMax.Size = new System.Drawing.Size(45, 13);
+            this.labelMax.Size = new System.Drawing.Size(60, 13);
             this.labelMax.TabIndex = 6;
-            this.labelMax.Text = "Max. $0";
+            this.labelMax.Text = "Max. $0,00";
             // 
             // FormTransferencias
             // 
@@ -217,7 +221,7 @@
         private System.Windows.Forms.Button buttonTransferencia;
         private System.Windows.Forms.Button buttonVolver;
         private System.Windows.Forms.Label labelCuentaOrigen;
-        private System.Windows.Forms.Label labelImporte;
+        private System.Windows.Forms.Label labelMonto;
         private System.Windows.Forms.TextBox textBoxImporte;
         private System.Windows.Forms.GroupBox groupBoxDestino;
         private System.Windows.Forms.ComboBox comboBoxCuentaPropia;

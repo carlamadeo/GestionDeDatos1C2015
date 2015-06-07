@@ -1042,7 +1042,7 @@ BEGIN
 
 	BEGIN TRANSACTION
 
-		Declare @importe_actual numeric(10,2)
+		Declare @importe_actual numeric(18,2)
 		
 		SELECT @importe_actual = Importe FROM SQL_SERVANT.Cuenta c
 		WHERE @p_deposito_cuenta = c.Id_Cuenta
@@ -1059,7 +1059,8 @@ GO
 
 CREATE PROCEDURE [SQL_SERVANT].[sp_get_importe_maximo_por_cuenta](
 @p_cuenta_id numeric(18,0) = 0,
-@p_importe_maximo numeric(18,2) = 0.00 OUTPUT
+@p_cuenta_propia bit = 0,
+@p_importe_maximo numeric(18,2) = 0 OUTPUT
 )
 AS
 BEGIN
@@ -1074,7 +1075,10 @@ BEGIN
 	SELECT @importe_costo_cuenta = Costo FROM SQL_SERVANT.Costo_Tipo_Cuenta
 	WHERE Id_Tipo_Cuenta = @id_tipo_cuenta
 	
-	SET @p_importe_maximo = @importe_cuenta - @importe_costo_cuenta
+	IF (@p_cuenta_propia <> 0)
+		SET @p_importe_maximo = @importe_cuenta
+	ELSE
+		SET @p_importe_maximo = @importe_cuenta - @importe_costo_cuenta
 	
 	IF (@p_importe_maximo < 0)
 		SET @p_importe_maximo = 0
@@ -1082,3 +1086,77 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [SQL_SERVANT].[sp_check_account_same_client](
+@p_primer_cuenta numeric(18,0),
+@p_segunda_cuenta numeric(18,0),
+@p_isSameClient bit = 0 OUTPUT
+)
+AS
+BEGIN
+
+	Declare @p_primer_cliente int
+	Declare @p_segundo_cliente int
+	
+	SELECT @p_primer_cliente = Id_Cliente FROM SQL_SERVANT.Cliente_Cuenta cc
+	WHERE cc.Id_Cuenta = @p_primer_cuenta
+	
+	SELECT @p_segundo_cliente = Id_Cliente FROM SQL_SERVANT.Cliente_Cuenta cc
+	WHERE cc.Id_Cuenta = @p_segunda_cuenta
+	
+	IF @p_primer_cliente = @p_segundo_cliente
+	SET @p_isSameClient = 1
+	
+END
+GO	
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_save_transferencia](
+@p_transferencia_origen numeric(18,0),
+@p_transferencia_destino numeric(18,0),
+@p_transferencia_monto numeric(18,2),
+@p_transferencia_moneda int,
+@p_tranferencia_fecha datetime,
+@p_tranferencia_mismo_cliente bit
+)
+
+AS
+BEGIN
+
+	BEGIN TRANSACTION
+
+		Declare @p_importe_actual_origen numeric(18,2)
+		Declare @p_importe_actual_destino numeric(18,2)
+		Declare @p_importe_final_origen numeric(18,2)
+		Declare @p_importe_final_destino numeric(18,2)
+		Declare @p_transferencia_costo numeric(10,2)
+		Declare @p_mismo_cliente bit
+		
+		SELECT @p_importe_actual_origen = Importe FROM SQL_SERVANT.Cuenta c
+		WHERE @p_transferencia_origen = c.Id_Cuenta
+		
+		SELECT @p_importe_actual_destino = Importe FROM SQL_SERVANT.Cuenta c
+		WHERE @p_transferencia_destino = c.Id_Cuenta
+		
+		SELECT @p_transferencia_costo = Costo FROM SQL_SERVANT.Costo_Tipo_Cuenta ctc
+		INNER JOIN SQL_SERVANT.Cuenta c ON ctc.Id_Tipo_Cuenta = c.Id_Tipo_Cuenta
+		WHERE Id_Cuenta = @p_transferencia_origen
+		
+		INSERT INTO SQL_SERVANT.Transferencia (Id_Cuenta_Origen, Id_Cuenta_Destino, Id_Moneda, 
+		Importe, Costo,	Fecha_Transferencia)
+		VALUES (@p_transferencia_origen, @p_transferencia_destino, @p_transferencia_moneda, @p_transferencia_monto, 
+		@p_transferencia_costo, @p_tranferencia_fecha)
+		
+		SET @p_importe_final_origen = @p_importe_actual_origen - @p_transferencia_monto
+		SET @p_importe_final_destino = @p_importe_actual_destino + @p_transferencia_monto
+		
+		IF (@p_tranferencia_mismo_cliente = 0)
+			SET @p_importe_final_origen = @p_importe_final_origen -  @p_transferencia_costo
+		
+		UPDATE SQL_SERVANT.Cuenta SET Importe = (@p_importe_final_origen)
+		WHERE @p_transferencia_origen = SQL_SERVANT.Cuenta.Id_Cuenta
+		
+		UPDATE SQL_SERVANT.Cuenta SET Importe = (@p_importe_final_destino)
+		WHERE @p_transferencia_destino = SQL_SERVANT.Cuenta.Id_Cuenta
+		
+	COMMIT TRANSACTION
+END
+GO
