@@ -39,3 +39,4 @@ C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\P
 C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\PagoElectronico\bin\Release\PagoElectronico.exe
 C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\PagoElectronico\bin\Release\PagoElectronico.pdb
 C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Release\PagoElectronico.pdb
+C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\bin\Release\PagoElectronico.exe.config

@@ -39,9 +39,11 @@
             this.buttonRemove = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxCrearRol = new System.Windows.Forms.GroupBox();
-            this.groupBoxFuncionalidades = new System.Windows.Forms.GroupBox();
-            this.labelHabilitado = new System.Windows.Forms.Label();
             this.checkBoxHabilitado = new System.Windows.Forms.CheckBox();
+            this.labelHabilitado = new System.Windows.Forms.Label();
+            this.groupBoxFuncionalidades = new System.Windows.Forms.GroupBox();
+            this.comboBoxFuncionalidad = new System.Windows.Forms.ComboBox();
+            this.labelFuncionalidad = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvToAdd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSelected)).BeginInit();
             this.groupBoxCrearRol.SuspendLayout();
@@ -66,7 +68,7 @@
             // 
             // buttonSaveName
             // 
-            this.buttonSaveName.Location = new System.Drawing.Point(518, 133);
+            this.buttonSaveName.Location = new System.Drawing.Point(518, 174);
             this.buttonSaveName.Name = "buttonSaveName";
             this.buttonSaveName.Size = new System.Drawing.Size(72, 23);
             this.buttonSaveName.TabIndex = 2;
@@ -130,7 +132,7 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(30, 423);
+            this.buttonCancel.Location = new System.Drawing.Point(30, 475);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 9;
@@ -140,16 +142,37 @@
             // 
             // groupBoxCrearRol
             // 
+            this.groupBoxCrearRol.Controls.Add(this.labelFuncionalidad);
+            this.groupBoxCrearRol.Controls.Add(this.comboBoxFuncionalidad);
             this.groupBoxCrearRol.Controls.Add(this.checkBoxHabilitado);
             this.groupBoxCrearRol.Controls.Add(this.labelHabilitado);
             this.groupBoxCrearRol.Controls.Add(this.txtRolDescription);
             this.groupBoxCrearRol.Controls.Add(this.label1);
             this.groupBoxCrearRol.Location = new System.Drawing.Point(30, 37);
             this.groupBoxCrearRol.Name = "groupBoxCrearRol";
-            this.groupBoxCrearRol.Size = new System.Drawing.Size(560, 82);
+            this.groupBoxCrearRol.Size = new System.Drawing.Size(560, 119);
             this.groupBoxCrearRol.TabIndex = 10;
             this.groupBoxCrearRol.TabStop = false;
             this.groupBoxCrearRol.Text = "Creación de Rol";
+            // 
+            // checkBoxHabilitado
+            // 
+            this.checkBoxHabilitado.AutoSize = true;
+            this.checkBoxHabilitado.Location = new System.Drawing.Point(135, 77);
+            this.checkBoxHabilitado.MaximumSize = new System.Drawing.Size(20, 20);
+            this.checkBoxHabilitado.Name = "checkBoxHabilitado";
+            this.checkBoxHabilitado.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxHabilitado.TabIndex = 3;
+            this.checkBoxHabilitado.UseVisualStyleBackColor = true;
+            // 
+            // labelHabilitado
+            // 
+            this.labelHabilitado.AutoSize = true;
+            this.labelHabilitado.Location = new System.Drawing.Point(18, 78);
+            this.labelHabilitado.Name = "labelHabilitado";
+            this.labelHabilitado.Size = new System.Drawing.Size(54, 13);
+            this.labelHabilitado.TabIndex = 2;
+            this.labelHabilitado.Text = "Habilitado";
             // 
             // groupBoxFuncionalidades
             // 
@@ -159,37 +182,35 @@
             this.groupBoxFuncionalidades.Controls.Add(this.buttonAdd);
             this.groupBoxFuncionalidades.Controls.Add(this.label3);
             this.groupBoxFuncionalidades.Controls.Add(this.dgvSelected);
-            this.groupBoxFuncionalidades.Location = new System.Drawing.Point(30, 162);
+            this.groupBoxFuncionalidades.Location = new System.Drawing.Point(30, 214);
             this.groupBoxFuncionalidades.Name = "groupBoxFuncionalidades";
             this.groupBoxFuncionalidades.Size = new System.Drawing.Size(560, 240);
             this.groupBoxFuncionalidades.TabIndex = 11;
             this.groupBoxFuncionalidades.TabStop = false;
             this.groupBoxFuncionalidades.Text = "Editar Funcionalidades";
             // 
-            // labelHabilitado
+            // comboBoxFuncionalidad
             // 
-            this.labelHabilitado.AutoSize = true;
-            this.labelHabilitado.Location = new System.Drawing.Point(311, 36);
-            this.labelHabilitado.Name = "labelHabilitado";
-            this.labelHabilitado.Size = new System.Drawing.Size(54, 13);
-            this.labelHabilitado.TabIndex = 2;
-            this.labelHabilitado.Text = "Habilitado";
+            this.comboBoxFuncionalidad.FormattingEnabled = true;
+            this.comboBoxFuncionalidad.Location = new System.Drawing.Point(392, 33);
+            this.comboBoxFuncionalidad.Name = "comboBoxFuncionalidad";
+            this.comboBoxFuncionalidad.Size = new System.Drawing.Size(150, 21);
+            this.comboBoxFuncionalidad.TabIndex = 4;
             // 
-            // checkBoxHabilitado
+            // labelFuncionalidad
             // 
-            this.checkBoxHabilitado.AutoSize = true;
-            this.checkBoxHabilitado.Location = new System.Drawing.Point(396, 35);
-            this.checkBoxHabilitado.MaximumSize = new System.Drawing.Size(20, 20);
-            this.checkBoxHabilitado.Name = "checkBoxHabilitado";
-            this.checkBoxHabilitado.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxHabilitado.TabIndex = 3;
-            this.checkBoxHabilitado.UseVisualStyleBackColor = true;
+            this.labelFuncionalidad.AutoSize = true;
+            this.labelFuncionalidad.Location = new System.Drawing.Point(284, 36);
+            this.labelFuncionalidad.Name = "labelFuncionalidad";
+            this.labelFuncionalidad.Size = new System.Drawing.Size(73, 13);
+            this.labelFuncionalidad.TabIndex = 5;
+            this.labelFuncionalidad.Text = "Funcionalidad";
             // 
             // FormABMRolModify
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 465);
+            this.ClientSize = new System.Drawing.Size(612, 517);
             this.Controls.Add(this.buttonSaveName);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxCrearRol);
@@ -223,5 +244,7 @@
         private System.Windows.Forms.GroupBox groupBoxFuncionalidades;
         private System.Windows.Forms.CheckBox checkBoxHabilitado;
         private System.Windows.Forms.Label labelHabilitado;
+        private System.Windows.Forms.Label labelFuncionalidad;
+        private System.Windows.Forms.ComboBox comboBoxFuncionalidad;
     }
 }

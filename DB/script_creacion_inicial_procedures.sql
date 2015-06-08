@@ -169,15 +169,27 @@ GO
 CREATE PROCEDURE SQL_SERVANT.[sp_rol_create](
 @p_rol_description varchar(255),
 @p_rol_habilitado bit,
+@p_rol_funcionalidad varchar(40),
 @p_id_rol int OUTPUT
 )
 AS
-BEGIN
+BEGIN	
+	
 	IF (@p_id_rol = 0)
 	BEGIN
+		Declare @p_id_funcionalidad int
+		
+		SELECT @p_id_funcionalidad = f.Id_Funcionalidad
+		FROM SQL_SERVANT.Funcionalidad f
+		WHERE f.Descripcion = @p_rol_funcionalidad
+		
 		INSERT INTO SQL_SERVANT.Rol (Descripcion, Habilitado)
 			VALUES(@p_rol_description, @p_rol_habilitado)
 		SET @p_id_rol = @@IDENTITY
+		
+		INSERT INTO SQL_SERVANT.Rol_Funcionalidad (Id_Rol, Id_Funcionalidad)
+			VALUES (@p_id_rol, @p_id_funcionalidad)
+		
 	END
 	ELSE
 	BEGIN

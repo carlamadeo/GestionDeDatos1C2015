@@ -33,19 +33,22 @@ namespace PagoElectronico.ABM_Rol
             {
                 this.txtRolDescription.Text = this.rol.description;
                 this.checkBoxHabilitado.Checked = this.rol.habilitado;
+                this.labelFuncionalidad.Enabled = false;
+                this.comboBoxFuncionalidad.Enabled = false;
                 this.groupBoxCrearRol.Text = "Editar Nombre";
                 this.buttonSaveName.Text = "Editar";
             }
 
             else
             {
+                RolFuncionalityHelper.fillComboBox(comboBoxFuncionalidad);
                 this.checkBoxHabilitado.Checked = true;
             }
         }
 
         private void reloadGrid()
         {
-            RolFuncionalityHelper.geFunctionalityByRolAvailability(rol.id, this.dgvToAdd);
+            RolFuncionalityHelper.getFunctionalityByRolAvailability(rol.id, this.dgvToAdd);
             RolFuncionalityHelper.getFunctionalityByRolEnabled(rol.id, this.dgvSelected);
         }
 
@@ -55,9 +58,28 @@ namespace PagoElectronico.ABM_Rol
             {
                 rol.habilitado = checkBoxHabilitado.Checked;
                 rol.description = txtRolDescription.Text;
-                RolHelper.editRol(rol);
-                MessageBox.Show("Se modifico/creo el rol \"" + rol.description + "\" correctamente", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.buttonSaveName.Text = "Editar nombre";
+
+                if (edit)
+                {
+                    rol.primerFuncionalidad = "";
+                    RolHelper.editRol(rol);
+                    MessageBox.Show("Se modifico el rol \"" + rol.description + "\" correctamente", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                else
+                {
+                    if (Validaciones.requiredString(comboBoxFuncionalidad.Text, "Debe seleccionar una funcionalidad"))
+                    {
+                        rol.primerFuncionalidad = comboBoxFuncionalidad.Text.ToString();
+                        RolHelper.editRol(rol);
+                        edit = true;
+                        reloadGrid();
+                        this.labelFuncionalidad.Enabled = false;
+                        this.comboBoxFuncionalidad.Enabled = false;
+                        MessageBox.Show("Se creo el rol \"" + rol.description + "\" correctamente", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.buttonSaveName.Text = "Editar nombre";
+                    }
+                }
             }
         }
 
@@ -96,7 +118,7 @@ namespace PagoElectronico.ABM_Rol
                 }
                 else
                 {
-                    MessageBox.Show("Debe seleccionar una funcionalidad a remover al rol", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Debe seleccionar una funcionalidad a remover del rol", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else

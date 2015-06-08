@@ -63,6 +63,9 @@ namespace PagoElectronico.ABM_Rol
             command.Parameters.Add(new SqlParameter("@p_rol_habilitado", SqlDbType.Int));
             command.Parameters["@p_rol_habilitado"].Value = habilitado;
 
+            command.Parameters.Add(new SqlParameter("@p_rol_funcionalidad", SqlDbType.VarChar));
+            command.Parameters["@p_rol_funcionalidad"].Value = rol.primerFuncionalidad;
+
             var returnParameterValue = command.Parameters.Add(new SqlParameter("@p_id_rol", SqlDbType.Int));
             returnParameterValue.Direction = ParameterDirection.InputOutput;
             command.Parameters["@p_id_rol"].Value = rol.id;
