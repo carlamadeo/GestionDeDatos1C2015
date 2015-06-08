@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="ABM Cliente\Cliente.cs" />
     <Compile Include="ABM Cliente\ClienteHelper.cs" />
+    <Compile Include="Consulta Saldos\ConsultaSaldos.cs" />
     <Compile Include="Tarjetas\Empresa.cs" />
     <Compile Include="ABM Cliente\FormABMCliente.cs">
       <SubType>Form</SubType>

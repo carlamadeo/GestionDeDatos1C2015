@@ -405,6 +405,69 @@ BEGIN
 END
 GO
 
+--PROCEDIMIENTOS CONSULTA DE SALDO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_consulta_check_account](
+@p_id_cuenta varchar(255) = null,
+@p_is_valid bit = 0 OUTPUT
+)
+AS
+BEGIN
+	IF EXISTS (SELECT 1 FROM SQL_SERVANT.Cuenta WHERE Id_Cuenta = @p_id_cuenta )
+	BEGIN
+		SET @p_is_valid = 1
+	END
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_consulta_saldo](
+@p_consulta_cuenta varchar(255) = null
+)
+AS
+BEGIN
+	select Importe from SQL_SERVANT.Cuenta
+	where Id_Cuenta = @p_consulta_cuenta
+	
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_consulta_last_5_deposits](
+@p_consulta_cuenta varchar(255) = null
+)
+AS
+BEGIN
+	select top 5 t1.Id_Deposito, t1.Importe, t1.Id_Tarjeta, t1.Fecha_Deposito
+ 	from SQL_SERVANT.Deposito t1
+	where Id_Cuenta = @p_consulta_cuenta
+	
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_consulta_last_5_withdrawal](
+@p_consulta_cuenta varchar(255) = null
+)
+AS
+BEGIN
+	select top 5 t1.Id_Retiro, t1.Importe, t1.Id_Banco, t1.Fecha_Extraccion
+ 	from SQL_SERVANT.Retiro t1
+	where Id_Cuenta = @p_consulta_cuenta
+	
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_consulta_last_10_transfers](
+@p_consulta_cuenta varchar(255) = null
+)
+AS
+BEGIN
+	select top 10 Id_Transferencia ,Id_Cuenta_Destino, Importe, Costo, Fecha_Transferencia
+	from SQL_SERVANT.Transferencia
+	where Id_Cuenta_Origen = @p_consulta_cuenta
+	
+END
+GO
+
+
 --PROCEDIMIENTOS ESTADISTICOS
 CREATE PROCEDURE [SQL_SERVANT].[sp_estadistic_top_5_country_movement](
 @p_estadistic_from datetime,

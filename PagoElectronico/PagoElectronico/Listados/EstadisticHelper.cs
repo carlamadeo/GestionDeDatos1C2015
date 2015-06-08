@@ -27,7 +27,8 @@ namespace PagoElectronico.Listados
                 "t.Fechas", "t.Descripcion", "", null);
         }
 
-        public static void loadEstadistic(String storeProcedure, DateTime from, DateTime to, DataGridView dgv)
+        public static void 
+            loadEstadistic(String storeProcedure, DateTime from, DateTime to, DataGridView dgv)
         {
             SqlCommand command = new SqlCommand();
             command.CommandText = "SQL_SERVANT." + storeProcedure;

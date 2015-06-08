@@ -45,6 +45,16 @@ DROP PROCEDURE SQL_SERVANT.sp_user_rol_add
 
 DROP PROCEDURE SQL_SERVANT.sp_user_rol_remove
 
+DROP PROCEDURE SQL_SERVANT.sp_consulta_check_account
+
+DROP PROCEDURE SQL_SERVANT.sp_consulta_saldo
+
+DROP PROCEDURE SQL_SERVANT.sp_consulta_last_5_deposits
+
+DROP PROCEDURE SQL_SERVANT.sp_consulta_last_5_withdrawal
+
+DROP PROCEDURE SQL_SERVANT.sp_consulta_last_10_transfers
+
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_country_movement
 
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_cli_more_pay_commission

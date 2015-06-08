@@ -94,6 +94,11 @@ namespace PagoElectronico.Menu
                     func.folder = "Transferencias";
                     func.form = "FormTransferencias";
                     break;
+                case "Consulta de saldos":
+                    func.folder = "Consulta_Saldos";
+                    func.form = "FormConsultaSaldos";
+                    break;
+
             }
             return func;
         }
