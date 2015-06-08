@@ -96,9 +96,10 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_rol_exist_one_by_user](
 AS
 BEGIN
 	Declare @count_rol int
-	SELECT DISTINCT  Id_Usuario, Id_Rol FROM SQL_SERVANT.Usuario_Rol
-		WHERE Id_Usuario = @p_id
-		AND Habilitado = 1
+	SELECT DISTINCT  ur.Id_Usuario, ur.Id_Rol FROM SQL_SERVANT.Usuario_Rol ur
+		INNER JOIN SQL_SERVANT.Rol r ON ur.Id_Rol = r.Id_Rol
+		WHERE ur.Id_Usuario = @p_id
+		AND r.Habilitado = 1
 
 	SET @count_rol = @@ROWCOUNT
 
@@ -162,17 +163,6 @@ BEGIN
 
 		WHERE
 		((@p_rol_name IS NULL) OR (r.Descripcion like @p_rol_name + '%'))
-END
-GO
-
-CREATE PROCEDURE [SQL_SERVANT].[sp_rol_enable_disable](
-@p_id_rol int,
-@p_enable_disable int
-)
-AS
-BEGIN
-	UPDATE SQL_SERVANT.Rol SET Habilitado = @p_enable_disable
-		WHERE Id_Rol = @p_id_rol
 END
 GO
 
