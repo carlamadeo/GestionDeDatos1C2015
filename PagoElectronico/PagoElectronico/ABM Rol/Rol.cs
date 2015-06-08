@@ -9,6 +9,7 @@ namespace PagoElectronico.ABM_Rol
     {
         public int id { get; set; }
         public string description { get; set; }
+        public Boolean habilitado { get; set; }
 
         public Rol()
         {

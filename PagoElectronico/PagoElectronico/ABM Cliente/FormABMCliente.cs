@@ -134,16 +134,19 @@ namespace PagoElectronico.ABM_Cliente
 
         private void checkClientEnableDisable()
         {
-            Boolean enabled = ClienteHelper.isEnabled(Convert.ToInt32(dgvClient.CurrentRow.Cells[0].Value));
-            if (enabled)
+            if (dgvClient.RowCount != 0)
             {
-                this.buttonDeshabilitar.Enabled = true;
-                this.buttonHabilitar.Enabled = false;
-            }
-            else
-            {
-                this.buttonHabilitar.Enabled = true;
-                this.buttonDeshabilitar.Enabled = false;
+                Boolean enabled = ClienteHelper.isEnabled(Convert.ToInt32(dgvClient.CurrentRow.Cells[0].Value));
+                if (enabled)
+                {
+                    this.buttonDeshabilitar.Enabled = true;
+                    this.buttonHabilitar.Enabled = false;
+                }
+                else
+                {
+                    this.buttonHabilitar.Enabled = true;
+                    this.buttonDeshabilitar.Enabled = false;
+                }
             }
         }
 

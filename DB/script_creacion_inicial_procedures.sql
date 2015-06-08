@@ -120,6 +120,18 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [SQL_SERVANT].[sp_rol_is_enabled](
+@p_rol_id int = 0,
+@p_isEnabled bit = 0 OUTPUT
+)
+AS
+BEGIN
+
+	SELECT @p_isEnabled = Habilitado FROM SQL_SERVANT.Rol
+	WHERE Id_Rol = @p_rol_id
+END
+GO
+
 --PROCEDIMIENTO PARA LISTAR MENU
 CREATE PROCEDURE [SQL_SERVANT].[sp_menu_list_functionality_by_user](
 @p_id_rol int
@@ -166,6 +178,7 @@ GO
 
 CREATE PROCEDURE SQL_SERVANT.[sp_rol_create](
 @p_rol_description varchar(255),
+@p_rol_habilitado bit,
 @p_id_rol int OUTPUT
 )
 AS
@@ -173,12 +186,12 @@ BEGIN
 	IF (@p_id_rol = 0)
 	BEGIN
 		INSERT INTO SQL_SERVANT.Rol (Descripcion, Habilitado)
-			VALUES(@p_rol_description, 1)
+			VALUES(@p_rol_description, @p_rol_habilitado)
 		SET @p_id_rol = @@IDENTITY
 	END
 	ELSE
 	BEGIN
-		UPDATE SQL_SERVANT.Rol SET Descripcion = @p_rol_description
+		UPDATE SQL_SERVANT.Rol SET Descripcion = @p_rol_description, Habilitado = @p_rol_habilitado
 			WHERE Id_Rol = @p_id_rol 
 	END
 	
