@@ -77,6 +77,10 @@ namespace PagoElectronico.Menu
                     func.folder = "Tarjetas";
                     func.form = "FormAssociateCard";
                     break;
+                case "Retiro de Efectivo":
+                    func.folder = "Retiros";
+                    func.form = "FormRetiros";
+                    break;
                 case "Depositos":
                     func.folder = "Depositos";
                     func.form = "Depositos";

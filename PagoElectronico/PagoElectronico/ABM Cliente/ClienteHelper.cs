@@ -290,5 +290,29 @@ namespace PagoElectronico.ABM_Cliente
 
         }
 
+        public static Boolean checkIdentificationIsCorrect(Int32 identificationId)
+        {
+            SqlCommand sp_client_check_valid_identification = new SqlCommand();
+            sp_client_check_valid_identification.CommandText = "SQL_SERVANT.sp_client_nro_identity_is_valid";
+            sp_client_check_valid_identification.Parameters.Add(new SqlParameter("@p_client_id", SqlDbType.Int));
+            sp_client_check_valid_identification.Parameters["@p_client_id"].Value = VarGlobal.usuario.clientId;
+
+            sp_client_check_valid_identification.Parameters.Add(new SqlParameter("@p_client_identity_id", SqlDbType.Int));
+            sp_client_check_valid_identification.Parameters["@p_client_identity_id"].Value = identificationId;
+
+            var returnParametersIsValid = sp_client_check_valid_identification.Parameters.Add(new SqlParameter("@p_is_valid", SqlDbType.Int));
+            returnParametersIsValid.Direction = ParameterDirection.InputOutput;
+
+            ProcedureHelper.execute(sp_client_check_valid_identification, "Chequear numero de identificacion", false);
+
+            if (Convert.ToInt16(returnParametersIsValid.Value) == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }

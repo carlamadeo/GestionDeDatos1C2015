@@ -603,6 +603,36 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [SQL_SERVANT].[sp_account_enabled_with_credit_search](
+@p_account_client_id int,
+@p_account_today datetime
+)
+AS
+BEGIN
+	SELECT 
+		cc.Id_Cuenta 'Nro Cuenta',
+		pa.Descripcion 'Pais',
+		mo.Descripcion 'Moneda',
+		cu.Importe 'Importe',
+		cu.Fecha_Vencimiento 'Fecha Vencimiento'
+	FROM SQL_SERVANT.Cuenta cu
+	INNER JOIN SQL_SERVANT.Cliente_Cuenta cc
+		ON cu.Id_Cuenta = cc.Id_Cuenta
+	INNER JOIN SQL_SERVANT.Estado_Cuenta ec
+		ON cu.Id_Estado_Cuenta = ec.Id_Estado_Cuenta
+	INNER JOIN SQL_SERVANT.Pais pa
+		ON cu.Id_Pais_Registro = pa.Id_Pais
+	INNER JOIN SQL_SERVANT.Moneda mo
+		ON mo.Id_Moneda = cu.Id_Moneda
+	WHERE ec.Descripcion = 'Habilitada'
+	AND cc.Id_Cliente = @p_account_client_id
+	AND cu.Fecha_Creacion <= @p_account_today
+	AND cu.Fecha_Vencimiento <= @p_account_today
+	AND cu.Importe > 0.00
+	AND UPPER(mo.Descripcion) = UPPER('USD')
+END
+GO
+
 CREATE PROCEDURE [SQL_SERVANT].[sp_client_search_by_lastname](
 @p_client_lastname varchar(255) = null
 )
@@ -713,6 +743,22 @@ BEGIN
 		INNER JOIN SQL_SERVANT.Pais p
 			ON (p.Id_Pais = cd.Id_Pais) 
 		WHERE c.Id_Cliente = @p_id_client
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_client_nro_identity_is_valid](
+@p_client_id int,
+@p_client_identity_id int,
+@p_is_valid bit = 0 OUTPUT
+)
+AS
+BEGIN
+	IF EXISTS (SELECT 1 FROM SQL_SERVANT.Cliente
+	WHERE Id_Cliente = @p_client_id
+		AND Nro_Identificacion = @p_client_identity_id)
+		SET @p_is_valid = 1
+	ELSE
+		SET @p_is_valid = 0
 END
 GO
 
@@ -995,6 +1041,67 @@ BEGIN
 			Codigo_Seguridad = @p_tarjeta_codigo_seguridad
 			WHERE Id_Tarjeta = @p_tarjeta_id
 		
+	COMMIT TRANSACTION
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_card_enabled_search](
+@p_card_client_id int,
+@p_card_today datetime
+)
+AS
+BEGIN
+	SELECT 
+		t.Id_Tarjeta 'Nro Tarjeta', 
+		t.Fecha_Vencimiento 'Fecha Vencimiento',
+		te.Descripcion 'Empresa'
+	FROM SQL_SERVANT.Tarjeta t
+	INNER JOIN SQL_SERVANT.Cliente_Tarjeta ct
+		ON t.Id_Tarjeta = ct.Id_Tarjeta
+	INNER JOIN SQL_SERVANT.Tarjeta_Empresa te
+		ON t.Id_Tarjeta_Empresa = te.Id_Tarjeta_Empresa
+	WHERE ct.Id_Cliente = @p_card_client_id
+		AND	t.Fecha_Emision <= @p_card_today
+		AND t.Fecha_Vencimiento <= @p_card_today
+		AND ct.Habilitada = 1
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_retirement_generate_extraction](
+@p_retirement_client_id int,
+@p_retirement_account_id numeric(18,0),
+@p_retirement_amount numeric(18,2),
+@p_retirement_bank_id int,
+@p_retirement_today datetime,
+@p_retirement_currency varchar(3),
+@p_retirement_check_number numeric(18,0) = 0 OUTPUT
+)
+AS
+BEGIN
+	declare @Id_Cheque numeric(18,0)
+	declare @Id_Retiro numeric(18,0)
+	BEGIN TRANSACTION
+		INSERT INTO SQL_SERVANT.Cheque (Id_Cuenta, Fecha, Importe, Id_Moneda, Id_Banco)
+		SELECT @p_retirement_account_id, @p_retirement_today, @p_retirement_amount, mo.Id_Moneda, @p_retirement_bank_id
+			FROM SQL_SERVANT.Cuenta cu
+				INNER JOIN SQL_SERVANT.Moneda mo
+					ON UPPER(mo.Descripcion) = UPPER(LTRIM(RTRIM(@p_retirement_currency)))
+			WHERE cu.Id_Cuenta = @p_retirement_account_id
+
+		SET @Id_Cheque = @@IDENTITY
+
+		INSERT INTO SQL_SERVANT.Retiro(Id_Cuenta, Id_Moneda, Importe, Fecha_Extraccion, Id_Banco)
+		SELECT @p_retirement_account_id, mo.Id_Moneda, @p_retirement_amount, @p_retirement_today, @p_retirement_bank_id
+			FROM SQL_SERVANT.Moneda mo
+			WHERE UPPER(mo.Descripcion) = UPPER(LTRIM(RTRIM(@p_retirement_currency)))
+		SET @Id_Retiro = @@IDENTITY
+
+		UPDATE SQL_SERVANT.Cuenta SET Importe = Importe - @p_retirement_amount
+			WHERE Id_Cuenta = @p_retirement_account_id
+
+		INSERT INTO SQL_SERVANT.Cheque_Retiro (Id_Retiro, Id_Cheque) VALUES (@Id_Retiro, @Id_Cheque)
+
+		SET @p_retirement_check_number = @Id_Cheque
 	COMMIT TRANSACTION
 END
 GO

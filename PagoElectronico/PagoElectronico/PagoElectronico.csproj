@@ -67,6 +67,7 @@
     <Compile Include="ABM Cliente\Tarjeta.cs" />
     <Compile Include="ABM Cliente\TarjetaHelper.cs" />
     <Compile Include="ABM Cliente\TypeIdentification.cs" />
+    <Compile Include="Utils\BancoHelper.cs" />
     <Compile Include="ABM Cuenta\Cuenta.cs" />
     <Compile Include="ABM Cuenta\CuentaHelper.cs" />
     <Compile Include="ABM Cuenta\FormABMCuenta.cs">
@@ -163,6 +164,13 @@
       <DependentUpon>FormSeleccionRol.cs</DependentUpon>
     </Compile>
     <Compile Include="Login\Login.cs" />
+    <Compile Include="Retiros\FormRetiros.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Retiros\FormRetiros.Designer.cs">
+      <DependentUpon>FormRetiros.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Retiros\RetirosHelper.cs" />
     <Compile Include="Seguridad\Password.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -218,6 +226,9 @@
     <EmbeddedResource Include="Login\FormSeleccionRol.resx">
       <DependentUpon>FormSeleccionRol.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Retiros\FormRetiros.resx">
+      <DependentUpon>FormRetiros.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Seguridad\Password.resx">
       <DependentUpon>Password.cs</DependentUpon>
     </EmbeddedResource>
@@ -246,12 +257,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="Retiros\Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Retiros\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Tarjetas\FormAssociateCard.cs">
       <SubType>Form</SubType>

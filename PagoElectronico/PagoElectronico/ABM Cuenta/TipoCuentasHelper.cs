@@ -56,5 +56,19 @@ namespace PagoElectronico.ABM_Cuenta
             ComboBoxHelper.fill(cmb, "SQL_SERVANT.Tipo_Cuenta tc",
                 "tc.Id_Tipo_Cuenta", "tc.Descripcion", "", null);
         }
+
+        public static void searchAccountEnabled(Int16 clientId, DataGridView dgvAccount)
+        {
+            SqlCommand command = new SqlCommand();
+            command.CommandText = "SQL_SERVANT.sp_account_enabled_with_credit_search";
+
+            command.Parameters.Add(new SqlParameter("@p_account_client_id", SqlDbType.Int));
+            command.Parameters["@p_account_client_id"].Value = clientId;
+
+            command.Parameters.Add(new SqlParameter("@p_account_today", SqlDbType.DateTime));
+            command.Parameters["@p_account_today"].Value = DateHelper.getToday();
+
+            DataGridViewHelper.fill(command, dgvAccount);
+        }
     }
 }

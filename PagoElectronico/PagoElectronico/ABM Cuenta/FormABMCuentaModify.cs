@@ -86,7 +86,8 @@ namespace PagoElectronico.ABM_Cuenta
             isValid = Validaciones.requiredString(comboBoxTypeAccount.SelectedValue.ToString(), "Debe seleccionar un tipo de cuenta");
             if (isValid)
                 account.idTypeAccount = Convert.ToInt16(comboBoxTypeAccount.SelectedValue.ToString());
-            else return null;
+            else 
+                return null;
 
             return account;
         }

@@ -68,7 +68,7 @@
             // 
             // buttonBack
             // 
-            this.buttonBack.Location = new System.Drawing.Point(461, 216);
+            this.buttonBack.Location = new System.Drawing.Point(461, 218);
             this.buttonBack.Name = "buttonBack";
             this.buttonBack.Size = new System.Drawing.Size(75, 23);
             this.buttonBack.TabIndex = 3;
@@ -78,7 +78,7 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(213, 216);
+            this.buttonSave.Location = new System.Drawing.Point(213, 218);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 4;
@@ -149,7 +149,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(698, 273);
+            this.ClientSize = new System.Drawing.Size(698, 278);
             this.Controls.Add(this.dtpExpirationDate);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
