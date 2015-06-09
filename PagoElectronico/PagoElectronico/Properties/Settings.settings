@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PagoElectronico.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="fechaSistema" Type="System.String" Scope="User">
-      <Value Profile="(Default)">01-01-2015 12:00:00</Value>
-    </Setting>
     <Setting Name="formatoFecha" Type="System.String" Scope="User">
       <Value Profile="(Default)">dd-MM-yyyy HH:mm:ss</Value>
     </Setting>
@@ -14,6 +11,9 @@
   &lt;ConnectionString&gt;Server=localhost\SQLSERVER2008;Database=GD1C2015;User Id=gd;Password=gd2015;MultipleActiveResultSets=True&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Server=localhost\SQLSERVER2008;Database=GD1C2015;User Id=gd;Password=gd2015;MultipleActiveResultSets=True</Value>
+    </Setting>
+    <Setting Name="fechaSistema" Type="System.String" Scope="User">
+      <Value Profile="(Default)">01-06-2016 00:00:00</Value>
     </Setting>
   </Settings>
 </SettingsFile>

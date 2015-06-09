@@ -54,10 +54,10 @@ C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\P
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cliente.FormABMCliente.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cliente.FormAltaModificacionCliente.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cuenta.FormABMCuenta.resources
-C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Depositos.Depositos.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cuenta.FormABMCuentaModify.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Tarjetas.FormAssociateCard.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Tarjetas.FormAssociateCardModify.resources
+C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Retiros.FormRetiros.resources
 C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cuenta.FormABMCuenta.resources
 C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.ABM_Cuenta.FormABMCuentaModify.resources
 C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Tarjetas.FormAssociateCard.resources
@@ -87,3 +87,5 @@ C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\P
 C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Tarjetas.FormAssociateCardModify.resources
 C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Transferencias.FormTransferencias.resources
 C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.csproj.GenerateResource.Cache
+C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Depositos.FormDepositos.resources
+C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Transferencias.FormTransferencias.resources

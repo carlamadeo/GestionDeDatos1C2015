@@ -67,6 +67,8 @@ DROP PROCEDURE SQL_SERVANT.sp_account_save_update
 
 DROP PROCEDURE SQL_SERVANT.sp_account_get_data
 
+DROP PROCEDURE SQL_SERVANT.sp_account_enabled_with_credit_search
+
 DROP PROCEDURE SQL_SERVANT.sp_client_search_by_lastname
 
 DROP PROCEDURE SQL_SERVANT.sp_client_search
@@ -74,6 +76,8 @@ DROP PROCEDURE SQL_SERVANT.sp_client_search
 DROP PROCEDURE SQL_SERVANT.sp_client_enable_disable
 
 DROP PROCEDURE SQL_SERVANT.sp_client_data_get_by_id_client
+
+DROP PROCEDURE SQL_SERVANT.sp_client_nro_identity_is_valid
 
 DROP PROCEDURE SQL_SERVANT.sp_client_check_exist_identification
 
@@ -99,9 +103,13 @@ DROP PROCEDURE SQL_SERVANT.sp_card_save_with_association
 
 DROP PROCEDURE SQL_SERVANT.sp_card_exist
 
+DROP PROCEDURE SQL_SERVANT.sp_card_enabled_search
+
 DROP PROCEDURE SQL_SERVANT.sp_tarjeta_save
 
 DROP PROCEDURE SQL_SERVANT.sp_tarjeta_not_expired
+
+DROP PROCEDURE SQL_SERVANT.sp_retirement_generate_extraction
 
 DROP PROCEDURE SQL_SERVANT.sp_save_deposito
 

@@ -111,9 +111,14 @@ namespace PagoElectronico.ABM_Cuenta
         private void buttonCreate_Click(object sender, EventArgs e)
         {
             Boolean dgvClientSelected = DataGridViewHelper.hasElementSelected(dgvClient);
-            if (dgvClientSelected)
+            if (dgvClientSelected || (VarGlobal.usuario.clientId != 0))
             {
-                Int16 idCliente = Convert.ToInt16(dgvClient.CurrentRow.Cells[0].Value.ToString());
+                Int16 idCliente;
+                if (VarGlobal.usuario.clientId != 0)
+                    idCliente = VarGlobal.usuario.clientId;
+                else
+                    idCliente = Convert.ToInt16(dgvClient.CurrentRow.Cells[0].Value.ToString());
+
                 FormABMCuentaModify formABMCuentaModify = new FormABMCuentaModify(false, idCliente, "");
                 formABMCuentaModify.MdiParent = this.MdiParent;
                 MdiParent.Size = formABMCuentaModify.Size;

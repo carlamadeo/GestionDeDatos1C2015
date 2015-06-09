@@ -172,5 +172,19 @@ namespace PagoElectronico.Tarjetas
 
             ProcedureHelper.execute(command, "Se crea la tarjeta", false);
         }
+
+        public static void searchCardEnabled(Int16 clientId, DataGridView dgvCard)
+        {
+            SqlCommand command = new SqlCommand();
+            command.CommandText = "SQL_SERVANT.sp_card_enabled_search";
+
+            command.Parameters.Add(new SqlParameter("@p_card_client_id", SqlDbType.Int));
+            command.Parameters["@p_card_client_id"].Value = clientId;
+
+            command.Parameters.Add(new SqlParameter("@p_card_today", SqlDbType.DateTime));
+            command.Parameters["@p_card_today"].Value = DateHelper.getToday();
+
+            DataGridViewHelper.fill(command, dgvCard);
+        }
     }
 }
