@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.SqlClient;
 using System.Data;
-using PagoElectronico.DB;
+using System.Data.SqlClient;
 using System.Windows.Forms;
+using PagoElectronico.DB;
 
-namespace PagoElectronico.ABM_Cliente
+namespace PagoElectronico.Tarjetas
 {
     public class TarjetaHelper
     {

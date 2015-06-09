@@ -385,7 +385,7 @@
             // 
             this.Tab.Controls.Add(this.tabCliente);
             this.Tab.Controls.Add(this.tabTarjetas);
-            this.Tab.Location = new System.Drawing.Point(2, 27);
+            this.Tab.Location = new System.Drawing.Point(0, 26);
             this.Tab.Name = "Tab";
             this.Tab.SelectedIndex = 0;
             this.Tab.Size = new System.Drawing.Size(717, 502);
@@ -478,6 +478,7 @@
             this.buttonVolverT.TabIndex = 11;
             this.buttonVolverT.Text = "Volver";
             this.buttonVolverT.UseVisualStyleBackColor = true;
+            this.buttonVolverT.Click += new System.EventHandler(this.buttonVolverT_Click);
             // 
             // buttonGuardarT
             // 
@@ -574,7 +575,6 @@
             // 
             // FormAltaModificacionCliente
             // 
-            this.AcceptButton = this.buttonGuardar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(716, 531);

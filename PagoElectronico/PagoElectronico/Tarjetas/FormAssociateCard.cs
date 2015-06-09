@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using PagoElectronico.ABM_Cliente;
 
 namespace PagoElectronico.Tarjetas
 {

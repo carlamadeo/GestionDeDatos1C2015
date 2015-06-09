@@ -44,32 +44,6 @@ namespace PagoElectronico.ABM_Rol
             this.Close();
         }
 
-        private void buttonEnabled_Click(object sender, EventArgs e)
-        {
-            if (dgvRol.CurrentRow != null)
-            {
-                RolHelper.enable(Convert.ToInt32(dgvRol.CurrentRow.Cells[0].Value), true);
-                buttonSearch.PerformClick();
-            }
-            else
-            {
-                MessageBox.Show("Debe seleccionar un rol habilitar");
-            }
-        }
-
-        private void buttonDisable_Click(object sender, EventArgs e)
-        {
-            if (dgvRol.CurrentRow != null)
-            {
-                RolHelper.enable(Convert.ToInt32(dgvRol.CurrentRow.Cells[0].Value), false);
-                buttonSearch.PerformClick();
-            }
-            else
-            {
-                MessageBox.Show("Debe seleccionar un rol habilitar");
-            }
-        }
-
         private void buttonEdit_Click(object sender, EventArgs e)
         {
             if (dgvRol.CurrentRow != null)
@@ -77,6 +51,7 @@ namespace PagoElectronico.ABM_Rol
                 Rol rolToModify = new Rol();
                 rolToModify.id = Convert.ToInt32(dgvRol.CurrentRow.Cells[0].Value.ToString());
                 rolToModify.description = dgvRol.CurrentRow.Cells[1].Value.ToString();
+                rolToModify.habilitado = Convert.ToBoolean(dgvRol.CurrentRow.Cells[2].Value);
                 FormABMRolModify formABMRolModify = new FormABMRolModify(true, rolToModify);
                 formABMRolModify.MdiParent = this.MdiParent;
                 MdiParent.Size = formABMRolModify.Size;
@@ -85,7 +60,7 @@ namespace PagoElectronico.ABM_Rol
             }
             else
             {
-                MessageBox.Show("Debe seleccionar un rol a modificar");
+                MessageBox.Show("Debe seleccionar un rol a modificar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -95,5 +70,6 @@ namespace PagoElectronico.ABM_Rol
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
         }
+
     }
 }

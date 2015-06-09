@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
 using System.Windows.Forms;
-using PagoElectronico.DB;
 using PagoElectronico.ABM_de_Usuario;
+using PagoElectronico.DB;
 using PagoElectronico.Seguridad;
 
 namespace PagoElectronico.ABM_Cliente
@@ -274,20 +271,22 @@ namespace PagoElectronico.ABM_Cliente
             }
         }
 
-        public static void getClientIdByUserId()
+        public static Int16 getClientIdByUserId(string usuarioId)
         {
             SqlCommand sp_client_get_by_user = new SqlCommand();
             sp_client_get_by_user.CommandText = "SQL_SERVANT.sp_client_get_by_user";
             sp_client_get_by_user.Parameters.Add(new SqlParameter("@p_user_id", SqlDbType.VarChar));
-            sp_client_get_by_user.Parameters["@p_user_id"].Value = VarGlobal.usuario.id;
+            sp_client_get_by_user.Parameters["@p_user_id"].Value = usuarioId;
 
             var returnParameter = sp_client_get_by_user.Parameters.Add(new SqlParameter("@p_client_id", SqlDbType.Int));
             returnParameter.Direction = ParameterDirection.InputOutput;
 
             ProcedureHelper.execute(sp_client_get_by_user, "conocer id cliente", false);
 
-            VarGlobal.usuario.clientId = Convert.ToInt16(returnParameter.Value);
+            if(usuarioId == VarGlobal.usuario.id)
+                VarGlobal.usuario.clientId = Convert.ToInt16(returnParameter.Value);
 
+            return Convert.ToInt16(returnParameter.Value);
         }
 
         public static Boolean checkIdentificationIsCorrect(Int32 identificationId)

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using PagoElectronico.Seguridad;
 
-namespace PagoElectronico.ABM_Cliente
+namespace PagoElectronico.Tarjetas
 {
     public class Tarjeta
     {
@@ -19,6 +15,12 @@ namespace PagoElectronico.ABM_Cliente
         public static void fillTarjetasByClient(ComboBox comboBoxTarjetas, Int32 idClient)
         {
             ComboBoxHelper.fill(comboBoxTarjetas, "SQL_SERVANT.Cliente_Tarjeta ct",
+                "ct.Id_Tarjeta", "ct.Id_Tarjeta", "ct.Id_Cliente = '" + idClient + "' AND ct.Habilitada = 1", null);
+        }
+
+        public static void fillTarjetasByClientWhithout4LastDigits(ComboBox comboBoxTarjetas, Int32 idClient)
+        {
+            ComboBoxHelper.fillWithoutLast4Digits(comboBoxTarjetas, "SQL_SERVANT.Cliente_Tarjeta ct",
                 "ct.Id_Tarjeta", "ct.Id_Tarjeta", "ct.Id_Cliente = '" + idClient + "' AND ct.Habilitada = 1", null);
         }
 
@@ -39,7 +41,7 @@ namespace PagoElectronico.ABM_Cliente
                     cenpw += splitString[i];
             }
 
-            return unString;
+            return cenpw;
         }
 
     }

@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using PagoElectronico.ABM_Cliente;
-using PagoElectronico.ABM_Cuenta;
 using System.Data.SqlClient;
-using PagoElectronico.Utils;
+using System.Windows.Forms;
+using PagoElectronico.ABM_Cuenta;
 using PagoElectronico.DB;
+using PagoElectronico.Tarjetas;
+using PagoElectronico.Utils;
 
 namespace PagoElectronico.Depositos
 {
-    public partial class Depositos : Form
+    public partial class FormDepositos : Form
     {
-        public Depositos()
+        public FormDepositos()
         {
             InitializeComponent();
         }
@@ -55,15 +50,15 @@ namespace PagoElectronico.Depositos
             else
                 return null;
 
-            isValid = Validaciones.validAndRequiredDoubleMoreThan0(this.textBoxImporte.Text.ToString(), "El importe a depositar debe ser mayor a 0");
+            isValid = Validaciones.validAndRequiredDoubleMoreThan0(this.textBoxImporte.Text.ToString(), "El monto a depositar debe ser mayor a 0");
             if (isValid)
                 deposito.importe = Convert.ToDecimal(this.textBoxImporte.Text.ToString());
             else
                 return null;
 
-            isValid = Validaciones.requiredString(this.comboBoxTarjetas.Text.ToString(), "Es necesario que seleccione una tarjeta");
+            isValid = Validaciones.requiredString(this.comboBoxTarjetas.SelectedValue.ToString(), "Es necesario que seleccione una tarjeta");
             if (isValid)
-                deposito.tarjeta = Convert.ToDecimal(this.comboBoxTarjetas.Text.ToString());
+                deposito.tarjeta = Convert.ToDecimal(this.comboBoxTarjetas.SelectedValue.ToString());
             else
                 return null;
 
@@ -80,7 +75,7 @@ namespace PagoElectronico.Depositos
                 Validaciones.tarjetaNoVencida(deposito.tarjeta);
                 deposito.fecha = DateHelper.getToday();
                 this.saveDeposito(deposito);
-                MessageBox.Show("Se realizo el Deposito correctamente");
+                MessageBox.Show("Se ha realizado correctamente el deposito por un monto de " + String.Format("{0:C}", deposito.importe), "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

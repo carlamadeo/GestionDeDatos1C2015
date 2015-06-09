@@ -15,8 +15,6 @@ DROP PROCEDURE SQL_SERVANT.sp_rol_exist_one_by_user
 
 DROP PROCEDURE SQL_SERVANT.sp_rol_search
 
-DROP PROCEDURE SQL_SERVANT.sp_rol_enable_disable
-
 DROP PROCEDURE SQL_SERVANT.sp_rol_create
 
 DROP PROCEDURE SQL_SERVANT.sp_rol_functionality_availability
@@ -26,6 +24,8 @@ DROP PROCEDURE SQL_SERVANT.sp_rol_functionality_enabled
 DROP PROCEDURE SQL_SERVANT.sp_rol_functionality_add
 
 DROP PROCEDURE SQL_SERVANT.sp_rol_functionality_remove
+
+DROP PROCEDURE SQL_SERVANT.sp_rol_is_enabled
 
 DROP PROCEDURE SQL_SERVANT.sp_user_search
 
@@ -44,6 +44,16 @@ DROP PROCEDURE SQL_SERVANT.sp_user_get_not_user_rol
 DROP PROCEDURE SQL_SERVANT.sp_user_rol_add
 
 DROP PROCEDURE SQL_SERVANT.sp_user_rol_remove
+
+DROP PROCEDURE SQL_SERVANT.sp_consulta_check_account
+
+DROP PROCEDURE SQL_SERVANT.sp_consulta_saldo
+
+DROP PROCEDURE SQL_SERVANT.sp_consulta_last_5_deposits
+
+DROP PROCEDURE SQL_SERVANT.sp_consulta_last_5_withdrawal
+
+DROP PROCEDURE SQL_SERVANT.sp_consulta_last_10_transfers
 
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_country_movement
 
@@ -104,3 +114,9 @@ DROP PROCEDURE SQL_SERVANT.sp_retirement_generate_extraction
 DROP PROCEDURE SQL_SERVANT.sp_save_deposito
 
 --DROP PROCEDURE SQL_SERVANT.sp_get_tipo_moneda
+
+DROP PROCEDURE SQL_SERVANT.sp_get_importe_maximo_por_cuenta
+
+DROP PROCEDURE SQL_SERVANT.sp_check_account_same_client
+
+DROP PROCEDURE SQL_SERVANT.sp_save_transferencia

@@ -25,38 +25,50 @@ namespace PagoElectronico.ABM_Rol
             DataGridViewHelper.fill(command, dvgRol);
         }
 
-        public static void enable(Int32 idRol, Boolean enable)
+        public static Boolean isEnabled(Int32 idRol)
         {
-            SqlCommand command = new SqlCommand();
-            command.CommandText = "SQL_SERVANT.sp_rol_enable_disable";
+            SqlCommand sp_rol_is_enabled = new SqlCommand();
+            sp_rol_is_enabled.CommandText = "SQL_SERVANT.sp_rol_is_enabled";
+            sp_rol_is_enabled.Parameters.Add(new SqlParameter("@p_rol_id", SqlDbType.Int));
+            sp_rol_is_enabled.Parameters["@p_rol_id"].Value = idRol;
 
-            command.Parameters.Add(new SqlParameter("@p_id_rol", SqlDbType.Int));
-            command.Parameters["@p_id_rol"].Value = idRol;
+            var returnParametersIsEnabled = sp_rol_is_enabled.Parameters.Add(new SqlParameter("@p_isEnabled", SqlDbType.Int));
+            returnParametersIsEnabled.Direction = ParameterDirection.InputOutput;
 
-            command.Parameters.Add(new SqlParameter("@p_enable_disable", SqlDbType.Int));
-            if (enable)
+            ProcedureHelper.execute(sp_rol_is_enabled, "chequear estado rol", false);
+
+            if (Convert.ToInt16(returnParametersIsEnabled.Value) == 0)
             {
-                command.Parameters["@p_enable_disable"].Value = 1;
+                return false;
             }
             else
             {
-                command.Parameters["@p_enable_disable"].Value = 0;
+                return true;
             }
-
-            ProcedureHelper.execute(command, "Habilitar o deshabilitar un rol", false);
         }
 
         public static void editRol(Rol rol)
         {
+            int habilitado = 0;
+
             SqlCommand command = new SqlCommand();
             command.CommandText = "SQL_SERVANT.sp_rol_create";
+
+            command.Parameters.Add(new SqlParameter("@p_rol_description", SqlDbType.VarChar));
+            command.Parameters["@p_rol_description"].Value = rol.description;
+
+            if (rol.habilitado)
+                habilitado = 1;
+            
+            command.Parameters.Add(new SqlParameter("@p_rol_habilitado", SqlDbType.Int));
+            command.Parameters["@p_rol_habilitado"].Value = habilitado;
+
+            command.Parameters.Add(new SqlParameter("@p_rol_funcionalidad", SqlDbType.VarChar));
+            command.Parameters["@p_rol_funcionalidad"].Value = rol.primerFuncionalidad;
 
             var returnParameterValue = command.Parameters.Add(new SqlParameter("@p_id_rol", SqlDbType.Int));
             returnParameterValue.Direction = ParameterDirection.InputOutput;
             command.Parameters["@p_id_rol"].Value = rol.id;
-
-            command.Parameters.Add(new SqlParameter("@p_rol_description", SqlDbType.VarChar));
-            command.Parameters["@p_rol_description"].Value = rol.description;
 
             ProcedureHelper.execute(command, "agregar funcionalidad a rol", false);
 

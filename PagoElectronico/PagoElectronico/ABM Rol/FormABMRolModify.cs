@@ -32,24 +32,54 @@ namespace PagoElectronico.ABM_Rol
             if (edit)
             {
                 this.txtRolDescription.Text = this.rol.description;
-                this.buttonSaveName.Text = "Editar nombre";
+                this.checkBoxHabilitado.Checked = this.rol.habilitado;
+                this.labelFuncionalidad.Enabled = false;
+                this.comboBoxFuncionalidad.Enabled = false;
+                this.groupBoxCrearRol.Text = "Editar Nombre";
+                this.buttonSaveName.Text = "Editar";
+            }
+
+            else
+            {
+                RolFuncionalityHelper.fillComboBox(comboBoxFuncionalidad);
+                this.checkBoxHabilitado.Checked = true;
             }
         }
 
         private void reloadGrid()
         {
-            RolFuncionalityHelper.geFunctionalityByRolAvailability(rol.id, this.dgvToAdd);
+            RolFuncionalityHelper.getFunctionalityByRolAvailability(rol.id, this.dgvToAdd);
             RolFuncionalityHelper.getFunctionalityByRolEnabled(rol.id, this.dgvSelected);
         }
 
         private void buttonSaveName_Click(object sender, EventArgs e)
         {
-            if (Validaciones.requiredString(txtRolDescription.Text, "Debe poner un rol valido"))
+            if (Validaciones.requiredString(txtRolDescription.Text, "El nombre del rol es invalido"))
             {
+                rol.habilitado = checkBoxHabilitado.Checked;
                 rol.description = txtRolDescription.Text;
-                RolHelper.editRol(rol);
-                MessageBox.Show("Se modifico/creo el rol correctamente");
-                this.buttonSaveName.Text = "Editar nombre";
+
+                if (edit)
+                {
+                    rol.primerFuncionalidad = "";
+                    RolHelper.editRol(rol);
+                    MessageBox.Show("Se modifico el rol \"" + rol.description + "\" correctamente", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                else
+                {
+                    if (Validaciones.requiredString(comboBoxFuncionalidad.Text, "Debe seleccionar una funcionalidad"))
+                    {
+                        rol.primerFuncionalidad = comboBoxFuncionalidad.Text.ToString();
+                        RolHelper.editRol(rol);
+                        edit = true;
+                        reloadGrid();
+                        this.labelFuncionalidad.Enabled = false;
+                        this.comboBoxFuncionalidad.Enabled = false;
+                        MessageBox.Show("Se creo el rol \"" + rol.description + "\" correctamente", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.buttonSaveName.Text = "Editar nombre";
+                    }
+                }
             }
         }
 
@@ -61,17 +91,17 @@ namespace PagoElectronico.ABM_Rol
                 {
                     Int32 idFunctionality = Convert.ToInt32(dgvToAdd.CurrentRow.Cells[0].Value);
                     RolFuncionalityHelper.setFunctionalityToRol(rol.id, idFunctionality);
-                    MessageBox.Show("Se agrego funcionalidad al rol correctamente");
+                    MessageBox.Show("Se agrego funcionalidad al rol correctamente", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     reloadGrid();
                 }
                 else
                 {
-                    MessageBox.Show("Debe seleccionar una funcionalidad a agregar al rol");
+                    MessageBox.Show("Debe seleccionar una funcionalidad a agregar al rol", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                MessageBox.Show("Debe primero guardar un nombre de rol");
+                MessageBox.Show("Primero debe crear el rol", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -83,17 +113,17 @@ namespace PagoElectronico.ABM_Rol
                 {
                     Int32 idFunctionality = Convert.ToInt32(dgvSelected.CurrentRow.Cells[0].Value);
                     RolFuncionalityHelper.removeFunctionalityToRol(rol.id, idFunctionality);
-                    MessageBox.Show("Se quito funcionalidad al rol correctamente");
+                    MessageBox.Show("Se quito funcionalidad al rol correctamente", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     reloadGrid();
                 }
                 else
                 {
-                    MessageBox.Show("Debe seleccionar una funcionalidad a remover al rol");
+                    MessageBox.Show("Debe seleccionar una funcionalidad a remover del rol", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                MessageBox.Show("Debe primero guardar un nombre de rol");
+                MessageBox.Show("Primero debe crear el rol", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

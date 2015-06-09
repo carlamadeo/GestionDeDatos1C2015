@@ -96,9 +96,10 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_rol_exist_one_by_user](
 AS
 BEGIN
 	Declare @count_rol int
-	SELECT DISTINCT  Id_Usuario, Id_Rol FROM SQL_SERVANT.Usuario_Rol
-		WHERE Id_Usuario = @p_id
-		AND Habilitado = 1
+	SELECT DISTINCT  ur.Id_Usuario, ur.Id_Rol FROM SQL_SERVANT.Usuario_Rol ur
+		INNER JOIN SQL_SERVANT.Rol r ON ur.Id_Rol = r.Id_Rol
+		WHERE ur.Id_Usuario = @p_id
+		AND r.Habilitado = 1
 
 	SET @count_rol = @@ROWCOUNT
 
@@ -117,6 +118,18 @@ BEGIN
 		SET @p_id_rol = null
 		SET @p_rol_desc = null
 	END
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_rol_is_enabled](
+@p_rol_id int = 0,
+@p_isEnabled bit = 0 OUTPUT
+)
+AS
+BEGIN
+
+	SELECT @p_isEnabled = Habilitado FROM SQL_SERVANT.Rol
+	WHERE Id_Rol = @p_rol_id
 END
 GO
 
@@ -153,32 +166,34 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [SQL_SERVANT].[sp_rol_enable_disable](
-@p_id_rol int,
-@p_enable_disable int
-)
-AS
-BEGIN
-	UPDATE SQL_SERVANT.Rol SET Habilitado = @p_enable_disable
-		WHERE Id_Rol = @p_id_rol
-END
-GO
-
 CREATE PROCEDURE SQL_SERVANT.[sp_rol_create](
 @p_rol_description varchar(255),
+@p_rol_habilitado bit,
+@p_rol_funcionalidad varchar(40),
 @p_id_rol int OUTPUT
 )
 AS
-BEGIN
+BEGIN	
+	
 	IF (@p_id_rol = 0)
 	BEGIN
+		Declare @p_id_funcionalidad int
+		
+		SELECT @p_id_funcionalidad = f.Id_Funcionalidad
+		FROM SQL_SERVANT.Funcionalidad f
+		WHERE f.Descripcion = @p_rol_funcionalidad
+		
 		INSERT INTO SQL_SERVANT.Rol (Descripcion, Habilitado)
-			VALUES(@p_rol_description, 1)
+			VALUES(@p_rol_description, @p_rol_habilitado)
 		SET @p_id_rol = @@IDENTITY
+		
+		INSERT INTO SQL_SERVANT.Rol_Funcionalidad (Id_Rol, Id_Funcionalidad)
+			VALUES (@p_id_rol, @p_id_funcionalidad)
+		
 	END
 	ELSE
 	BEGIN
-		UPDATE SQL_SERVANT.Rol SET Descripcion = @p_rol_description
+		UPDATE SQL_SERVANT.Rol SET Descripcion = @p_rol_description, Habilitado = @p_rol_habilitado
 			WHERE Id_Rol = @p_id_rol 
 	END
 	
@@ -401,6 +416,69 @@ BEGIN
 		VALUES (@p_user_name, @p_rol_id, @p_date, @p_date, 0)
 END
 GO
+
+--PROCEDIMIENTOS CONSULTA DE SALDO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_consulta_check_account](
+@p_id_cuenta varchar(255) = null,
+@p_is_valid bit = 0 OUTPUT
+)
+AS
+BEGIN
+	IF EXISTS (SELECT 1 FROM SQL_SERVANT.Cuenta WHERE Id_Cuenta = @p_id_cuenta )
+	BEGIN
+		SET @p_is_valid = 1
+	END
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_consulta_saldo](
+@p_consulta_cuenta varchar(255) = null
+)
+AS
+BEGIN
+	select Importe from SQL_SERVANT.Cuenta
+	where Id_Cuenta = @p_consulta_cuenta
+	
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_consulta_last_5_deposits](
+@p_consulta_cuenta varchar(255) = null
+)
+AS
+BEGIN
+	select top 5 t1.Id_Deposito, t1.Importe, t1.Id_Tarjeta, t1.Fecha_Deposito
+ 	from SQL_SERVANT.Deposito t1
+	where Id_Cuenta = @p_consulta_cuenta
+	
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_consulta_last_5_withdrawal](
+@p_consulta_cuenta varchar(255) = null
+)
+AS
+BEGIN
+	select top 5 t1.Id_Retiro, t1.Importe, t1.Id_Banco, t1.Fecha_Extraccion
+ 	from SQL_SERVANT.Retiro t1
+	where Id_Cuenta = @p_consulta_cuenta
+	
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_consulta_last_10_transfers](
+@p_consulta_cuenta varchar(255) = null
+)
+AS
+BEGIN
+	select top 10 Id_Transferencia ,Id_Cuenta_Destino, Importe, Costo, Fecha_Transferencia
+	from SQL_SERVANT.Transferencia
+	where Id_Cuenta_Origen = @p_consulta_cuenta
+	
+END
+GO
+
 
 --PROCEDIMIENTOS ESTADISTICOS
 CREATE PROCEDURE [SQL_SERVANT].[sp_estadistic_top_5_country_movement](
@@ -1147,6 +1225,8 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_save_deposito](
 AS
 BEGIN
 
+	BEGIN TRANSACTION
+
 		Declare @importe_actual numeric(18,2)
 		
 		SELECT @importe_actual = Importe FROM SQL_SERVANT.Cuenta c
@@ -1155,7 +1235,121 @@ BEGIN
 		INSERT INTO SQL_SERVANT.Deposito (Id_Cuenta, Importe, Id_Moneda, Id_Tarjeta, Fecha_Deposito)
 		VALUES (@p_deposito_cuenta, @p_deposito_importe, @p_deposito_moneda, @p_deposito_tarjeta, @p_deposito_fecha)
 		
-		INSERT INTO SQL_SERVANT.Cuenta (Importe)
-		VALUES (@importe_actual + @p_deposito_importe)
+		UPDATE SQL_SERVANT.Cuenta SET Importe = (@p_deposito_importe + @importe_actual)
+		WHERE @p_deposito_cuenta = SQL_SERVANT.Cuenta.Id_Cuenta
+		
+	COMMIT TRANSACTION
 END
 GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_get_importe_maximo_por_cuenta](
+@p_cuenta_id numeric(18,0) = 0,
+@p_cuenta_propia bit = 0,
+@p_importe_maximo numeric(18,2) = 0 OUTPUT
+)
+AS
+BEGIN
+
+	Declare @importe_cuenta numeric(18,2)
+	Declare @id_tipo_cuenta int
+
+	SELECT @importe_cuenta = Importe, @id_tipo_cuenta = Id_Tipo_Cuenta FROM SQL_SERVANT.Cuenta
+	WHERE Id_Cuenta = @p_cuenta_id
+	
+	SET @p_importe_maximo = @importe_cuenta
+	
+	IF (@p_importe_maximo < 0)
+		SET @p_importe_maximo = 0
+	
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_check_account_same_client](
+@p_primer_cuenta numeric(18,0),
+@p_segunda_cuenta numeric(18,0),
+@p_isSameClient bit = 0 OUTPUT
+)
+AS
+BEGIN
+
+	Declare @p_primer_cliente int
+	Declare @p_segundo_cliente int
+	
+	SELECT @p_primer_cliente = Id_Cliente FROM SQL_SERVANT.Cliente_Cuenta cc
+	WHERE cc.Id_Cuenta = @p_primer_cuenta
+	
+	SELECT @p_segundo_cliente = Id_Cliente FROM SQL_SERVANT.Cliente_Cuenta cc
+	WHERE cc.Id_Cuenta = @p_segunda_cuenta
+	
+	IF @p_primer_cliente = @p_segundo_cliente
+	SET @p_isSameClient = 1
+	
+END
+GO	
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_save_transferencia](
+@p_transferencia_origen numeric(18,0),
+@p_transferencia_destino numeric(18,0),
+@p_transferencia_monto numeric(18,2),
+@p_transferencia_moneda int,
+@p_tranferencia_fecha datetime,
+@p_tranferencia_mismo_cliente bit
+)
+
+AS
+BEGIN
+
+	BEGIN TRANSACTION
+
+		Declare @p_importe_actual_origen numeric(18,2)
+		Declare @p_importe_actual_destino numeric(18,2)
+		Declare @p_importe_final_origen numeric(18,2)
+		Declare @p_importe_final_destino numeric(18,2)
+		Declare @p_transferencia_costo numeric(10,2)
+		Declare @p_id_transferencia int
+		Declare @p_id_tipo_cuenta int
+		Declare @p_mismo_cliente bit
+		
+		SELECT @p_importe_actual_origen = Importe FROM SQL_SERVANT.Cuenta c
+		WHERE @p_transferencia_origen = c.Id_Cuenta
+		
+		SELECT @p_importe_actual_destino = Importe FROM SQL_SERVANT.Cuenta c
+		WHERE @p_transferencia_destino = c.Id_Cuenta
+		
+		SELECT @p_transferencia_costo = Costo FROM SQL_SERVANT.Costo_Tipo_Cuenta ctc
+		INNER JOIN SQL_SERVANT.Cuenta c ON ctc.Id_Tipo_Cuenta = c.Id_Tipo_Cuenta
+		WHERE c.Id_Cuenta = @p_transferencia_origen
+		
+		SELECT @p_id_tipo_cuenta = Id_Tipo_Cuenta FROM SQL_SERVANT.Cuenta c
+		WHERE c.Id_Cuenta = @p_transferencia_origen
+		
+		INSERT INTO SQL_SERVANT.Transferencia (Id_Cuenta_Origen, Id_Cuenta_Destino, Id_Moneda, 
+		Importe, Costo,	Fecha_Transferencia)
+		VALUES (@p_transferencia_origen, @p_transferencia_destino, @p_transferencia_moneda, @p_transferencia_monto, 
+		@p_transferencia_costo, @p_tranferencia_fecha)
+		
+		SET @p_id_transferencia = @@IDENTITY
+		
+		SET @p_importe_final_origen = @p_importe_actual_origen - @p_transferencia_monto
+		SET @p_importe_final_destino = @p_importe_actual_destino + @p_transferencia_monto
+		
+		IF (@p_tranferencia_mismo_cliente = 0)
+			SET @p_importe_final_origen = @p_importe_final_origen -  @p_transferencia_costo
+		
+		UPDATE SQL_SERVANT.Cuenta SET Importe = (@p_importe_final_origen)
+		WHERE @p_transferencia_origen = SQL_SERVANT.Cuenta.Id_Cuenta
+		
+		UPDATE SQL_SERVANT.Cuenta SET Importe = (@p_importe_final_destino)
+		WHERE @p_transferencia_destino = SQL_SERVANT.Cuenta.Id_Cuenta
+		
+		INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Id_Tipo_Cuenta, Id_Moneda, Fecha,
+		Importe, Id_Referencia, Descripcion)
+		VALUES (@p_transferencia_origen, @p_id_tipo_cuenta, @p_transferencia_moneda, @p_tranferencia_fecha, 
+		@p_transferencia_costo, @p_id_transferencia, 'Comisión por transferencia.')
+		
+	COMMIT TRANSACTION
+END
+GO
+
+
+

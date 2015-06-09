@@ -11,7 +11,14 @@ namespace PagoElectronico.ABM_Rol
 {
     public class RolFuncionalityHelper
     {
-        public static void geFunctionalityByRolAvailability(Int32 idRol, DataGridView dvgRolFunctionality)
+
+        public static void fillComboBox(ComboBox comboBox)
+        {
+            ComboBoxHelper.fill(comboBox, "SQL_SERVANT.Funcionalidad f",
+                "f.Id_Funcionalidad", "f.Descripcion", "", null);
+        }
+
+        public static void getFunctionalityByRolAvailability(Int32 idRol, DataGridView dvgRolFunctionality)
         {
             SqlCommand command = new SqlCommand();
             command.CommandText = "SQL_SERVANT.sp_rol_functionality_availability";
