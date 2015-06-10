@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using PagoElectronico.Menu;
+using PagoElectronico.Login;
 
 namespace PagoElectronico
 {
@@ -87,6 +88,11 @@ namespace PagoElectronico
                 menuItem.DropDownItems.Add(subItem);
             }
 
+            ToolStripMenuItem subItemLogin = new ToolStripMenuItem("Cambiar Usuario", null, irALogin);
+            subItemLogin.Tag = "Cambiar Usuario";
+
+            menuItem.DropDownItems.Add(subItemLogin);
+
             ToolStripMenuItem subItemSalir = new ToolStripMenuItem("Salir", null, opcionMenuSalir_Click);
             subItemSalir.Tag = "Salir";
 
@@ -94,6 +100,15 @@ namespace PagoElectronico
 
             menuStrip1.Items.Add(menuItem);
             this.Controls.Add(menuStrip1);
+        }
+
+        private void irALogin(object sender, EventArgs e)
+        {
+            FormLogin formLogin = new FormLogin();
+            this.Hide();
+            formLogin.ShowDialog();
+            this.Close();
+            
         }
     }
 }

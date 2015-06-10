@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using PagoElectronico.ABM_Rol;
 
@@ -13,25 +7,14 @@ namespace PagoElectronico.Login
     public partial class FormSeleccionRol : Form
     {
         private int countRol;
-
-        public FormSeleccionRol()
+       
+        public FormSeleccionRol(int countRol)
         {
             InitializeComponent();
-
+            this.countRol = countRol;
             Usuario user = VarGlobal.usuario;
-
-            countRol = Roles.fillRolByUser(user);
-
-            if (countRol > 0)
-            {
-                Roles.fillComboBoxByUser(comboBox_Roles, user);
-            }
-            else
-            {
-                MessageBox.Show("El usuario no tiene ningun rol habilitado");
-            }
+            Roles.fillComboBoxByUser(comboBox_Roles, user);
         }
-
 
         private void goToMenu()
         {
@@ -64,7 +47,7 @@ namespace PagoElectronico.Login
             }
             else
             {
-                MessageBox.Show("Debe seleccionar un tipo de rol");
+                MessageBox.Show("Debe seleccionar un tipo de rol", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

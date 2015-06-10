@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using PagoElectronico.ABM_Rol;
 
@@ -12,16 +6,26 @@ namespace PagoElectronico.ABM_de_Usuario
 {
     public partial class FormABMUsuario : Form
     {
-        public FormABMUsuario()
+        private Boolean fromLogin;
+
+        public FormABMUsuario(Boolean fromLogin)
         {
+            this.fromLogin = fromLogin;
             InitializeComponent();
         }
 
         private void FormABMUsuario_Load(object sender, EventArgs e)
         {
-            this.ControlBox = false;
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;
+            this.FormBorderStyle = FormBorderStyle.SizableToolWindow;
+            if (!fromLogin)
+            {
+                this.ControlBox = false;
+                
+                this.WindowState = FormWindowState.Maximized;
+            }
+
+            else
+                buttonCreate.Enabled = false;
 
             Roles.fillComboBox(comboBoxRol);
         }
@@ -40,7 +44,14 @@ namespace PagoElectronico.ABM_de_Usuario
 
         private void buttonBack_Click(object sender, EventArgs e)
         {
-            this.Close();
+            if (fromLogin)
+            {
+                this.Close();
+                Application.OpenForms[0].Show();
+            }
+
+            else
+                this.Close();
         }
 
         private void buttonEnable_Click(object sender, EventArgs e)
@@ -71,7 +82,7 @@ namespace PagoElectronico.ABM_de_Usuario
 
         private void buttonCreate_Click(object sender, EventArgs e)
         {
-            FormABMUsuarioModify formABMUsuarioModify = new FormABMUsuarioModify(false, null);
+            FormABMUsuarioModify formABMUsuarioModify = new FormABMUsuarioModify(false, null, false);
             formABMUsuarioModify.MdiParent = this.MdiParent;
             MdiParent.Size = formABMUsuarioModify.Size;
             formABMUsuarioModify.Show();
@@ -82,9 +93,14 @@ namespace PagoElectronico.ABM_de_Usuario
         {
             if (dgvUser.CurrentRow != null)
             {
-                FormABMUsuarioModify formABMUsuarioModify = new FormABMUsuarioModify(true, dgvUser.CurrentRow.Cells[0].Value.ToString());
-                formABMUsuarioModify.MdiParent = this.MdiParent;
-                MdiParent.Size = formABMUsuarioModify.Size;
+                FormABMUsuarioModify formABMUsuarioModify = new FormABMUsuarioModify(true, dgvUser.CurrentRow.Cells[0].Value.ToString(), fromLogin);
+                
+                if (!fromLogin)
+                {
+                    formABMUsuarioModify.MdiParent = this.MdiParent;
+                    MdiParent.Size = formABMUsuarioModify.Size;
+                }
+
                 formABMUsuarioModify.Show();
                 this.Close();
             }

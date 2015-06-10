@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PagoElectronico.ABM_Rol
@@ -63,7 +57,7 @@ namespace PagoElectronico.ABM_Rol
                 {
                     rol.primerFuncionalidad = "";
                     RolHelper.editRol(rol);
-                    MessageBox.Show("Se modifico el rol \"" + rol.description + "\" correctamente", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Se modifico el rol '" + rol.description + "' correctamente", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 else

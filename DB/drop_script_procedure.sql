@@ -9,6 +9,10 @@ DROP PROCEDURE SQL_SERVANT.sp_password_change
 
 DROP PROCEDURE SQL_SERVANT.sp_login_check_password
 
+DROP PROCEDURE SQL_SERVANT.sp_save_auditoria_login
+
+DROP PROCEDURE SQL_SERVANT.sp_check_user_is_admin
+
 DROP PROCEDURE SQL_SERVANT.sp_menu_list_functionality_by_user
 
 DROP PROCEDURE SQL_SERVANT.sp_rol_exist_one_by_user

@@ -61,7 +61,8 @@ GO
 CREATE PROCEDURE [SQL_SERVANT].[sp_login_check_password](
 @p_id varchar(255) = null,
 @p_pass varchar(255) = null,
-@p_intentos int = 0 OUTPUT
+@p_intentos int = 0 OUTPUT,
+@p_correcto bit = 0 OUTPUT
 )
 AS
 BEGIN
@@ -74,16 +75,53 @@ BEGIN
 	ELSE
 	BEGIN
 		Declare @p_intentos_base int
+		SET @p_correcto = 0
 		SELECT @p_intentos_base = Cantidad_Login FROM SQL_SERVANT.Usuario WHERE Id_Usuario = @p_id
 		SET @p_intentos = @p_intentos_base + 1
 
-		IF ( @p_intentos >= 3 )
+		IF ( @p_intentos = 3 )
 			UPDATE SQL_SERVANT.Usuario SET Cantidad_Login = @p_intentos, Ultima_Fecha = getDate(), Habilitado = 0
 			WHERE Id_Usuario = @p_id
-		ELSE
+		ELSE IF ( @p_intentos < 3 )
 			UPDATE SQL_SERVANT.Usuario SET Cantidad_Login = @p_intentos, Ultima_Fecha = getDate()
 			WHERE Id_Usuario = @p_id
 	END
+	
+	IF EXISTS (SELECT 1 FROM SQL_SERVANT.Usuario WHERE Id_Usuario = @p_id AND Password = @p_pass)
+		SET @p_correcto = 1
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_save_auditoria_login](
+@p_id varchar(20),
+@p_is_correcto bit
+)
+AS
+BEGIN
+
+	Declare @cantidad_intentos_fallidos int
+
+	SELECT @cantidad_intentos_fallidos = COUNT (Id_Usuario) FROM SQL_SERVANT.Auditoria_Login al
+	WHERE al.Intento_Correcto = 0 AND al.Id_Usuario = @p_id
+	
+	IF (@p_is_correcto = 0)
+		SET @cantidad_intentos_fallidos = @cantidad_intentos_fallidos + 1
+
+	INSERT INTO SQL_SERVANT.Auditoria_Login (Id_Usuario, Fecha, Intento_Correcto, Cantidad_Fallidos)
+	VALUES (@p_id, CAST(GETDATE() AS DATE), @p_is_correcto, @cantidad_intentos_fallidos)
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_check_user_is_admin](
+@p_id_usuario varchar(20),
+@p_is_admin int = 0 OUTPUT
+)
+AS
+BEGIN
+
+	SELECT @p_is_admin = COUNT (ur.Id_Rol) FROM SQL_SERVANT.Usuario_Rol ur
+	WHERE ur.Id_Usuario = @p_id_usuario AND ur.Id_Rol = 1
+	
 END
 GO
 
@@ -1350,6 +1388,3 @@ BEGIN
 	COMMIT TRANSACTION
 END
 GO
-
-
-

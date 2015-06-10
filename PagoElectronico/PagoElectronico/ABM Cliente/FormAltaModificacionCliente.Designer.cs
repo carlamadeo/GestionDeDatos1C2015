@@ -87,6 +87,7 @@
             // 
             // buttonVolver
             // 
+            this.buttonVolver.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonVolver.Location = new System.Drawing.Point(26, 429);
             this.buttonVolver.Name = "buttonVolver";
             this.buttonVolver.Size = new System.Drawing.Size(75, 23);
@@ -575,9 +576,12 @@
             // 
             // FormAltaModificacionCliente
             // 
+            this.AcceptButton = this.buttonGuardar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.buttonVolver;
             this.ClientSize = new System.Drawing.Size(716, 531);
+            this.ControlBox = false;
             this.Controls.Add(this.Tab);
             this.Name = "FormAltaModificacionCliente";
             this.Text = "Alta/Modificacion Cliente";

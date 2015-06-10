@@ -45,7 +45,8 @@
             // 
             // buttonBack
             // 
-            this.buttonBack.Location = new System.Drawing.Point(58, 310);
+            this.buttonBack.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonBack.Location = new System.Drawing.Point(28, 293);
             this.buttonBack.Name = "buttonBack";
             this.buttonBack.Size = new System.Drawing.Size(75, 23);
             this.buttonBack.TabIndex = 0;
@@ -55,7 +56,7 @@
             // 
             // buttonCreate
             // 
-            this.buttonCreate.Location = new System.Drawing.Point(162, 310);
+            this.buttonCreate.Location = new System.Drawing.Point(151, 293);
             this.buttonCreate.Name = "buttonCreate";
             this.buttonCreate.Size = new System.Drawing.Size(75, 23);
             this.buttonCreate.TabIndex = 1;
@@ -65,7 +66,7 @@
             // 
             // buttonEnable
             // 
-            this.buttonEnable.Location = new System.Drawing.Point(266, 310);
+            this.buttonEnable.Location = new System.Drawing.Point(272, 293);
             this.buttonEnable.Name = "buttonEnable";
             this.buttonEnable.Size = new System.Drawing.Size(75, 23);
             this.buttonEnable.TabIndex = 2;
@@ -75,7 +76,7 @@
             // 
             // buttonDisable
             // 
-            this.buttonDisable.Location = new System.Drawing.Point(366, 310);
+            this.buttonDisable.Location = new System.Drawing.Point(391, 293);
             this.buttonDisable.Name = "buttonDisable";
             this.buttonDisable.Size = new System.Drawing.Size(75, 23);
             this.buttonDisable.TabIndex = 3;
@@ -85,7 +86,7 @@
             // 
             // buttonEdit
             // 
-            this.buttonEdit.Location = new System.Drawing.Point(466, 310);
+            this.buttonEdit.Location = new System.Drawing.Point(508, 293);
             this.buttonEdit.Name = "buttonEdit";
             this.buttonEdit.Size = new System.Drawing.Size(75, 23);
             this.buttonEdit.TabIndex = 4;
@@ -104,7 +105,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(55, 45);
+            this.label1.Location = new System.Drawing.Point(25, 44);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(44, 13);
             this.label1.TabIndex = 6;
@@ -112,15 +113,15 @@
             // 
             // textBoxName
             // 
-            this.textBoxName.Location = new System.Drawing.Point(121, 42);
+            this.textBoxName.Location = new System.Drawing.Point(90, 41);
             this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(100, 20);
+            this.textBoxName.Size = new System.Drawing.Size(145, 20);
             this.textBoxName.TabIndex = 7;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(408, 45);
+            this.label2.Location = new System.Drawing.Point(388, 44);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(23, 13);
             this.label2.TabIndex = 8;
@@ -129,14 +130,14 @@
             // comboBoxRol
             // 
             this.comboBoxRol.FormattingEnabled = true;
-            this.comboBoxRol.Location = new System.Drawing.Point(437, 41);
+            this.comboBoxRol.Location = new System.Drawing.Point(438, 40);
             this.comboBoxRol.Name = "comboBoxRol";
-            this.comboBoxRol.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxRol.Size = new System.Drawing.Size(145, 21);
             this.comboBoxRol.TabIndex = 9;
             // 
             // buttonClean
             // 
-            this.buttonClean.Location = new System.Drawing.Point(87, 84);
+            this.buttonClean.Location = new System.Drawing.Point(28, 84);
             this.buttonClean.Name = "buttonClean";
             this.buttonClean.Size = new System.Drawing.Size(75, 23);
             this.buttonClean.TabIndex = 10;
@@ -146,7 +147,7 @@
             // 
             // buttonSearch
             // 
-            this.buttonSearch.Location = new System.Drawing.Point(437, 84);
+            this.buttonSearch.Location = new System.Drawing.Point(508, 84);
             this.buttonSearch.Name = "buttonSearch";
             this.buttonSearch.Size = new System.Drawing.Size(75, 23);
             this.buttonSearch.TabIndex = 11;
@@ -156,9 +157,12 @@
             // 
             // FormABMUsuario
             // 
+            this.AcceptButton = this.buttonEdit;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(618, 379);
+            this.CancelButton = this.buttonBack;
+            this.ClientSize = new System.Drawing.Size(618, 345);
+            this.ControlBox = false;
             this.Controls.Add(this.buttonSearch);
             this.Controls.Add(this.buttonClean);
             this.Controls.Add(this.comboBoxRol);

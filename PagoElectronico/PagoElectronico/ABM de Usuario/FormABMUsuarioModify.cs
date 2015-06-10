@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using PagoElectronico.ABM_Rol;
 using PagoElectronico.Seguridad;
 
 namespace PagoElectronico.ABM_de_Usuario
@@ -15,12 +8,14 @@ namespace PagoElectronico.ABM_de_Usuario
     {
         private Boolean edit;
         private String user;
+        private Boolean fromLogin;
 
-        public FormABMUsuarioModify(Boolean edit, String user)
+        public FormABMUsuarioModify(Boolean edit, String user, Boolean fromLogin)
         {
             InitializeComponent();
             this.edit = edit;
             this.user = user;
+            this.fromLogin = fromLogin;
         }
 
         private void reloadGrid()
@@ -40,10 +35,12 @@ namespace PagoElectronico.ABM_de_Usuario
 
         private void FormABMUsuarioModify_Load(object sender, EventArgs e)
         {
-            this.ControlBox = false;
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;
-
+            if (!fromLogin)
+            {
+                this.ControlBox = false;
+                this.FormBorderStyle = FormBorderStyle.None;
+                this.WindowState = FormWindowState.Maximized;
+            }
             //Roles.fillComboBox(comboBoxRol);
             this.labelCreationDate.Visible = false;
             this.labelModificationDate.Visible = false;
@@ -131,9 +128,13 @@ namespace PagoElectronico.ABM_de_Usuario
 
         private void closeWindow()
         {
-            FormABMUsuario formABMUsuario = new FormABMUsuario();
-            formABMUsuario.MdiParent = this.MdiParent;
-            MdiParent.Size = formABMUsuario.Size;
+            FormABMUsuario formABMUsuario = new FormABMUsuario(fromLogin);
+            if (!fromLogin)
+            {
+                formABMUsuario.MdiParent = this.MdiParent;
+                MdiParent.Size = formABMUsuario.Size;
+            }
+
             this.Close();
             formABMUsuario.Show();
         }
