@@ -937,7 +937,7 @@ CREATE TABLE [SQL_SERVANT].[Estadistica](
 	[Descripcion][varchar](100) NOT NULL
 )
 
-INSERT INTO SQL_SERVANT.Estadistica (Store_Procedure, Descripcion) VALUES ('sp_estadistic_top_5_cli_count_disabled', 
+INSERT INTO SQL_SERVANT.Estadistica (Store_Procedure, Descripcion) VALUES ('sp_estadistic_top_5_client_disable_account', 
 	'TOP 5 CLIENTES CUE. INH. POR NO PAGAR')
 INSERT INTO SQL_SERVANT.Estadistica (Store_Procedure, Descripcion) VALUES ('sp_estadistic_top_5_cli_more_pay_commission', 
 	'TOP 5 CLIENTES PAGAR MAS COMISIONES')

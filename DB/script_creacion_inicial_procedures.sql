@@ -519,6 +519,59 @@ GO
 
 
 --PROCEDIMIENTOS ESTADISTICOS
+CREATE PROCEDURE [SQL_SERVANT].[sp_estadistic_top_5_client_disable_account](
+@p_estadistic_from datetime,
+@p_estadistic_to datetime
+)
+AS
+BEGIN
+	Declare @truncateFrom datetime = CAST(@p_estadistic_from AS DATE)
+	Declare @truncateTo datetime = CAST(@p_estadistic_to AS DATE)
+
+	SELECT TOP 5 
+		l.Id_Cliente 'Id cliente',
+	 	cd.Nombre 'Nombre', 
+	 	cd.Apellido 'Apellido', 
+	 	COUNT(*) 'Cantidad'
+ 	FROM SQL_SERVANT.Log l
+ 	INNER JOIN SQL_SERVANT.Motivo_Log ml
+ 		ON l.Id_Motivo = ml.Id_Motivo
+	INNER JOIN SQL_SERVANT.Cliente_Datos cd
+		ON l.Id_Cliente = cd.Id_Cliente
+	WHERE l.Fecha BETWEEN @truncateFrom AND @truncateTo 
+	AND ml.Descripcion = UPPER('INHABILITACION CUENTA POR NO PAGO')
+	GROUP BY l.Id_Cliente, cd.Nombre, cd.Apellido
+	ORDER BY 4 DESC
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_estadistic_top_5_count_type_payment](
+@p_estadistic_from datetime,
+@p_estadistic_to datetime
+)
+AS
+BEGIN
+	Declare @truncateFrom datetime = CAST(@p_estadistic_from AS DATE)
+	Declare @truncateTo datetime = CAST(@p_estadistic_to AS DATE)
+
+	SELECT TOP 5 
+	tc.Id_Tipo_Cuenta 'Id Tipo Cuenta',
+	tc.Descripcion 'Tipo Cuenta',
+	mo.Descripcion 'mo',
+	SUM(fi.Importe) 'Monto Facturado'
+	FROM SQL_SERVANT.Facturacion_Item fi
+	INNER JOIN SQL_SERVANT.Facturacion f
+		ON fi.Id_Factura = f.Id_Factura
+	INNER JOIN SQL_SERVANT.Tipo_Cuenta tc
+		ON tc.Id_Tipo_Cuenta = fi.Id_Tipo_Cuenta
+	INNER JOIN SQL_SERVANT.Moneda mo
+		ON fi.Id_Moneda = mo.Id_Moneda
+	WHERE f.Fecha BETWEEN @truncateFrom AND @truncateTo
+	GROUP BY tc.Id_Tipo_Cuenta, tc.Descripcion, mo.Descripcion
+	ORDER BY 4 DESC
+END
+GO
+
 CREATE PROCEDURE [SQL_SERVANT].[sp_estadistic_top_5_country_movement](
 @p_estadistic_from datetime,
 @p_estadistic_to datetime

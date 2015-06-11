@@ -65,6 +65,10 @@ DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_cli_more_pay_commission
 
 DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_cli_trans_own_count
 
+DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_client_disable_account
+
+DROP PROCEDURE SQL_SERVANT.sp_estadistic_top_5_count_type_payment
+
 DROP PROCEDURE SQL_SERVANT.sp_account_search
 
 DROP PROCEDURE SQL_SERVANT.sp_account_save_update
