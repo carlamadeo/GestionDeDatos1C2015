@@ -10,21 +10,24 @@ namespace PagoElectronico.ABM_Cliente
     {
         private String client { get; set; }
         private Boolean edit { get; set; }
-        private Form from;
+        private Boolean fromLogin;
 
-        public FormAltaModificacionCliente(Boolean edit, String client, Form from)
+        public FormAltaModificacionCliente(Boolean edit, String client, Boolean isLogin)
         {
             this.edit = edit;
             this.client = client;
-            this.from = from;
+            this.fromLogin = isLogin;
             InitializeComponent();
         }
 
         private void FormAltaModificacionCliente_Load(object sender, EventArgs e)
         {
-            this.ControlBox = false;
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;
+            if (!fromLogin)
+            {
+                this.ControlBox = false;
+                this.FormBorderStyle = FormBorderStyle.None;
+                this.WindowState = FormWindowState.Maximized;
+            }
 
             Usuario user = VarGlobal.usuario;
             TypeIdentification.fillComboBox(comboBoxIdentificationType);
@@ -33,6 +36,7 @@ namespace PagoElectronico.ABM_Cliente
 
             if (edit)
             {
+                this.Text = "Editar datos de Cliente " + user.id;
                 Cliente clientData = ClienteHelper.getClientData(client);
                 Tarjeta.fillTarjetasByClientWhithout4LastDigits(comboBoxTarjetas, clientData.id);
                 Empresa.fillEmpresa(comboBoxEmpresa);
@@ -59,6 +63,7 @@ namespace PagoElectronico.ABM_Cliente
 
             else
             {
+                this.Text = "Creación de nuevo Cliente";
                 this.Tab.TabPages.Remove(tabTarjetas);
             }
 
@@ -71,13 +76,12 @@ namespace PagoElectronico.ABM_Cliente
 
         private void closeWindow()
         {
-            if (from != null)
+            if (fromLogin)
             {
-                from.MdiParent = this.MdiParent;
-                MdiParent.Size = from.Size;
                 this.Close();
-                from.Show();
+                Application.OpenForms[0].Show();
             }
+
             else
             {
                 FormABMCliente formABMCliente = new FormABMCliente();
@@ -325,7 +329,7 @@ namespace PagoElectronico.ABM_Cliente
         private void buttonDesvincular_Click(object sender, EventArgs e)
         {
             ClienteHelper.desvincularTarjeta(Convert.ToInt32(client), Convert.ToDecimal(this.comboBoxTarjetas.SelectedValue.ToString()));
-            MessageBox.Show("Tarjeta desvinculada correctamente", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);           
+            MessageBox.Show("Tarjeta desvinculada correctamente", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             Tarjeta.fillTarjetasByClientWhithout4LastDigits(this.comboBoxTarjetas, Convert.ToInt32(client));
         }
@@ -340,7 +344,7 @@ namespace PagoElectronico.ABM_Cliente
                 this.dateTimeEmision.Value = tarjeta.fechaEmision;
                 this.dateTimeVencimiento.Value = tarjeta.fechaVencimiento;
                 this.comboBoxEmpresa.SelectedIndex = this.comboBoxEmpresa.FindStringExact(tarjeta.empresa);
-                
+
             }
         }
 
@@ -353,7 +357,7 @@ namespace PagoElectronico.ABM_Cliente
         private void updateTarjeta(Tarjeta tarjeta)
         {
             TarjetaHelper.save(tarjeta);
-            MessageBox.Show("Modificacion de tarjeta realizada con exito", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);           
+            MessageBox.Show("Modificacion de tarjeta realizada con exito", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void buttonVolverT_Click(object sender, EventArgs e)

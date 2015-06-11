@@ -12,6 +12,8 @@ DROP TABLE SQL_SERVANT.Facturacion
 
 DROP TABLE SQL_SERVANT.Facturacion_Pendiente
 
+DROP TABLE SQL_SERVANT.Auditoria_Login
+
 DROP TABLE SQL_SERVANT.Transferencia
 
 DROP TABLE SQL_SERVANT.Cheque_Retiro

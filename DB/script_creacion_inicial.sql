@@ -212,6 +212,21 @@ SELECT DISTINCT SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido),
 'e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7', 0, GETDATE(), GETDATE(), GETDATE(),'default', 'default', 1
 FROM gd_esquema.Maestra m
 
+
+--TABLA DE AUDITORIA LOGINS
+
+CREATE TABLE [SQL_SERVANT].[Auditoria_Login](
+	[Id_Logueo][Int]IDENTITY(1,1) NOT NULL,
+	[Id_Usuario][varchar](20) NOT NULL,
+	[Fecha][datetime] NOT NULL,
+	[Intento_Correcto][bit] NOT NULL,
+	[Cantidad_Fallidos][Int] NOT NULL
+	
+	CONSTRAINT [PK_Id_Logueo] PRIMARY KEY(Id_Logueo)
+	CONSTRAINT [FK_Id_Logueo_Usuario_Id_Usuario] FOREIGN KEY(Id_Usuario)
+		REFERENCES [SQL_SERVANT].[Usuario] (Id_Usuario)
+)
+
 --TABLA ROL
 /*
 	Tabla que contiene los tipos de roles que existen
@@ -282,6 +297,7 @@ INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (1, 2
 INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (1, 3)
 INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (1, 4)
 INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (1, 5)
+INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (1, 10)
 INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (1, 11)
 INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (1, 12)
 INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (2, 5)
@@ -289,6 +305,7 @@ INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (2, 6
 INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (2, 7)
 INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (2, 8)
 INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (2, 9)
+INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (2, 10)
 INSERT INTO SQL_SERVANT.Rol_Funcionalidad(Id_Rol, Id_Funcionalidad) VALUES (2, 11)
 
 --TABLA USUARIO_ROL
@@ -811,6 +828,7 @@ CREATE TABLE [SQL_SERVANT].[Facturacion_Pendiente](
 	CONSTRAINT [FK_Facturacion_Pendiente_Id_Moneda] FOREIGN KEY (Id_Moneda)
 		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
 )
+
 INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Id_Moneda, Fecha, Importe, Id_Tipo_Cuenta, Id_Referencia, Descripcion)
 SELECT m.Cuenta_Numero, mo.Id_Moneda, m.Transf_Fecha, m.Trans_Importe, tc.Id_Tipo_Cuenta, 0, 'Comisión por transferencia.' 
 FROM gd_esquema.Maestra m 
@@ -835,41 +853,28 @@ CREATE TABLE [SQL_SERVANT].[Facturacion](
 	[Id_Factura][Int]IDENTITY(1,1) NOT NULL,
 	[Fecha][datetime] NOT NULL,	
 	[Id_Cliente][Int] NOT NULL,
-	[Id_Cuenta][numeric](18,0) NOT NULL,
-	[Id_Tipo_Cuenta][Int] NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
 	[Importe][numeric](10,2) NOT NULL
 
 	CONSTRAINT [PK_Facturacion] PRIMARY KEY(Id_Factura),
 	CONSTRAINT [FK_Facturacion_Id_Cliente] FOREIGN KEY (Id_Cliente)
 		REFERENCES [SQL_SERVANT].[Cliente] (Id_Cliente),
-	CONSTRAINT [FK_Facturacion_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
-		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
 	CONSTRAINT [FK_Facturacion_Id_Moneda] FOREIGN KEY (Id_Moneda)
-		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda),
-	CONSTRAINT [FK_Facturacion_Id_Tipo_Cuenta] FOREIGN KEY (Id_Tipo_Cuenta)
-		REFERENCES [SQL_SERVANT].[Tipo_Cuenta] (Id_Tipo_Cuenta)
+		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
 )
 
 SET IDENTITY_INSERT SQL_SERVANT.Facturacion ON
 
-INSERT INTO SQL_SERVANT.Facturacion (Id_Factura, Fecha, Id_Cliente, Id_Cuenta, Id_Moneda, Id_Tipo_Cuenta, Importe)
-SELECT m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente, cc.Id_Cuenta, mo.Id_Moneda, tc.Id_Tipo_Cuenta, SUM(Item_Factura_Importe)
+INSERT INTO SQL_SERVANT.Facturacion (Id_Factura, Fecha, Id_Cliente, Id_Moneda, Importe)
+SELECT m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente, mo.Id_Moneda, SUM(Item_Factura_Importe)
 FROM gd_esquema.Maestra m
 	INNER JOIN SQL_SERVANT.Cliente_Datos cd
 		ON UPPER(LTRIM(RTRIM(m.Cli_Nombre))) = UPPER(LTRIM(RTRIM(cd.Nombre)))
 		AND UPPER(LTRIM(RTRIM(m.Cli_Apellido))) = UPPER(LTRIM(RTRIM(cd.Apellido)))
 	INNER JOIN SQL_SERVANT.Moneda mo
 		ON mo.Descripcion = 'USD'
-	INNER JOIN SQL_SERVANT.Cliente_Cuenta cc
-		ON cc.Id_Cuenta = m.Cuenta_Numero
-		AND cc.Id_Cliente = cd.Id_Cliente
-	INNER JOIN SQL_SERVANT.Cuenta cu
-		ON cu.Id_Cuenta = cc.Id_Cuenta
-	INNER JOIN SQL_SERVANT.Tipo_Cuenta tc
-		ON cu.Id_Tipo_Cuenta = tc.Id_Tipo_Cuenta
 WHERE m.Factura_Numero IS NOT NULL
-GROUP BY m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente, cc.Id_Cuenta, mo.Id_Moneda, tc.Id_Tipo_Cuenta
+GROUP BY m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente, mo.Id_Moneda
 
 SET IDENTITY_INSERT SQL_SERVANT.Facturacion OFF
 
@@ -877,25 +882,41 @@ CREATE TABLE [SQL_SERVANT].[Facturacion_Item](
 	[Id_Factura][Int] NOT NULL,
 	[Id_Factura_Item][Int] NOT NULL,
 	[Id_Referencia][Int] NOT NULL,
+	[Id_Cuenta][numeric](18,0) NOT NULL,
+	[Id_Tipo_Cuenta][Int] NOT NULL,
 	[Descripcion][varchar](30) NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
 	[Importe][numeric](10,2) NOT NULL
 
 	CONSTRAINT [FK_Facturacion_Item_Id_Factura] FOREIGN KEY (Id_Factura)
-	REFERENCES [SQL_SERVANT].[Facturacion] (Id_Factura)
+	REFERENCES [SQL_SERVANT].[Facturacion] (Id_Factura),
+	CONSTRAINT [FK_Facturacion_Item_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
+		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
+	CONSTRAINT [FK_Facturacion_Item_Id_Tipo_Cuenta] FOREIGN KEY (Id_Tipo_Cuenta)
+		REFERENCES [SQL_SERVANT].[Tipo_Cuenta] (Id_Tipo_Cuenta)
 )
 
-INSERT INTO SQL_SERVANT.Facturacion_Item (Id_Factura, Id_Factura_Item, Id_Referencia, Descripcion, Id_Moneda, Importe)
+INSERT INTO SQL_SERVANT.Facturacion_Item (Id_Factura, Id_Factura_Item, Id_Referencia, Id_Cuenta, Id_Tipo_Cuenta, Descripcion, Id_Moneda, Importe)
 SELECT m.Factura_Numero, 1, 
-t.Id_Transferencia, m.Item_Factura_Descr, mo.Id_Moneda, m.Item_Factura_Importe
+t.Id_Transferencia, cc.Id_Cuenta, tc.Id_Tipo_Cuenta, m.Item_Factura_Descr, mo.Id_Moneda, m.Item_Factura_Importe
 FROM gd_esquema.Maestra m
+	INNER JOIN SQL_SERVANT.Cliente_Datos cd
+		ON UPPER(LTRIM(RTRIM(m.Cli_Nombre))) = UPPER(LTRIM(RTRIM(cd.Nombre)))
+		AND UPPER(LTRIM(RTRIM(m.Cli_Apellido))) = UPPER(LTRIM(RTRIM(cd.Apellido)))
+	INNER JOIN SQL_SERVANT.Cliente_Cuenta cc
+		ON cc.Id_Cuenta = m.Cuenta_Numero
+		AND cc.Id_Cliente = cd.Id_Cliente
+	INNER JOIN SQL_SERVANT.Cuenta cu
+		ON cu.Id_Cuenta = cc.Id_Cuenta
+	INNER JOIN SQL_SERVANT.Tipo_Cuenta tc
+		ON cu.Id_Tipo_Cuenta = tc.Id_Tipo_Cuenta
 	INNER JOIN SQL_SERVANT.Moneda mo
-	ON mo.Descripcion = 'USD'
+		ON mo.Descripcion = 'USD'
 	INNER JOIN SQL_SERVANT.Transferencia t
-	ON t.Id_Cuenta_Origen = m.Cuenta_Numero
-	AND t.Id_Cuenta_Destino = m.Cuenta_Dest_Numero
-	AND t.Fecha_Transferencia = m.Transf_Fecha
-	AND t.Importe = m.Trans_Importe
+		ON t.Id_Cuenta_Origen = m.Cuenta_Numero
+		AND t.Id_Cuenta_Destino = m.Cuenta_Dest_Numero
+		AND t.Fecha_Transferencia = m.Transf_Fecha
+		AND t.Importe = m.Trans_Importe
 WHERE Factura_Numero IS NOT NULL
 
 --SE ELIMINAN TRANSACCIONES QUE SE REALIZARON EL MISMO DIA ENTRE MISMO CLIENTES

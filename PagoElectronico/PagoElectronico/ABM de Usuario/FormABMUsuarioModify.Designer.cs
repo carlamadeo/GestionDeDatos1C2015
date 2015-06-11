@@ -57,7 +57,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(37, 89);
+            this.label1.Location = new System.Drawing.Point(35, 73);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(83, 13);
             this.label1.TabIndex = 0;
@@ -65,7 +65,7 @@
             // 
             // textBoxUsername
             // 
-            this.textBoxUsername.Location = new System.Drawing.Point(149, 86);
+            this.textBoxUsername.Location = new System.Drawing.Point(147, 70);
             this.textBoxUsername.Name = "textBoxUsername";
             this.textBoxUsername.Size = new System.Drawing.Size(205, 20);
             this.textBoxUsername.TabIndex = 1;
@@ -73,7 +73,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(37, 130);
+            this.label2.Location = new System.Drawing.Point(35, 114);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 13);
             this.label2.TabIndex = 2;
@@ -81,7 +81,7 @@
             // 
             // textBoxPassword
             // 
-            this.textBoxPassword.Location = new System.Drawing.Point(149, 127);
+            this.textBoxPassword.Location = new System.Drawing.Point(147, 111);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(205, 20);
@@ -90,7 +90,7 @@
             // checkBoxEnable
             // 
             this.checkBoxEnable.AutoSize = true;
-            this.checkBoxEnable.Location = new System.Drawing.Point(40, 283);
+            this.checkBoxEnable.Location = new System.Drawing.Point(38, 278);
             this.checkBoxEnable.Name = "checkBoxEnable";
             this.checkBoxEnable.Size = new System.Drawing.Size(73, 17);
             this.checkBoxEnable.TabIndex = 5;
@@ -100,7 +100,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(37, 173);
+            this.label3.Location = new System.Drawing.Point(35, 157);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(90, 13);
             this.label3.TabIndex = 6;
@@ -109,7 +109,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(37, 213);
+            this.label4.Location = new System.Drawing.Point(35, 197);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(98, 13);
             this.label4.TabIndex = 7;
@@ -117,21 +117,21 @@
             // 
             // textBoxQuestion
             // 
-            this.textBoxQuestion.Location = new System.Drawing.Point(149, 170);
+            this.textBoxQuestion.Location = new System.Drawing.Point(147, 154);
             this.textBoxQuestion.Name = "textBoxQuestion";
             this.textBoxQuestion.Size = new System.Drawing.Size(205, 20);
             this.textBoxQuestion.TabIndex = 8;
             // 
             // textBoxAnswer
             // 
-            this.textBoxAnswer.Location = new System.Drawing.Point(149, 210);
+            this.textBoxAnswer.Location = new System.Drawing.Point(147, 194);
             this.textBoxAnswer.Name = "textBoxAnswer";
             this.textBoxAnswer.Size = new System.Drawing.Size(205, 20);
             this.textBoxAnswer.TabIndex = 9;
             // 
             // buttonAccept
             // 
-            this.buttonAccept.Location = new System.Drawing.Point(249, 411);
+            this.buttonAccept.Location = new System.Drawing.Point(664, 380);
             this.buttonAccept.Name = "buttonAccept";
             this.buttonAccept.Size = new System.Drawing.Size(75, 23);
             this.buttonAccept.TabIndex = 10;
@@ -141,7 +141,7 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(509, 411);
+            this.buttonCancel.Location = new System.Drawing.Point(36, 380);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 11;
@@ -151,7 +151,7 @@
             // 
             // buttonClean
             // 
-            this.buttonClean.Location = new System.Drawing.Point(541, 339);
+            this.buttonClean.Location = new System.Drawing.Point(253, 278);
             this.buttonClean.Name = "buttonClean";
             this.buttonClean.Size = new System.Drawing.Size(99, 23);
             this.buttonClean.TabIndex = 12;
@@ -162,7 +162,7 @@
             // labelCreationDate
             // 
             this.labelCreationDate.AutoSize = true;
-            this.labelCreationDate.Location = new System.Drawing.Point(37, 249);
+            this.labelCreationDate.Location = new System.Drawing.Point(35, 237);
             this.labelCreationDate.Name = "labelCreationDate";
             this.labelCreationDate.Size = new System.Drawing.Size(82, 13);
             this.labelCreationDate.TabIndex = 13;
@@ -170,7 +170,7 @@
             // 
             // dateTimeCreation
             // 
-            this.dateTimeCreation.Location = new System.Drawing.Point(149, 245);
+            this.dateTimeCreation.Location = new System.Drawing.Point(147, 233);
             this.dateTimeCreation.Name = "dateTimeCreation";
             this.dateTimeCreation.Size = new System.Drawing.Size(205, 20);
             this.dateTimeCreation.TabIndex = 14;
@@ -178,7 +178,7 @@
             // labelModificationDate
             // 
             this.labelModificationDate.AutoSize = true;
-            this.labelModificationDate.Location = new System.Drawing.Point(428, 308);
+            this.labelModificationDate.Location = new System.Drawing.Point(34, 333);
             this.labelModificationDate.Name = "labelModificationDate";
             this.labelModificationDate.Size = new System.Drawing.Size(99, 13);
             this.labelModificationDate.TabIndex = 15;
@@ -186,30 +186,30 @@
             // 
             // dateTimeModification
             // 
-            this.dateTimeModification.Location = new System.Drawing.Point(541, 304);
+            this.dateTimeModification.Location = new System.Drawing.Point(147, 329);
             this.dateTimeModification.Name = "dateTimeModification";
-            this.dateTimeModification.Size = new System.Drawing.Size(200, 20);
+            this.dateTimeModification.Size = new System.Drawing.Size(204, 20);
             this.dateTimeModification.TabIndex = 16;
             // 
             // dgvAvailableRol
             // 
             this.dgvAvailableRol.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvAvailableRol.Location = new System.Drawing.Point(376, 86);
+            this.dgvAvailableRol.Location = new System.Drawing.Point(374, 70);
             this.dgvAvailableRol.Name = "dgvAvailableRol";
-            this.dgvAvailableRol.Size = new System.Drawing.Size(151, 150);
+            this.dgvAvailableRol.Size = new System.Drawing.Size(151, 183);
             this.dgvAvailableRol.TabIndex = 17;
             // 
             // dgvOwnRol
             // 
             this.dgvOwnRol.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvOwnRol.Location = new System.Drawing.Point(593, 86);
+            this.dgvOwnRol.Location = new System.Drawing.Point(591, 70);
             this.dgvOwnRol.Name = "dgvOwnRol";
-            this.dgvOwnRol.Size = new System.Drawing.Size(148, 150);
+            this.dgvOwnRol.Size = new System.Drawing.Size(148, 183);
             this.dgvOwnRol.TabIndex = 18;
             // 
             // buttonAddRol
             // 
-            this.buttonAddRol.Location = new System.Drawing.Point(541, 105);
+            this.buttonAddRol.Location = new System.Drawing.Point(539, 114);
             this.buttonAddRol.Name = "buttonAddRol";
             this.buttonAddRol.Size = new System.Drawing.Size(34, 23);
             this.buttonAddRol.TabIndex = 19;
@@ -219,7 +219,7 @@
             // 
             // buttonRemoveRol
             // 
-            this.buttonRemoveRol.Location = new System.Drawing.Point(541, 189);
+            this.buttonRemoveRol.Location = new System.Drawing.Point(539, 173);
             this.buttonRemoveRol.Name = "buttonRemoveRol";
             this.buttonRemoveRol.Size = new System.Drawing.Size(34, 23);
             this.buttonRemoveRol.TabIndex = 20;
@@ -230,7 +230,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(625, 49);
+            this.label5.Location = new System.Drawing.Point(620, 45);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(86, 13);
             this.label5.TabIndex = 21;
@@ -239,7 +239,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(413, 49);
+            this.label6.Location = new System.Drawing.Point(401, 45);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(91, 13);
             this.label6.TabIndex = 22;
@@ -249,7 +249,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 463);
+            this.ClientSize = new System.Drawing.Size(775, 431);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.buttonRemoveRol);

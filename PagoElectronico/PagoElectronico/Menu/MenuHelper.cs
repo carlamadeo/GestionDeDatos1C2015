@@ -98,6 +98,10 @@ namespace PagoElectronico.Menu
                     func.folder = "Transferencias";
                     func.form = "FormTransferencias";
                     break;
+                case "Facturacion de Costos":
+                    func.folder = "Facturacion";
+                    func.form = "FormFacturacion";
+                    break;
                 case "Consulta de saldos":
                     func.folder = "Consulta_Saldos";
                     func.form = "FormConsultaSaldos";

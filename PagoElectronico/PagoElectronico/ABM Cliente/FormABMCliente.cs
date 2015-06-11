@@ -10,11 +10,6 @@ namespace PagoElectronico.ABM_Cliente
             InitializeComponent();
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            
-        }
-
         private void FormABMCliente_Load (object sender, EventArgs e)
         {
             this.ControlBox = false;
@@ -109,7 +104,7 @@ namespace PagoElectronico.ABM_Cliente
 
         private void buttonAlta_Click(object sender, EventArgs e)
         {
-            FormAltaModificacionCliente formAltaModificacion = new FormAltaModificacionCliente(false, null, null);
+            FormAltaModificacionCliente formAltaModificacion = new FormAltaModificacionCliente(false, null, false);
             formAltaModificacion.MdiParent = this.MdiParent;
             MdiParent.Size = formAltaModificacion.Size;
             formAltaModificacion.Show();
@@ -120,7 +115,7 @@ namespace PagoElectronico.ABM_Cliente
         {
             if (dgvClient.CurrentRow != null)
             {
-                FormAltaModificacionCliente formAltaModificacion = new FormAltaModificacionCliente(true, dgvClient.CurrentRow.Cells[0].Value.ToString(), null);
+                FormAltaModificacionCliente formAltaModificacion = new FormAltaModificacionCliente(true, dgvClient.CurrentRow.Cells[0].Value.ToString(), false);
                 formAltaModificacion.MdiParent = this.MdiParent;
                 MdiParent.Size = formAltaModificacion.Size;
                 formAltaModificacion.Show();

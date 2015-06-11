@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using PagoElectronico.ABM_Cliente;
+using PagoElectronico.ABM_de_Usuario;
+using PagoElectronico.ABM_Rol;
 
 namespace PagoElectronico.Login
 {
     public partial class FormLogin : Form
     {
+        private int countRol;
+
         public FormLogin()
         {
             InitializeComponent();
@@ -27,27 +26,61 @@ namespace PagoElectronico.Login
 
             if (!Login.isValidUser(user))
             {
-                MessageBox.Show("No es un usuario valido");
+                if (Login.isAdmin(user.id))
+                {
+                    int correcto = 0;
+                    int intentos = Login.login(user, pass, ref correcto);
+
+                    if (correcto == 1)
+                    {
+                        MessageBox.Show("El Administrador se encuentra inhabilitado. Solo podrá modificar o dar de baja Usuarios", "Imposible Loguearse", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        FormABMUsuario formABMUsuario = new FormABMUsuario(true);
+                        this.Hide();
+                        formABMUsuario.Show();
+                    }
+
+                    else
+                    {
+                        MessageBox.Show("La contraseña es incorrecta.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    }
+                }
+
+                else
+                    MessageBox.Show("El usuario es invalido. Intentelo nuevamente", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            else if (pass == "")
+            {
+                MessageBox.Show("El Password no puede ser vacio.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
             else
             {
-                int intentos = Login.login(user, pass);
+                countRol = Roles.fillRolByUser(user);
+                int correcto = 0;
+
+                int intentos = Login.login(user, pass, ref correcto);
 
                 if (intentos == 0)
                 {
-                    FormSeleccionRol fSeleccionRol = new FormSeleccionRol();
-                    this.Hide();
-                    fSeleccionRol.ShowDialog();
-                    this.Close();
+                    if (countRol == 0)
+                        MessageBox.Show("El usuario no tiene ningun rol habilitado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    else
+                    {
+                        FormSeleccionRol fSeleccionRol = new FormSeleccionRol(countRol);
+                        this.Hide();
+                        fSeleccionRol.ShowDialog();
+                        this.Close();
+                    }
                 }
+
                 else if (intentos < 3)
-                {
-                    MessageBox.Show("La contraseña es erronea. Lleva " + intentos + " intento(s)" );
-                }
+                    MessageBox.Show("La contraseña es incorrecta. Lleva " + intentos + " intento(s)", "Incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
                 else
-                {
-                    MessageBox.Show("Contactese con el administrador para limpiar su clave");
-                }
+                    MessageBox.Show("Contactese con el administrador para limpiar su clave", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -55,5 +88,13 @@ namespace PagoElectronico.Login
         {
             Application.Exit();
         }
+
+        private void buttonRegistro_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            FormAltaModificacionCliente formAltaModificacion = new FormAltaModificacionCliente(false, null, true);
+            formAltaModificacion.Show();
+        }
+
     }
 }

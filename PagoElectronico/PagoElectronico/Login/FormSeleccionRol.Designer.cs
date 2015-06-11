@@ -44,7 +44,7 @@
             // 
             // button_accept
             // 
-            this.button_accept.Location = new System.Drawing.Point(104, 127);
+            this.button_accept.Location = new System.Drawing.Point(165, 126);
             this.button_accept.Name = "button_accept";
             this.button_accept.Size = new System.Drawing.Size(75, 23);
             this.button_accept.TabIndex = 1;
@@ -58,14 +58,14 @@
             this.comboBox_Roles.Location = new System.Drawing.Point(52, 70);
             this.comboBox_Roles.Name = "comboBox_Roles";
             this.comboBox_Roles.Size = new System.Drawing.Size(188, 21);
-            this.comboBox_Roles.TabIndex = 2;
+            this.comboBox_Roles.TabIndex = 0;
             // 
             // FormSeleccionRol
             // 
             this.AcceptButton = this.button_accept;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 191);
+            this.ClientSize = new System.Drawing.Size(288, 181);
             this.Controls.Add(this.comboBox_Roles);
             this.Controls.Add(this.button_accept);
             this.Controls.Add(this.label1);
