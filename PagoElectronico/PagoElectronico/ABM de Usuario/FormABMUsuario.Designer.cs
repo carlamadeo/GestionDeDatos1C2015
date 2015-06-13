@@ -161,7 +161,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonBack;
-            this.ClientSize = new System.Drawing.Size(618, 345);
+            this.ClientSize = new System.Drawing.Size(608, 355);
             this.ControlBox = false;
             this.Controls.Add(this.buttonSearch);
             this.Controls.Add(this.buttonClean);
@@ -176,7 +176,7 @@
             this.Controls.Add(this.buttonCreate);
             this.Controls.Add(this.buttonBack);
             this.Name = "FormABMUsuario";
-            this.Text = "ABM Usuario";
+            this.Text = "Usuario";
             this.Load += new System.EventHandler(this.FormABMUsuario_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvUser)).EndInit();
             this.ResumeLayout(false);

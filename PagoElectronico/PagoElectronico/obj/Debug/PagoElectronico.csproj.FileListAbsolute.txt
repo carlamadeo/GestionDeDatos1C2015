@@ -90,3 +90,4 @@ C:\Users\nelson\Documents\UTN\Gestión de Datos\TP\gdd_1c_2015\PagoElectronico\P
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Depositos.FormDepositos.resources
 C:\Documents and Settings\UsuarioAdmin\Mis documentos\tp1c2015\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Transferencias.FormTransferencias.resources
 C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Retiros.FormRetiros.resources
+C:\Documents and Settings\UsuarioAdmin\Escritorio\Pago Electronico\gdd_1c_2015\PagoElectronico\PagoElectronico\obj\Debug\PagoElectronico.Consulta_Saldos.FormSaldos.resources

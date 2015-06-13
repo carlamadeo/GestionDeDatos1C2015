@@ -50,7 +50,13 @@
   <ItemGroup>
     <Compile Include="ABM Cliente\Cliente.cs" />
     <Compile Include="ABM Cliente\ClienteHelper.cs" />
-    <Compile Include="Consulta Saldos\ConsultaSaldos.cs" />
+    <Compile Include="Consulta Saldos\ConsultaSaldosHelper.cs" />
+    <Compile Include="Consulta Saldos\FormSaldos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Consulta Saldos\FormSaldos.Designer.cs">
+      <DependentUpon>FormSaldos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tarjetas\Empresa.cs" />
     <Compile Include="ABM Cliente\FormABMCliente.cs">
       <SubType>Form</SubType>
@@ -211,6 +217,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Consulta Saldos\FormConsultaSaldos.resx">
       <DependentUpon>FormConsultaSaldos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Consulta Saldos\FormSaldos.resx">
+      <DependentUpon>FormSaldos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Depositos\FormDepositos.resx">
       <DependentUpon>FormDepositos.cs</DependentUpon>

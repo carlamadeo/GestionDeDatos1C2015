@@ -238,7 +238,7 @@
             this.AcceptButton = this.buttonBuscar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(695, 448);
+            this.ClientSize = new System.Drawing.Size(695, 465);
             this.Controls.Add(this.buttonAlta);
             this.Controls.Add(this.buttonModificar);
             this.Controls.Add(this.buttonHabilitar);

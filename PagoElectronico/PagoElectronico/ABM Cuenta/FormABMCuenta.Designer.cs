@@ -45,7 +45,7 @@
             // 
             // buttonBack
             // 
-            this.buttonBack.Location = new System.Drawing.Point(207, 296);
+            this.buttonBack.Location = new System.Drawing.Point(42, 448);
             this.buttonBack.Name = "buttonBack";
             this.buttonBack.Size = new System.Drawing.Size(75, 23);
             this.buttonBack.TabIndex = 0;
@@ -55,7 +55,7 @@
             // 
             // buttonCreate
             // 
-            this.buttonCreate.Location = new System.Drawing.Point(426, 296);
+            this.buttonCreate.Location = new System.Drawing.Point(320, 448);
             this.buttonCreate.Name = "buttonCreate";
             this.buttonCreate.Size = new System.Drawing.Size(75, 23);
             this.buttonCreate.TabIndex = 1;
@@ -65,7 +65,7 @@
             // 
             // buttonModify
             // 
-            this.buttonModify.Location = new System.Drawing.Point(638, 296);
+            this.buttonModify.Location = new System.Drawing.Point(575, 448);
             this.buttonModify.Name = "buttonModify";
             this.buttonModify.Size = new System.Drawing.Size(75, 23);
             this.buttonModify.TabIndex = 2;
@@ -92,7 +92,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(247, 40);
+            this.label2.Location = new System.Drawing.Point(428, 40);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 13);
             this.label2.TabIndex = 5;
@@ -101,7 +101,7 @@
             // comboBoxTypeAccount
             // 
             this.comboBoxTypeAccount.FormattingEnabled = true;
-            this.comboBoxTypeAccount.Location = new System.Drawing.Point(332, 36);
+            this.comboBoxTypeAccount.Location = new System.Drawing.Point(529, 37);
             this.comboBoxTypeAccount.Name = "comboBoxTypeAccount";
             this.comboBoxTypeAccount.Size = new System.Drawing.Size(121, 21);
             this.comboBoxTypeAccount.TabIndex = 6;
@@ -109,14 +109,14 @@
             // dgvAccount
             // 
             this.dgvAccount.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvAccount.Location = new System.Drawing.Point(42, 116);
+            this.dgvAccount.Location = new System.Drawing.Point(42, 268);
             this.dgvAccount.Name = "dgvAccount";
-            this.dgvAccount.Size = new System.Drawing.Size(853, 150);
+            this.dgvAccount.Size = new System.Drawing.Size(608, 150);
             this.dgvAccount.TabIndex = 7;
             // 
             // buttonClean
             // 
-            this.buttonClean.Location = new System.Drawing.Point(90, 76);
+            this.buttonClean.Location = new System.Drawing.Point(44, 76);
             this.buttonClean.Name = "buttonClean";
             this.buttonClean.Size = new System.Drawing.Size(75, 23);
             this.buttonClean.TabIndex = 8;
@@ -126,7 +126,7 @@
             // 
             // buttonSearch
             // 
-            this.buttonSearch.Location = new System.Drawing.Point(349, 76);
+            this.buttonSearch.Location = new System.Drawing.Point(575, 76);
             this.buttonSearch.Name = "buttonSearch";
             this.buttonSearch.Size = new System.Drawing.Size(75, 23);
             this.buttonSearch.TabIndex = 9;
@@ -137,9 +137,9 @@
             // dgvClient
             // 
             this.dgvClient.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvClient.Location = new System.Drawing.Point(493, 23);
+            this.dgvClient.Location = new System.Drawing.Point(42, 118);
             this.dgvClient.Name = "dgvClient";
-            this.dgvClient.Size = new System.Drawing.Size(402, 76);
+            this.dgvClient.Size = new System.Drawing.Size(608, 117);
             this.dgvClient.TabIndex = 10;
             this.dgvClient.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvClient_SelectionChanged);
             // 
@@ -147,7 +147,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(961, 364);
+            this.ClientSize = new System.Drawing.Size(665, 512);
             this.Controls.Add(this.dgvClient);
             this.Controls.Add(this.buttonSearch);
             this.Controls.Add(this.buttonClean);

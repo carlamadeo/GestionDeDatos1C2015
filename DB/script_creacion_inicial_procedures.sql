@@ -1,4 +1,5 @@
---PROCEDIMIENTOS PARA LOGIN USUARIO
+--**PROCEDIMIENTOS PARA LOGIN USUARIO**--
+
 GO
 CREATE PROCEDURE [SQL_SERVANT].[sp_login_check_valid_user](
 @p_id varchar(255) = null,
@@ -171,7 +172,8 @@ BEGIN
 END
 GO
 
---PROCEDIMIENTO PARA LISTAR MENU
+--**PROCEDIMIENTO PARA LISTAR MENU**--
+
 CREATE PROCEDURE [SQL_SERVANT].[sp_menu_list_functionality_by_user](
 @p_id_rol int
 )
@@ -185,7 +187,8 @@ END
 GO
 
 
---PROCEDIMIENTOS PARA ROL
+--**PROCEDIMIENTOS PARA ROL**--
+
 CREATE PROCEDURE [SQL_SERVANT].[sp_rol_search](
 @p_rol_name varchar(255) = null
 )
@@ -239,7 +242,7 @@ END
 GO
 
 
---PROCEDIMIENTOS PARA ROL Y FUNCIONALIDADES
+--**PROCEDIMIENTOS PARA ROL Y FUNCIONALIDADES**--
 CREATE PROCEDURE [SQL_SERVANT].[sp_rol_functionality_availability](
 @p_id_rol int = null
 )
@@ -293,7 +296,8 @@ BEGIN
 END
 GO
 
---PROCEDIMIENTOS DE USUARIOS
+--**PROCEDIMIENTOS DE USUARIOS**--
+
 CREATE PROCEDURE [SQL_SERVANT].[sp_user_search](
 @p_user_name varchar(255) = null,
 @p_id_rol int = null
@@ -308,7 +312,7 @@ BEGIN
 		u.Ultima_Modificacion 'Ultima Modificacion',
 		r.Id_Rol 'Id Rol',
 		r.Descripcion 'Rol',
-		ur.Habilitado 'Habilitado'
+		u.Habilitado 'Habilitado'
 		
 		FROM SQL_SERVANT.Usuario u
 			INNER JOIN SQL_SERVANT.Usuario_Rol ur
@@ -455,7 +459,7 @@ BEGIN
 END
 GO
 
---PROCEDIMIENTOS CONSULTA DE SALDO
+--**PROCEDIMIENTOS CONSULTA DE SALDO**--
 
 CREATE PROCEDURE [SQL_SERVANT].[sp_consulta_check_account](
 @p_id_cuenta varchar(255) = null,
@@ -517,8 +521,8 @@ BEGIN
 END
 GO
 
+--**PROCEDIMIENTOS ESTADISTICOS**--
 
---PROCEDIMIENTOS ESTADISTICOS
 CREATE PROCEDURE [SQL_SERVANT].[sp_estadistic_top_5_client_disable_account](
 @p_estadistic_from datetime,
 @p_estadistic_to datetime
@@ -655,6 +659,7 @@ BEGIN
 END
 GO
 
+--**PROCEDIMIENTOS DE CUENTAS**--
 
 CREATE PROCEDURE [SQL_SERVANT].[sp_account_search](
 @p_account_lastname varchar(255) = null,
@@ -667,10 +672,10 @@ BEGIN
 	cd.Id_Cliente 'Id Cliente',
 	cd.Nombre 'Nombre',
 	cd.Apellido 'Apellido',
-	cc.Id_Cuenta 'Cuenta Numero Identificacion',
-	tp.Descripcion 'Tipo Cuenta',
-	cu.Fecha_Creacion 'Fecha Creacion',
-	cu.Fecha_Vencimiento 'Fecha Vencimiento',
+	cc.Id_Cuenta 'Cuenta',
+	tp.Descripcion 'Tipo',
+	cu.Fecha_Creacion 'Creacion',
+	cu.Fecha_Vencimiento 'Vencimiento',
 	ec.Descripcion 'Estado',
 	mo.Descripcion 'Moneda',
 	pa.Descripcion 'Pais'
@@ -802,6 +807,9 @@ BEGIN
 END
 GO
 
+--**PROCEDIMIENTOS DE CLIENTES**--
+
+--SE OBTIENEN LOS DATOS DEL CLIENTE A TRAVES DEL APELLIDO
 CREATE PROCEDURE [SQL_SERVANT].[sp_client_search_by_lastname](
 @p_client_lastname varchar(255) = null
 )
@@ -820,6 +828,7 @@ BEGIN
 END
 GO
 
+--A TRAVES DE CIERTOS PARAMETROS SE OBTIENEN LOS DATOS DEL CLIENTE
 CREATE PROCEDURE [SQL_SERVANT].[sp_client_search](
 @p_client_name varchar(255) = null,
 @p_client_lastname varchar(255) = null,
@@ -860,6 +869,7 @@ BEGIN
 END
 GO
 
+--SE ACTUALIZA EL ESTADO DEL CLIENTE EN HABILITADO O DESHABILITADO
 CREATE PROCEDURE [SQL_SERVANT].[sp_client_enable_disable](
 @p_client_id int,
 @p_enable_disable int
@@ -871,6 +881,7 @@ BEGIN
 END
 GO
 
+--A TRAVES DEL ID DEL CLIENTE SE OBTIENEN SUS DATOS
 CREATE PROCEDURE [SQL_SERVANT].[sp_client_data_get_by_id_client](
 @p_id_client varchar(255)
 )
@@ -931,6 +942,8 @@ BEGIN
 END
 GO
 
+--SE VERIFICA QUE EL NUMERO Y TIPO DE INDENTIFICACION INGRESADO
+--NO SE ENCUENTRA EN LA BASE DE DATOS 
 CREATE PROCEDURE [SQL_SERVANT].[sp_client_check_exist_identification](
 @p_client_id int = 0,
 @p_client_type_identification varchar(255),
@@ -954,6 +967,8 @@ BEGIN
 END
 GO
 
+--SE VERIFICA QUE EL MAIL INGRESADO NO SE ENCUENTRA EN LA
+--BASE DE DATOS
 CREATE PROCEDURE [SQL_SERVANT].[sp_client_check_exist_mail](
 @p_client_id int = 0,
 @p_client_mail varchar(255),
@@ -970,6 +985,9 @@ BEGIN
 END
 GO
 
+--SE INGRESAN LOS DATOS DEL CLIENTE, EN CASO DE QUE EL ID DE CLIENTE SEA 0
+--SE CREA UN NUEVO CLIENTE, SI ES DISTINTO DE 0 SE ACTUALIZAN LOS DATOS
+--DEL CLIENTE 
 CREATE PROCEDURE [SQL_SERVANT].[sp_client_save_update](
 @p_client_id int = 0 OUTPUT,
 @p_client_name varchar(255),
@@ -1025,7 +1043,8 @@ BEGIN
 			
 			INSERT INTO SQL_SERVANT.Usuario (Id_Usuario, Password, Cantidad_Login, Fecha_Creacion, Pregunta_Secreta,
 				Respuesta_Secreta, Habilitado)
-			VALUES (@p_user_username, @p_user_password, 0, CAST(GETDATE() AS DATE), @p_user_secret_question, @p_user_secret_answer, 1)
+			VALUES (@p_user_username, @p_user_password, 0, CAST(GETDATE() AS DATE), @p_user_secret_question, 
+			@p_user_secret_answer, 1)
 		
 			INSERT INTO SQL_SERVANT.Usuario_Cliente (Id_Usuario, Id_Cliente)
 			VALUES (@p_user_username, @p_client_id)
@@ -1041,7 +1060,8 @@ BEGIN
 			UPDATE SQL_SERVANT.Cliente_Datos SET Nombre = @p_client_name, Apellido = @p_client_lastname, 
 				Mail = @p_client_mail, Id_Pais = @p_client_country_id, Calle = @p_client_address_name,
 				Calle_Nro = @p_client_address_number, Piso = @p_client_address_floor, Depto = @p_client_address_dept,
-				Localidad = @p_client_localidad, Id_Nacionalidad = @p_client_nationality_id, Fecha_Nacimiento = @p_client_birthdate
+				Localidad = @p_client_localidad, Id_Nacionalidad = @p_client_nationality_id, 
+				Fecha_Nacimiento = @p_client_birthdate
 			WHERE Id_Cliente = @p_client_id
 			
 			UPDATE SQL_SERVANT.Cliente SET Nro_Identificacion = @p_client_identification_number, 
@@ -1053,17 +1073,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [SQL_SERVANT].[sp_client_tarjeta_disable](
-@p_client_id int,
-@p_tarjeta_id varchar(16)
-)
-AS
-BEGIN
-	UPDATE SQL_SERVANT.Cliente_Tarjeta SET Habilitada = 0
-		WHERE Id_Cliente = @p_client_id AND Id_Tarjeta = @p_tarjeta_id
-END
-GO
-
+--A TRAVES DEL ID DE CLIENTE SE OBTIENE SI EL MISMO SE ENCUENTRA HABILITADO
 CREATE PROCEDURE [SQL_SERVANT].[sp_client_is_enabled](
 @p_client_id int = 0,
 @p_isEnabled bit = 0 OUTPUT
@@ -1076,6 +1086,55 @@ BEGIN
 END
 GO
 
+--SE OBTIENE EL ID DE CLIENTE A PARTIR DEL ID DE USUARIO
+CREATE PROCEDURE [SQL_SERVANT].[sp_client_get_by_user](
+@p_client_id int = 0 OUTPUT,
+@p_user_id varchar(20)
+)
+
+AS
+BEGIN
+
+	SELECT @p_client_id = Id_Cliente FROM Usuario_Cliente 
+	WHERE Id_Usuario = @p_user_id
+END
+GO
+
+--**PROCEDIMIENTOS DE TARJETAS**-
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_card_get_data](
+@p_card_id varchar(16)
+)
+AS
+BEGIN
+	SELECT
+		t.Id_Tarjeta,
+		te.Descripcion "Tarjeta_Descripcion",
+		t.Id_Tarjeta_Empresa,
+		t.Fecha_Emision,
+		t.Fecha_Vencimiento,
+		t.Codigo_Seguridad
+
+	FROM SQL_SERVANT.Tarjeta t
+		INNER JOIN SQL_SERVANT.Tarjeta_Empresa te
+			ON t.Id_Tarjeta_Empresa = te.Id_Tarjeta_Empresa
+	WHERE t.Id_Tarjeta = @p_card_id
+END
+GO
+
+--SE DESHABILITA LA TARJETA DE CREDITO INGRESADA
+CREATE PROCEDURE [SQL_SERVANT].[sp_client_tarjeta_disable](
+@p_client_id int,
+@p_tarjeta_id varchar(16)
+)
+AS
+BEGIN
+	UPDATE SQL_SERVANT.Cliente_Tarjeta SET Habilitada = 0
+		WHERE Id_Cliente = @p_client_id AND Id_Tarjeta = @p_tarjeta_id
+END
+GO
+
+--SE OBTIENEN LOS DATOS DE UNA TARJETA A TRAVES DEL ID DEL CLIENTE
 CREATE PROCEDURE [SQL_SERVANT].[sp_client_tarjeta_get_by_id_client](
 @p_id_client varchar(255),
 @p_id_tarjeta varchar(16)
@@ -1100,26 +1159,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [SQL_SERVANT].[sp_card_get_data](
-@p_card_id varchar(16)
-)
-AS
-BEGIN
-	SELECT
-		t.Id_Tarjeta,
-		te.Descripcion "Tarjeta_Descripcion",
-		t.Id_Tarjeta_Empresa,
-		t.Fecha_Emision,
-		t.Fecha_Vencimiento,
-		t.Codigo_Seguridad
-
-	FROM SQL_SERVANT.Tarjeta t
-		INNER JOIN SQL_SERVANT.Tarjeta_Empresa te
-			ON t.Id_Tarjeta_Empresa = te.Id_Tarjeta_Empresa
-	WHERE t.Id_Tarjeta = @p_card_id
-END
-GO
-
+--SE OBTIENEN LOS DATOS DE TODAS LAS TARJETAS QUE POSEA EL CLIENTE
 CREATE PROCEDURE [SQL_SERVANT].[sp_card_by_client_id](
 @p_card_client_id int
 )
@@ -1236,6 +1276,26 @@ BEGIN
 END
 GO
 
+--SE VERIFICA SI LA TARJETA DE CREDITO SE ENCUENTRA VENCIDA
+CREATE PROCEDURE [SQL_SERVANT].[sp_tarjeta_not_expired](
+@p_tarjeta_id varchar(16) = 0,
+@p_notExpired bit = 1 OUTPUT
+)
+AS
+BEGIN
+
+	Declare @p_fecha_vencimiento datetime
+
+	SELECT @p_fecha_vencimiento = Fecha_Vencimiento FROM SQL_SERVANT.Tarjeta
+	WHERE Id_Tarjeta = @p_tarjeta_id
+	
+	IF (@p_fecha_vencimiento < CAST(GETDATE() AS DATE))
+		SET @p_notExpired = 0
+END
+GO
+
+--**PROCEDIMIENTOS DE RETIROS**--
+
 CREATE PROCEDURE [SQL_SERVANT].[sp_retirement_generate_extraction](
 @p_retirement_client_id int,
 @p_retirement_account_id numeric(18,0),
@@ -1275,36 +1335,10 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [SQL_SERVANT].[sp_client_get_by_user](
-@p_client_id int = 0 OUTPUT,
-@p_user_id varchar(20)
-)
+--**PROCEDIMIENTOS DE DEPOSITOS**--
 
-AS
-BEGIN
-
-	SELECT @p_client_id = Id_Cliente FROM Usuario_Cliente 
-	WHERE Id_Usuario = @p_user_id
-END
-GO
-
-CREATE PROCEDURE [SQL_SERVANT].[sp_tarjeta_not_expired](
-@p_tarjeta_id varchar(16) = 0,
-@p_notExpired bit = 1 OUTPUT
-)
-AS
-BEGIN
-
-	Declare @p_fecha_vencimiento datetime
-
-	SELECT @p_fecha_vencimiento = Fecha_Vencimiento FROM SQL_SERVANT.Tarjeta
-	WHERE Id_Tarjeta = @p_tarjeta_id
-	
-	IF (@p_fecha_vencimiento < CAST(GETDATE() AS DATE))
-		SET @p_notExpired = 0
-END
-GO
-
+--SE GUARDA EL DEPOSITO REALIZADO Y SE ACTUALIZA EL IMPORTE DE LA CUENTA
+--DONDE SE DEPOSITO
 CREATE PROCEDURE [SQL_SERVANT].[sp_save_deposito](
 @p_deposito_cuenta numeric(18,0),
 @p_deposito_importe numeric(10,2),
@@ -1333,6 +1367,10 @@ BEGIN
 END
 GO
 
+--**PROCEDIMIENTOS DE TRANSFERENCIAS**--
+
+--SE VERIFICA CUAL ES EL IMPORTE MAXIMO QUE SE PUEDE TRANSFERIR
+--POR CUENTA
 CREATE PROCEDURE [SQL_SERVANT].[sp_get_importe_maximo_por_cuenta](
 @p_cuenta_id numeric(18,0) = 0,
 @p_cuenta_propia bit = 0,
@@ -1355,29 +1393,8 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [SQL_SERVANT].[sp_check_account_same_client](
-@p_primer_cuenta numeric(18,0),
-@p_segunda_cuenta numeric(18,0),
-@p_isSameClient bit = 0 OUTPUT
-)
-AS
-BEGIN
-
-	Declare @p_primer_cliente int
-	Declare @p_segundo_cliente int
-	
-	SELECT @p_primer_cliente = Id_Cliente FROM SQL_SERVANT.Cliente_Cuenta cc
-	WHERE cc.Id_Cuenta = @p_primer_cuenta
-	
-	SELECT @p_segundo_cliente = Id_Cliente FROM SQL_SERVANT.Cliente_Cuenta cc
-	WHERE cc.Id_Cuenta = @p_segunda_cuenta
-	
-	IF @p_primer_cliente = @p_segundo_cliente
-	SET @p_isSameClient = 1
-	
-END
-GO	
-
+--SE GUARDA LA TRANSFERENCIA REALIZADA, SE ACTUALIZAN LOS IMPORTES
+--DE AMBAS CUENTAS Y SE GENERA UNA FACTURACION PENDIENTE
 CREATE PROCEDURE [SQL_SERVANT].[sp_save_transferencia](
 @p_transferencia_origen numeric(18,0),
 @p_transferencia_destino numeric(18,0),
@@ -1440,4 +1457,45 @@ BEGIN
 		
 	COMMIT TRANSACTION
 END
+GO
+
+--SE INGRESAN 2 CUENTAS Y SE DEVUELVE 1 SI LAS MISMAS PERTENECEN
+--AL MISMO CLIENTE, 0 SI NO
+CREATE PROCEDURE [SQL_SERVANT].[sp_check_account_same_client](
+@p_primer_cuenta numeric(18,0),
+@p_segunda_cuenta numeric(18,0),
+@p_isSameClient bit = 0 OUTPUT
+)
+AS
+BEGIN
+
+	Declare @p_primer_cliente int
+	Declare @p_segundo_cliente int
+	
+	SELECT @p_primer_cliente = Id_Cliente FROM SQL_SERVANT.Cliente_Cuenta cc
+	WHERE cc.Id_Cuenta = @p_primer_cuenta
+	
+	SELECT @p_segundo_cliente = Id_Cliente FROM SQL_SERVANT.Cliente_Cuenta cc
+	WHERE cc.Id_Cuenta = @p_segunda_cuenta
+	
+	IF @p_primer_cliente = @p_segundo_cliente
+	SET @p_isSameClient = 1
+	
+END
+GO	
+
+--CUANDO UNA CUENTA TIENE MAS DE 5 TRANSACCIONES PENDIENTES DE PAGO SE INHABILITA LA CUENTA
+CREATE TRIGGER [SQL_SERVANT].[tr_inhabilitacion_cuenta_por_transacciones]
+ON SQL_SERVANT.Facturacion_Pendiente
+FOR INSERT
+AS
+
+Declare @id_cuenta numeric(18,0)
+
+SELECT @id_cuenta = Id_Cuenta FROM inserted
+IF ((SELECT COUNT (*) FROM SQL_SERVANT.Facturacion_Pendiente fp
+	WHERE fp.Id_Cuenta = @id_cuenta) > 5)
+UPDATE SQL_SERVANT.Cuenta SET Id_Estado_Cuenta = 3
+WHERE Id_Cuenta = @id_cuenta
+
 GO

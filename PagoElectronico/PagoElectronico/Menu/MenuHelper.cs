@@ -93,7 +93,6 @@ namespace PagoElectronico.Menu
                     func.folder = "ABM_Cliente";
                     func.form = "FormABMCliente";
                     break;
-
                 case "Transferencias entre cuentas":
                     func.folder = "Transferencias";
                     func.form = "FormTransferencias";

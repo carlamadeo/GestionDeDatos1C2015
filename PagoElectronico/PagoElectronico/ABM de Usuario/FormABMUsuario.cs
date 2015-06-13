@@ -14,18 +14,26 @@ namespace PagoElectronico.ABM_de_Usuario
             InitializeComponent();
         }
 
+        public FormABMUsuario()
+        {
+            InitializeComponent();
+        }
+
         private void FormABMUsuario_Load(object sender, EventArgs e)
         {
-            this.FormBorderStyle = FormBorderStyle.SizableToolWindow;
+
             if (!fromLogin)
             {
                 this.ControlBox = false;
-                
+                this.FormBorderStyle = FormBorderStyle.None;
                 this.WindowState = FormWindowState.Maximized;
             }
 
             else
+            {
                 buttonCreate.Enabled = false;
+                this.FormBorderStyle = FormBorderStyle.SizableToolWindow;
+            }
 
             Roles.fillComboBox(comboBoxRol);
         }
