@@ -30,19 +30,19 @@ namespace PagoElectronico.Listados
         {
             if (comboBoxEstadistic.Text == String.Empty)
             {
-                MessageBox.Show("Debe seleccionar una estadistica", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Debe seleccionar una estadistica", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (comboBoxQuater.Text == String.Empty)
             {
-                MessageBox.Show("Debe seleccionar un trimestre", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Debe seleccionar un trimestre", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (comboBoxYear.Text == String.Empty)
             {
-                MessageBox.Show("Debe seleccionar un año", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Debe seleccionar un año", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

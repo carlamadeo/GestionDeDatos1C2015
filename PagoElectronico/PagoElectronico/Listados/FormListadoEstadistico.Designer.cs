@@ -43,7 +43,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(50, 42);
+            this.label1.Location = new System.Drawing.Point(53, 42);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 0;
@@ -76,7 +76,7 @@
             // 
             // buttonBack
             // 
-            this.buttonBack.Location = new System.Drawing.Point(249, 377);
+            this.buttonBack.Location = new System.Drawing.Point(56, 368);
             this.buttonBack.Name = "buttonBack";
             this.buttonBack.Size = new System.Drawing.Size(75, 23);
             this.buttonBack.TabIndex = 4;
@@ -103,7 +103,7 @@
             // 
             // buttonSearch
             // 
-            this.buttonSearch.Location = new System.Drawing.Point(249, 126);
+            this.buttonSearch.Location = new System.Drawing.Point(460, 126);
             this.buttonSearch.Name = "buttonSearch";
             this.buttonSearch.Size = new System.Drawing.Size(75, 23);
             this.buttonSearch.TabIndex = 7;
@@ -123,7 +123,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(625, 417);
+            this.ClientSize = new System.Drawing.Size(570, 417);
             this.Controls.Add(this.dgvEstadistic);
             this.Controls.Add(this.buttonSearch);
             this.Controls.Add(this.label3);

@@ -467,15 +467,26 @@ SELECT tc.Id_Tipo_Cuenta, 30 FROM SQL_SERVANT.Tipo_Cuenta tc WHERE tc.Descripcio
 --VER SI HACE FALTA AGREGAR LA DE GRATUITA
 CREATE TABLE [SQL_SERVANT].[Costo_Tipo_Cuenta](
 	[Id_Tipo_Cuenta][Int] NOT NULL,
-	[Costo][Numeric](10,2) NOT NULL
+	[Costo_Apertura][Numeric](10,2) NOT NULL,
+	[Costo_Transferencia][Numeric](10,2) NOT NULL
 
 	CONSTRAINT UQ_Costo_Tipo_Cuenta UNIQUE (Id_Tipo_Cuenta),
 	CONSTRAINT [FK_Costo_Tipo_Cuenta] FOREIGN KEY (Id_Tipo_Cuenta)
 		REFERENCES [SQL_SERVANT].[Tipo_Cuenta] (Id_Tipo_Cuenta)
 )
-INSERT INTO SQL_SERVANT.Costo_Tipo_Cuenta(Id_Tipo_Cuenta, Costo)
-SELECT tc.Id_Tipo_Cuenta, 0.00
+INSERT INTO SQL_SERVANT.Costo_Tipo_Cuenta
+SELECT tc.Id_Tipo_Cuenta, 0, 0
 FROM SQL_SERVANT.Tipo_Cuenta tc
+
+UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Apertura = 0 WHERE Id_Tipo_Cuenta = 4
+UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Apertura = 5 WHERE Id_Tipo_Cuenta = 3
+UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Apertura = 7 WHERE Id_Tipo_Cuenta = 2
+UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Apertura = 9 WHERE Id_Tipo_Cuenta = 1
+
+UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Transferencia = 1 WHERE Id_Tipo_Cuenta = 4
+UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Transferencia = 0.5 WHERE Id_Tipo_Cuenta = 3
+UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Transferencia = 0.3 WHERE Id_Tipo_Cuenta = 2
+UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Transferencia = 0.1 WHERE Id_Tipo_Cuenta = 1
 
 --TABLA ESTADO_CUENTA
 CREATE TABLE [SQL_SERVANT].[Estado_Cuenta](
@@ -807,6 +818,22 @@ JOIN    (
                 Id_Cuenta_Destino
         ) AS receptor
 ON      cuenta.Id_Cuenta = receptor.Id_Cuenta_Destino
+	
+--TABLA TIPO_ITEM
+
+/*
+	Tabla donde se almacena el tipo de item que puede contener una factura con su descripcion
+*/
+CREATE TABLE [SQL_SERVANT].[Tipo_Item](
+	[Id_Tipo_Item][Int] IDENTITY(1,1) NOT NULL,
+	[Descripcion][varchar](255) NOT NULL
+	
+	CONSTRAINT [PK_Tipo_Item] PRIMARY KEY ([Id_Tipo_Item] ASC),
+)
+
+INSERT INTO SQL_SERVANT.Tipo_Item VALUES ('Comisión por transferencia.')
+INSERT INTO SQL_SERVANT.Tipo_Item VALUES ('Apertura de cuenta.')
+INSERT INTO SQL_SERVANT.Tipo_Item VALUES ('Modificacion de cuenta.')
 
 --TABLA FACTURACION_PENDIENTE
 /*
@@ -815,29 +842,22 @@ ON      cuenta.Id_Cuenta = receptor.Id_Cuenta_Destino
 CREATE TABLE [SQL_SERVANT].[Facturacion_Pendiente](
 	[Id_Facturacion_Pendiente][Int]IDENTITY(1,1) NOT NULL,
 	[Id_Cuenta][numeric](18,0) NOT NULL,
-	[Id_Tipo_Cuenta][Int] NOT NULL,
-	[Id_Moneda][Int] NOT NULL,
 	[Fecha][datetime] NOT NULL,
 	[Importe][Numeric](10,2) NOT NULL,
-	[Id_Referencia][Int] NOT NULL,
-	[Descripcion][varchar](30) NOT NULL
+	[Id_Tipo_Item][Int] NOT NULL
 
 	CONSTRAINT [PK_Facturacion_Pendiente] PRIMARY KEY(Id_Facturacion_Pendiente),
 	CONSTRAINT [FK_Facturacion_Pendiente_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
 		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
-	CONSTRAINT [FK_Facturacion_Pendiente_Id_Moneda] FOREIGN KEY (Id_Moneda)
-		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
+	CONSTRAINT [FK_Facturacion_Pendiente_Id_Tipo_Item] FOREIGN KEY (Id_Tipo_Item)
+		REFERENCES [SQL_SERVANT].[Tipo_Item] (Id_Tipo_Item)
 )
 
-INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Id_Moneda, Fecha, Importe, Id_Tipo_Cuenta, Id_Referencia, Descripcion)
-SELECT m.Cuenta_Numero, mo.Id_Moneda, m.Transf_Fecha, m.Trans_Importe, tc.Id_Tipo_Cuenta, 0, 'Comisión por transferencia.' 
+INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Fecha, Importe, Id_Tipo_Item)
+SELECT m.Cuenta_Numero, m.Transf_Fecha, m.Trans_Importe, 1
 FROM gd_esquema.Maestra m 
-INNER JOIN SQL_SERVANT.Moneda mo
-	ON mo.Descripcion = 'USD'
 INNER JOIN SQL_SERVANT.Cuenta cu
 	ON cu.Id_Cuenta = m.Cuenta_Numero
-INNER JOIN SQL_SERVANT.Tipo_Cuenta tc
-	ON cu.Id_Tipo_Cuenta = tc.Id_Tipo_Cuenta
 WHERE m.Transf_Fecha IS NOT NULL 
 	AND m.Factura_Numero IS NULL 
 	AND NOT EXISTS(SELECT 1 FROM gd_esquema.Maestra m1
@@ -851,54 +871,48 @@ WHERE m.Transf_Fecha IS NOT NULL
 
 CREATE TABLE [SQL_SERVANT].[Facturacion](
 	[Id_Factura][Int]IDENTITY(1,1) NOT NULL,
-	[Fecha][datetime] NOT NULL,	
 	[Id_Cliente][Int] NOT NULL,
-	[Id_Moneda][Int] NOT NULL,
+	[Fecha][datetime] NOT NULL,	
+	[Id_Tarjeta][varchar](16) NULL,
 	[Importe][numeric](10,2) NOT NULL
 
 	CONSTRAINT [PK_Facturacion] PRIMARY KEY(Id_Factura),
 	CONSTRAINT [FK_Facturacion_Id_Cliente] FOREIGN KEY (Id_Cliente)
 		REFERENCES [SQL_SERVANT].[Cliente] (Id_Cliente),
-	CONSTRAINT [FK_Facturacion_Id_Moneda] FOREIGN KEY (Id_Moneda)
-		REFERENCES [SQL_SERVANT].[Moneda] (Id_Moneda)
+	CONSTRAINT [FK_Facturacion_Id_Tarjeta] FOREIGN KEY (Id_Tarjeta)
+		REFERENCES [SQL_SERVANT].[Tarjeta] (Id_Tarjeta)
 )
 
 SET IDENTITY_INSERT SQL_SERVANT.Facturacion ON
 
-INSERT INTO SQL_SERVANT.Facturacion (Id_Factura, Fecha, Id_Cliente, Id_Moneda, Importe)
-SELECT m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente, mo.Id_Moneda, SUM(Item_Factura_Importe)
+INSERT INTO SQL_SERVANT.Facturacion (Id_Factura, Fecha, Id_Cliente, Importe)
+SELECT m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente, SUM(Item_Factura_Importe)
 FROM gd_esquema.Maestra m
 	INNER JOIN SQL_SERVANT.Cliente_Datos cd
 		ON UPPER(LTRIM(RTRIM(m.Cli_Nombre))) = UPPER(LTRIM(RTRIM(cd.Nombre)))
 		AND UPPER(LTRIM(RTRIM(m.Cli_Apellido))) = UPPER(LTRIM(RTRIM(cd.Apellido)))
-	INNER JOIN SQL_SERVANT.Moneda mo
-		ON mo.Descripcion = 'USD'
 WHERE m.Factura_Numero IS NOT NULL
-GROUP BY m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente, mo.Id_Moneda
+GROUP BY m.Factura_Numero, m.Factura_Fecha, cd.Id_Cliente
 
 SET IDENTITY_INSERT SQL_SERVANT.Facturacion OFF
 
 CREATE TABLE [SQL_SERVANT].[Facturacion_Item](
+	[Id_Factura_Item][Int] IDENTITY(1,1) NOT NULL,
 	[Id_Factura][Int] NOT NULL,
-	[Id_Factura_Item][Int] NOT NULL,
-	[Id_Referencia][Int] NOT NULL,
 	[Id_Cuenta][numeric](18,0) NOT NULL,
-	[Id_Tipo_Cuenta][Int] NOT NULL,
-	[Descripcion][varchar](30) NOT NULL,
-	[Id_Moneda][Int] NOT NULL,
+	[Id_Tipo_Item][Int] NOT NULL,
 	[Importe][numeric](10,2) NOT NULL
 
 	CONSTRAINT [FK_Facturacion_Item_Id_Factura] FOREIGN KEY (Id_Factura)
 	REFERENCES [SQL_SERVANT].[Facturacion] (Id_Factura),
 	CONSTRAINT [FK_Facturacion_Item_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
 		REFERENCES [SQL_SERVANT].[Cuenta] (Id_Cuenta),
-	CONSTRAINT [FK_Facturacion_Item_Id_Tipo_Cuenta] FOREIGN KEY (Id_Tipo_Cuenta)
-		REFERENCES [SQL_SERVANT].[Tipo_Cuenta] (Id_Tipo_Cuenta)
+	CONSTRAINT [FK_Facturacion_Item_Id_Tipo_Item] FOREIGN KEY (Id_Tipo_Item)
+		REFERENCES [SQL_SERVANT].[Tipo_Item] (Id_Tipo_Item)
 )
 
-INSERT INTO SQL_SERVANT.Facturacion_Item (Id_Factura, Id_Factura_Item, Id_Referencia, Id_Cuenta, Id_Tipo_Cuenta, Descripcion, Id_Moneda, Importe)
-SELECT m.Factura_Numero, 1, 
-t.Id_Transferencia, cc.Id_Cuenta, tc.Id_Tipo_Cuenta, m.Item_Factura_Descr, mo.Id_Moneda, m.Item_Factura_Importe
+INSERT INTO SQL_SERVANT.Facturacion_Item (Id_Factura, Id_Cuenta, Id_Tipo_Item, Importe)
+SELECT m.Factura_Numero, cc.Id_Cuenta, 1, m.Item_Factura_Importe
 FROM gd_esquema.Maestra m
 	INNER JOIN SQL_SERVANT.Cliente_Datos cd
 		ON UPPER(LTRIM(RTRIM(m.Cli_Nombre))) = UPPER(LTRIM(RTRIM(cd.Nombre)))
@@ -908,28 +922,8 @@ FROM gd_esquema.Maestra m
 		AND cc.Id_Cliente = cd.Id_Cliente
 	INNER JOIN SQL_SERVANT.Cuenta cu
 		ON cu.Id_Cuenta = cc.Id_Cuenta
-	INNER JOIN SQL_SERVANT.Tipo_Cuenta tc
-		ON cu.Id_Tipo_Cuenta = tc.Id_Tipo_Cuenta
-	INNER JOIN SQL_SERVANT.Moneda mo
-		ON mo.Descripcion = 'USD'
-	INNER JOIN SQL_SERVANT.Transferencia t
-		ON t.Id_Cuenta_Origen = m.Cuenta_Numero
-		AND t.Id_Cuenta_Destino = m.Cuenta_Dest_Numero
-		AND t.Fecha_Transferencia = m.Transf_Fecha
-		AND t.Importe = m.Trans_Importe
+		
 WHERE Factura_Numero IS NOT NULL
-
---SE ELIMINAN TRANSACCIONES QUE SE REALIZARON EL MISMO DIA ENTRE MISMO CLIENTES
---QUE VAN A APARECER DOS VECES COMO TRANSFERENCIAS
---Y EN EL INNER JOIN SE DUPLICAN
-DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15230528 AND Id_Referencia = 33384
-DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15230529 AND Id_Referencia = 33383
-DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15231781 AND Id_Referencia = 34338
-DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15231782 AND Id_Referencia = 34337
-DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15238589 AND Id_Referencia = 39586
-DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15238590 AND Id_Referencia = 39585
-DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15331954 AND Id_Referencia = 111352
-DELETE FROM SQL_SERVANT.Facturacion_Item WHERE Id_Factura = 15331955 AND Id_Referencia = 111351
 
 CREATE TABLE [SQL_SERVANT].[Estadistica](
 	[Id_Estadistica][int]IDENTITY(1,1) NOT NULL,

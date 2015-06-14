@@ -561,18 +561,17 @@ BEGIN
 	SELECT TOP 5 
 	tc.Id_Tipo_Cuenta 'Id Tipo Cuenta',
 	tc.Descripcion 'Tipo Cuenta',
-	mo.Descripcion 'mo',
 	SUM(fi.Importe) 'Monto Facturado'
 	FROM SQL_SERVANT.Facturacion_Item fi
 	INNER JOIN SQL_SERVANT.Facturacion f
 		ON fi.Id_Factura = f.Id_Factura
+	INNER JOIN SQL_SERVANT.Cuenta c
+		ON c.Id_Cuenta = fi.Id_Cuenta
 	INNER JOIN SQL_SERVANT.Tipo_Cuenta tc
-		ON tc.Id_Tipo_Cuenta = fi.Id_Tipo_Cuenta
-	INNER JOIN SQL_SERVANT.Moneda mo
-		ON fi.Id_Moneda = mo.Id_Moneda
+		ON tc.Id_Tipo_Cuenta = c.Id_Tipo_Cuenta
 	WHERE f.Fecha BETWEEN @truncateFrom AND @truncateTo
-	GROUP BY tc.Id_Tipo_Cuenta, tc.Descripcion, mo.Descripcion
-	ORDER BY 4 DESC
+	GROUP BY tc.Id_Tipo_Cuenta, tc.Descripcion
+	ORDER BY 3 DESC
 END
 GO
 
@@ -1415,7 +1414,6 @@ BEGIN
 		Declare @p_importe_final_destino numeric(18,2)
 		Declare @p_transferencia_costo numeric(10,2)
 		Declare @p_id_transferencia int
-		Declare @p_id_tipo_cuenta int
 		Declare @p_mismo_cliente bit
 		
 		SELECT @p_importe_actual_origen = Importe FROM SQL_SERVANT.Cuenta c
@@ -1424,11 +1422,8 @@ BEGIN
 		SELECT @p_importe_actual_destino = Importe FROM SQL_SERVANT.Cuenta c
 		WHERE @p_transferencia_destino = c.Id_Cuenta
 		
-		SELECT @p_transferencia_costo = Costo FROM SQL_SERVANT.Costo_Tipo_Cuenta ctc
+		SELECT @p_transferencia_costo = Costo_Transferencia FROM SQL_SERVANT.Costo_Tipo_Cuenta ctc
 		INNER JOIN SQL_SERVANT.Cuenta c ON ctc.Id_Tipo_Cuenta = c.Id_Tipo_Cuenta
-		WHERE c.Id_Cuenta = @p_transferencia_origen
-		
-		SELECT @p_id_tipo_cuenta = Id_Tipo_Cuenta FROM SQL_SERVANT.Cuenta c
 		WHERE c.Id_Cuenta = @p_transferencia_origen
 		
 		INSERT INTO SQL_SERVANT.Transferencia (Id_Cuenta_Origen, Id_Cuenta_Destino, Id_Moneda, 
@@ -1450,10 +1445,9 @@ BEGIN
 		UPDATE SQL_SERVANT.Cuenta SET Importe = (@p_importe_final_destino)
 		WHERE @p_transferencia_destino = SQL_SERVANT.Cuenta.Id_Cuenta
 		
-		INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Id_Tipo_Cuenta, Id_Moneda, Fecha,
-		Importe, Id_Referencia, Descripcion)
-		VALUES (@p_transferencia_origen, @p_id_tipo_cuenta, @p_transferencia_moneda, @p_tranferencia_fecha, 
-		@p_transferencia_costo, @p_id_transferencia, 'Comisión por transferencia.')
+		INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Fecha, Importe, Id_Tipo_Item)
+		VALUES (@p_transferencia_origen, @p_tranferencia_fecha, 
+		@p_transferencia_costo, 1)
 		
 	COMMIT TRANSACTION
 END

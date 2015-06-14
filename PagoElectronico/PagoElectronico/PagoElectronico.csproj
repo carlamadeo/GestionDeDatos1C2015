@@ -57,6 +57,14 @@
     <Compile Include="Consulta Saldos\FormSaldos.Designer.cs">
       <DependentUpon>FormSaldos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Facturacion\Facturacion.cs" />
+    <Compile Include="Facturacion\FacturacionHelper.cs" />
+    <Compile Include="Facturacion\FormSeleccionTarjeta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Facturacion\FormSeleccionTarjeta.Designer.cs">
+      <DependentUpon>FormSeleccionTarjeta.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tarjetas\Empresa.cs" />
     <Compile Include="ABM Cliente\FormABMCliente.cs">
       <SubType>Form</SubType>
@@ -139,11 +147,11 @@
     <Compile Include="Depositos\FormDepositos.Designer.cs">
       <DependentUpon>FormDepositos.cs</DependentUpon>
     </Compile>
-    <Compile Include="Facturacion\Form1.cs">
+    <Compile Include="Facturacion\FormFacturacion.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Facturacion\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Facturacion\FormFacturacion.Designer.cs">
+      <DependentUpon>FormFacturacion.cs</DependentUpon>
     </Compile>
     <Compile Include="FormMenu.cs">
       <SubType>Form</SubType>
@@ -223,6 +231,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Depositos\FormDepositos.resx">
       <DependentUpon>FormDepositos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturacion\FormFacturacion.resx">
+      <DependentUpon>FormFacturacion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturacion\FormSeleccionTarjeta.resx">
+      <DependentUpon>FormSeleccionTarjeta.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMenu.resx">
       <DependentUpon>FormMenu.cs</DependentUpon>

@@ -100,12 +100,14 @@ namespace PagoElectronico.ABM_Cuenta
                 CuentaHelper.save(accountData);
                 if (isEdition)
                 {
-                    MessageBox.Show("Modificacion de cuenta realizada con exito");
+                    MessageBox.Show("Modificacion de cuenta realizada con exito",
+                            "Modificacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.closeWindow();
                 }
                 else
                 {
-                    MessageBox.Show("Creacion de cuenta realizada con exito");
+                    MessageBox.Show("Creacion de cuenta realizada con exito",
+                            "Creacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.closeWindow();
                 }
             }
