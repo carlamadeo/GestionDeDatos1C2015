@@ -27,10 +27,7 @@ namespace PagoElectronico.Facturacion
         private void buttonContinuar_Click(object sender, EventArgs e)
         {
             FormSeleccionTarjeta formSeleccionTarjeta = new FormSeleccionTarjeta();
-            formSeleccionTarjeta.MdiParent = this.MdiParent;
-            MdiParent.Size = formSeleccionTarjeta.Size;
-            formSeleccionTarjeta.Show();
-            this.Close();
+            formSeleccionTarjeta.ShowDialog();
         }
     }
 }

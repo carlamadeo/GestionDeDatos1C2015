@@ -18,9 +18,6 @@ namespace PagoElectronico.Facturacion
 
         private void FormSeleccionTarjeta_Load(object sender, EventArgs e)
         {
-            this.ControlBox = false;
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;
         }
     }
 }
