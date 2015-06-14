@@ -10,19 +10,19 @@ namespace PagoElectronico.ABM_Cliente
     {
         private String client { get; set; }
         private Boolean edit { get; set; }
-        private Boolean fromLogin;
+        private Boolean isLogin;
 
         public FormAltaModificacionCliente(Boolean edit, String client, Boolean isLogin)
         {
             this.edit = edit;
             this.client = client;
-            this.fromLogin = isLogin;
+            this.isLogin = isLogin;
             InitializeComponent();
         }
 
         private void FormAltaModificacionCliente_Load(object sender, EventArgs e)
         {
-            if (!fromLogin)
+            if (!isLogin)
             {
                 this.ControlBox = false;
                 this.FormBorderStyle = FormBorderStyle.None;
@@ -76,7 +76,7 @@ namespace PagoElectronico.ABM_Cliente
 
         private void closeWindow()
         {
-            if (fromLogin)
+            if (isLogin)
             {
                 this.Close();
                 Application.OpenForms[0].Show();

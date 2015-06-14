@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.labelTarjeta = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBoxTarjetas = new System.Windows.Forms.ComboBox();
             this.buttonPagar = new System.Windows.Forms.Button();
             this.buttonVolver = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -43,13 +43,13 @@
             this.labelTarjeta.TabIndex = 0;
             this.labelTarjeta.Text = "Tarjeta";
             // 
-            // comboBox1
+            // comboBoxTarjetas
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(114, 57);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(154, 21);
-            this.comboBox1.TabIndex = 1;
+            this.comboBoxTarjetas.FormattingEnabled = true;
+            this.comboBoxTarjetas.Location = new System.Drawing.Point(114, 57);
+            this.comboBoxTarjetas.Name = "comboBoxTarjetas";
+            this.comboBoxTarjetas.Size = new System.Drawing.Size(154, 21);
+            this.comboBoxTarjetas.TabIndex = 1;
             // 
             // buttonPagar
             // 
@@ -59,6 +59,7 @@
             this.buttonPagar.TabIndex = 2;
             this.buttonPagar.Text = "Pagar";
             this.buttonPagar.UseVisualStyleBackColor = true;
+            this.buttonPagar.Click += new System.EventHandler(this.buttonPagar_Click);
             // 
             // buttonVolver
             // 
@@ -68,18 +69,20 @@
             this.buttonVolver.TabIndex = 3;
             this.buttonVolver.Text = "Volver";
             this.buttonVolver.UseVisualStyleBackColor = true;
+            this.buttonVolver.Click += new System.EventHandler(this.buttonVolver_Click);
             // 
             // FormSeleccionTarjeta
             // 
+            this.AcceptButton = this.buttonPagar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(303, 188);
+            this.ClientSize = new System.Drawing.Size(326, 218);
             this.Controls.Add(this.buttonVolver);
             this.Controls.Add(this.buttonPagar);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.comboBoxTarjetas);
             this.Controls.Add(this.labelTarjeta);
             this.Name = "FormSeleccionTarjeta";
-            this.Text = "FormSeleccionTarjeta";
+            this.Text = "Tarjeta para Facturacion de Costos";
             this.Load += new System.EventHandler(this.FormSeleccionTarjeta_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -89,7 +92,7 @@
         #endregion
 
         private System.Windows.Forms.Label labelTarjeta;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBoxTarjetas;
         private System.Windows.Forms.Button buttonPagar;
         private System.Windows.Forms.Button buttonVolver;
     }

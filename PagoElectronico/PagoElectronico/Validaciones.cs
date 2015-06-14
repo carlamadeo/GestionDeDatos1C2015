@@ -70,6 +70,20 @@ namespace PagoElectronico
             }
         }
 
+        public static Boolean validAndRequiredInt32LessThan13(string value, string error)
+        {
+            Int32 aux;
+            if (Int32.TryParse(value, out aux) && value != "" && aux < 13)
+            {
+                return true;
+            }
+            else
+            {
+                MessageBox.Show(error, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
         public static Boolean validAndRequiredDoubleMoreThan0(string value, string error)
         {
             Double aux;

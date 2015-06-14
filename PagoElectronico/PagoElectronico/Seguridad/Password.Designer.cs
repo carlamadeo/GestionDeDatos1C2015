@@ -45,7 +45,7 @@
             this.buttonSave.Location = new System.Drawing.Point(220, 204);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
-            this.buttonSave.TabIndex = 0;
+            this.buttonSave.TabIndex = 4;
             this.buttonSave.Text = "Guardar";
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
@@ -65,7 +65,7 @@
             this.textBoxOldPass.Name = "textBoxOldPass";
             this.textBoxOldPass.PasswordChar = '*';
             this.textBoxOldPass.Size = new System.Drawing.Size(232, 20);
-            this.textBoxOldPass.TabIndex = 2;
+            this.textBoxOldPass.TabIndex = 0;
             // 
             // label2
             // 
@@ -82,7 +82,7 @@
             this.textBoxNewPass.Name = "textBoxNewPass";
             this.textBoxNewPass.PasswordChar = '*';
             this.textBoxNewPass.Size = new System.Drawing.Size(232, 20);
-            this.textBoxNewPass.TabIndex = 4;
+            this.textBoxNewPass.TabIndex = 1;
             // 
             // label3
             // 
@@ -98,7 +98,7 @@
             this.textBoxPregSec.Location = new System.Drawing.Point(136, 126);
             this.textBoxPregSec.Name = "textBoxPregSec";
             this.textBoxPregSec.Size = new System.Drawing.Size(232, 20);
-            this.textBoxPregSec.TabIndex = 6;
+            this.textBoxPregSec.TabIndex = 2;
             // 
             // label4
             // 
@@ -114,20 +114,21 @@
             this.textBoxRespSec.Location = new System.Drawing.Point(136, 166);
             this.textBoxRespSec.Name = "textBoxRespSec";
             this.textBoxRespSec.Size = new System.Drawing.Size(232, 20);
-            this.textBoxRespSec.TabIndex = 8;
+            this.textBoxRespSec.TabIndex = 3;
             // 
             // buttonBack
             // 
             this.buttonBack.Location = new System.Drawing.Point(88, 204);
             this.buttonBack.Name = "buttonBack";
             this.buttonBack.Size = new System.Drawing.Size(75, 23);
-            this.buttonBack.TabIndex = 9;
+            this.buttonBack.TabIndex = 5;
             this.buttonBack.Text = "Volver";
             this.buttonBack.UseVisualStyleBackColor = true;
             this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
             // 
             // Password
             // 
+            this.AcceptButton = this.buttonSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(389, 251);

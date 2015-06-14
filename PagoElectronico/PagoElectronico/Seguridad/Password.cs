@@ -37,7 +37,7 @@ namespace PagoElectronico.Seguridad
                 }
                 else
                 {
-                    MessageBox.Show("La contraseña anterior es invalida");
+                    MessageBox.Show("La contraseña anterior es invalida", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -49,11 +49,11 @@ namespace PagoElectronico.Seguridad
 
         private Boolean validar()
         {
-            return Validaciones.requiredString(textBoxNewPass.Text, "debe ingresar una nueva contraseña") &&
-                Validaciones.requiredString(textBoxOldPass.Text, "debe ingresar la contraseña actual") &&
-                Validaciones.requiredString(textBoxRespSec.Text, "debe ingresar una respuesta secreta") &&
-                Validaciones.requiredString(textBoxPregSec.Text, "debe ingresar una pregunta secreta") &&
-                Validaciones.differentValues(textBoxNewPass.Text, textBoxOldPass.Text, "las contrseñas deben ser distintas");
+            return Validaciones.requiredString(textBoxNewPass.Text, "Debe ingresar una nueva contraseña") &&
+                Validaciones.requiredString(textBoxOldPass.Text, "Debe ingresar la contraseña actual") &&
+                Validaciones.requiredString(textBoxRespSec.Text, "Debe ingresar una respuesta secreta") &&
+                Validaciones.requiredString(textBoxPregSec.Text, "Debe ingresar una pregunta secreta") &&
+                Validaciones.differentValues(textBoxNewPass.Text, textBoxOldPass.Text, "Las contrseñas deben ser distintas");
 
         }
     }

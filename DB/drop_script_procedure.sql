@@ -128,3 +128,9 @@ DROP PROCEDURE SQL_SERVANT.sp_get_importe_maximo_por_cuenta
 DROP PROCEDURE SQL_SERVANT.sp_check_account_same_client
 
 DROP PROCEDURE SQL_SERVANT.sp_save_transferencia
+
+DROP PROCEDURE SQL_SERVANT.sp_remove_pending_facturacion
+
+DROP PROCEDURE SQL_SERVANT.sp_create_factura
+
+DROP PROCEDURE SQL_SERVANT.sp_create_facturacion_item

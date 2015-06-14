@@ -59,6 +59,12 @@
     </Compile>
     <Compile Include="Facturacion\Facturacion.cs" />
     <Compile Include="Facturacion\FacturacionHelper.cs" />
+    <Compile Include="Facturacion\FormSeleccionSuscripciones.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Facturacion\FormSeleccionSuscripciones.Designer.cs">
+      <DependentUpon>FormSeleccionSuscripciones.cs</DependentUpon>
+    </Compile>
     <Compile Include="Facturacion\FormSeleccionTarjeta.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -234,6 +240,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Facturacion\FormFacturacion.resx">
       <DependentUpon>FormFacturacion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturacion\FormSeleccionSuscripciones.resx">
+      <DependentUpon>FormSeleccionSuscripciones.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Facturacion\FormSeleccionTarjeta.resx">
       <DependentUpon>FormSeleccionTarjeta.cs</DependentUpon>

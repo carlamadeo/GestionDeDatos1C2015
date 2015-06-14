@@ -1478,6 +1478,53 @@ BEGIN
 END
 GO	
 
+--**PROCEDIMIENTOS DE FACTURACION**--
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_remove_pending_facturacion](
+@p_facturacion_pendiente_id int
+)
+AS
+BEGIN
+	DELETE FROM SQL_SERVANT.Facturacion_Pendiente 
+	WHERE Id_Facturacion_Pendiente = @p_facturacion_pendiente_id
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_create_factura](
+@p_id_cliente int,
+@p_fecha datetime,
+@p_id_tarjeta varchar(16),
+@p_importe numeric (10,2),
+@p_id_factura int = 0 OUTPUT
+)
+AS
+BEGIN
+
+	INSERT INTO SQL_SERVANT.Facturacion VALUES
+	(@p_id_cliente, @p_fecha, @p_id_tarjeta, @p_importe)
+	
+	SET @p_id_factura = @@IDENTITY
+
+END
+GO
+
+CREATE PROCEDURE [SQL_SERVANT].[sp_create_facturacion_item](
+@p_id_factura int,
+@p_id_cuenta numeric(18,0),
+@p_descripcion_gasto varchar(255),
+@p_importe numeric(10,2)
+)
+AS
+BEGIN
+	Declare @id_tipo_item int
+	SELECT @id_tipo_item = Id_Tipo_Item FROM SQL_SERVANT.Tipo_Item
+	WHERE @p_descripcion_gasto = Descripcion
+	
+	INSERT INTO SQL_SERVANT.Facturacion_Item VALUES
+	(@p_id_factura, @p_id_cuenta, @id_tipo_item, @p_importe)
+END
+GO
+
 --CUANDO UNA CUENTA TIENE MAS DE 5 TRANSACCIONES PENDIENTES DE PAGO SE INHABILITA LA CUENTA
 CREATE TRIGGER [SQL_SERVANT].[tr_inhabilitacion_cuenta_por_transacciones]
 ON SQL_SERVANT.Facturacion_Pendiente

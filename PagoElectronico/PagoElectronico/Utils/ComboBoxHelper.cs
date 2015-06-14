@@ -42,7 +42,6 @@ namespace PagoElectronico
             Connection.close(conn);
         }
 
-        //TODO Revisar esto, esta mal
         public static void fillWithoutLast4Digits(ComboBox comboBox, String dataSource, String valueMember, String displayMember, String whereMember, String orderMember)
         {
             SqlConnection conn = Connection.getConnection();
