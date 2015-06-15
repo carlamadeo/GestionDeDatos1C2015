@@ -751,7 +751,7 @@ BEGIN
 				VALUES (@p_account_client_id, @account_id)
 
 			INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Fecha, Importe, Id_Tipo_Item)
-			SELECT @account_id, @p_account_date, ctc.Costo_Apertura, ti_Id_Tipo_Item
+			SELECT @account_id, @p_account_date, ctc.Costo_Apertura, ti.Id_Tipo_Item
 			FROM SQL_SERVANT.Costo_Tipo_Cuenta ctc, SQL_SERVANT.Tipo_Item ti
 				WHERE ctc.Id_Tipo_Cuenta = @p_account_type_account_id
 				AND ti.Descripcion = 'Apertura de cuenta.'
