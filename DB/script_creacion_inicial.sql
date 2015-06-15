@@ -381,7 +381,6 @@ FROM gd_esquema.Maestra m
 */
 CREATE TABLE [SQL_SERVANT].[Cliente](
 	[Id_Cliente][Int] NOT NULL,
-	--CAMBIAR CUANDO SE LES CANTE A LOS AYUDANTES LARGAR LA DATA
 	[Nro_Identificacion][Int] NULL,
 	[Id_Tipo_Identificacion][Int] NOT NULL,
 	[Habilitado][bit] NOT NULL,

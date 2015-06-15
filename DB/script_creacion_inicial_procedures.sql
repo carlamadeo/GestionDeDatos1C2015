@@ -1526,7 +1526,8 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_create_facturacion_item](
 @p_id_factura int,
 @p_id_cuenta numeric(18,0),
 @p_descripcion_gasto varchar(255),
-@p_importe numeric(10,2)
+@p_importe numeric(10,2),
+@p_cantidad_suscripciones int
 )
 AS
 BEGIN
@@ -1536,6 +1537,26 @@ BEGIN
 	
 	INSERT INTO SQL_SERVANT.Facturacion_Item VALUES
 	(@p_id_factura, @p_id_cuenta, @id_tipo_item, @p_importe)
+	
+	IF(@id_tipo_item = 2)
+	BEGIN
+		UPDATE SQL_SERVANT.Cuenta SET Id_Estado_Cuenta = 4
+		WHERE Id_Cuenta = @p_id_cuenta
+	END
+	
+	IF(@id_tipo_item = 2 or @id_tipo_item = 3)
+			
+		IF(@p_cantidad_suscripciones > 1)
+		BEGIN
+			Declare @fecha_vencimiento datetime
+			
+			SELECT @fecha_vencimiento = Fecha_Vencimiento FROM SQL_SERVANT.Cuenta
+			WHERE Id_Cuenta = @p_id_cuenta
+			
+			UPDATE SQL_SERVANT.Cuenta SET Fecha_Vencimiento = DATEADD(month, @p_cantidad_suscripciones - 1, @fecha_vencimiento)
+			
+		END
+	
 END
 GO
 
@@ -1550,7 +1571,14 @@ Declare @id_cuenta numeric(18,0)
 SELECT @id_cuenta = Id_Cuenta FROM inserted
 IF ((SELECT COUNT (*) FROM SQL_SERVANT.Facturacion_Pendiente fp
 	WHERE fp.Id_Cuenta = @id_cuenta) > 5)
-UPDATE SQL_SERVANT.Cuenta SET Id_Estado_Cuenta = 3
-WHERE Id_Cuenta = @id_cuenta
-
+BEGIN
+	UPDATE SQL_SERVANT.Cuenta SET Id_Estado_Cuenta = 3
+	WHERE Id_Cuenta = @id_cuenta
+	
+	INSERT INTO SQL_SERVANT.Log (Id_Cliente, Id_Cuenta, Fecha, Id_Motivo) 
+	(SELECT cc.Id_Cliente, cc.Id_Cuenta, inserted.Fecha, ml.Id_Motivo
+	FROM SQL_SERVANT.Cliente_Cuenta cc, inserted, SQL_SERVANT.Motivo_Log ml
+	WHERE cc.Id_Cuenta = @id_cuenta
+	AND ml.Descripcion = 'INHABILITACION CUENTA POR NO PAGO')
+END
 GO

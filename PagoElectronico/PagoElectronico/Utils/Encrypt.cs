@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using System.Security.Cryptography;
 using System;
+using System.IO;
+using System.Collections.Generic;
 namespace PagoElectronico
 {
     public class Encrypt

@@ -174,7 +174,7 @@ namespace PagoElectronico.ABM_Cliente
                     && Validaciones.requiredString(textBoxRespSecreta.Text, "El campo Respuesta Secreta no puede ser vacio");
                 if (isValid)
                 {
-                    var questionAnswer = new PreguntaRespuesta(textBoxPregSecreta.Text, Encrypt.Sha256(textBoxRespSecreta.Text));
+                    var questionAnswer = new PreguntaRespuesta(textBoxPregSecreta.Text, textBoxRespSecreta.Text);
                     userData.questionAnswer = questionAnswer;
                 }
                 else

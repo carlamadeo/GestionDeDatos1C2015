@@ -72,8 +72,7 @@ namespace PagoElectronico.Facturacion
             }
         }
 
-
-        public static void saveFacturacion(List<Facturacion> facturacionesAPagar, Int16 idCliente, string tarjeta)
+        public static Decimal getImporteAPagar(List<Facturacion> facturacionesAPagar)
         {
             Decimal importeTotal = 0;
             int indice = 0;
@@ -84,6 +83,18 @@ namespace PagoElectronico.Facturacion
                     facturacionesAPagar[indice].suscripciones;
                 eliminarFacturacionesPendientes(item);
                 indice++;
+            }
+
+            return importeTotal;
+        }
+
+        public static void saveFacturacion(List<Facturacion> facturacionesAPagar, Int16 idCliente, string tarjeta)
+        {
+            Decimal importeTotal =  getImporteAPagar(facturacionesAPagar);
+
+            foreach (Facturacion item in facturacionesAPagar)
+            {
+                eliminarFacturacionesPendientes(item);
             }
 
             Int32 idFactura = crearFacturacion(idCliente, tarjeta, importeTotal);
@@ -139,6 +150,7 @@ namespace PagoElectronico.Facturacion
             sp_create_facturacion_item.Parameters.AddWithValue("@p_id_cuenta", item.idCuenta);
             sp_create_facturacion_item.Parameters.AddWithValue("@p_descripcion_gasto", item.descripcionGasto);
             sp_create_facturacion_item.Parameters.AddWithValue("@p_importe", item.importe);
+            sp_create_facturacion_item.Parameters.AddWithValue("@p_cantidad_suscripciones", item.suscripciones);
 
             ProcedureHelper.execute(sp_create_facturacion_item, "create facturacion item", false);
         }
