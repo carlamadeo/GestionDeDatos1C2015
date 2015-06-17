@@ -21,7 +21,7 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_login_get_answer_question_secret](
 )
 AS
 BEGIN
-	SELECT @p_question = Pregunta_Secreta, @p_answer = Respuesta_Secreta
+	SELECT @p_question = Pregunta_Secreta, @p_answer = CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', Respuesta_Secreta))
 	FROM SQL_SERVANT.Usuario
 	WHERE Id_Usuario = @p_id
 END
@@ -51,10 +51,16 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_password_change](
 )
 AS
 BEGIN
+	IF @p_pass IS NOT NULL
+	BEGIN
 	UPDATE SQL_SERVANT.Usuario
-		SET Password = @p_pass,
-		Pregunta_Secreta = @p_question,
-		Respuesta_Secreta = @p_answer
+		SET Password = @p_pass
+	WHERE Id_Usuario = @p_id
+	END
+	
+	UPDATE SQL_SERVANT.Usuario
+		SET Pregunta_Secreta = @p_question,
+		Respuesta_Secreta = EncryptByPassPhrase('SQL SERVANT', @p_answer)
 	WHERE Id_Usuario = @p_id
 END
 GO
@@ -346,7 +352,17 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_user_get_by_user](
 )
 AS
 BEGIN
-	SELECT * FROM SQL_SERVANT.Usuario u
+	SELECT 
+	Id_Usuario,
+	Password,
+	Cantidad_Login,
+	Ultima_Fecha,
+	Fecha_Creacion,
+	Ultima_Modificacion,
+	Pregunta_Secreta,
+	CONVERT(varchar(50),DecryptByPassphrase ('SQL SERVANT', Respuesta_Secreta)),
+	Habilitado 
+	FROM SQL_SERVANT.Usuario u
 		WHERE u.Id_Usuario = @p_user_name
 END
 GO
@@ -379,7 +395,7 @@ BEGIN
 			Fecha_Creacion = @p_user_creation_date,
 			Ultima_Modificacion = @p_user_modify_date,
 			Pregunta_Secreta = @p_user_question_secret,
-			Respuesta_Secreta = @p_user_answer_secret,
+			Respuesta_Secreta = EncryptByPassPhrase('SQL SERVANT', @p_user_answer_secret),
 			Habilitado = @p_enabled
 			WHERE Id_Usuario = @p_user_name
 		ELSE
@@ -387,7 +403,7 @@ BEGIN
 			Fecha_Creacion = @p_user_creation_date,
 			Ultima_Modificacion = @p_user_modify_date,
 			Pregunta_Secreta = @p_user_question_secret,
-			Respuesta_Secreta = @p_user_answer_secret,
+			Respuesta_Secreta = EncryptByPassPhrase('SQL SERVANT', @p_user_answer_secret),
 			Habilitado = @p_enabled
 			WHERE Id_Usuario = @p_user_name
 	END
@@ -395,8 +411,8 @@ BEGIN
 	BEGIN
 		INSERT INTO SQL_SERVANT.Usuario (Id_Usuario, Password, Cantidad_Login, Ultima_Fecha, Fecha_Creacion, Ultima_Modificacion,
 		Pregunta_Secreta, Respuesta_Secreta, Habilitado)
-		VALUES (@p_user_name, @p_password, 0, null, @p_user_creation_date, @p_user_modify_date, @p_user_question_secret, @p_user_answer_secret,
-		@p_enabled)
+		VALUES (@p_user_name, @p_password, 0, null, @p_user_creation_date, @p_user_modify_date, @p_user_question_secret, 
+		EncryptByPassPhrase('SQL SERVANT', @p_user_answer_secret),@p_enabled)
 	END
 END
 GO
@@ -490,10 +506,9 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_consulta_last_5_deposits](
 )
 AS
 BEGIN
-	select top 5 t1.Id_Deposito, t1.Importe, t1.Id_Tarjeta, t1.Fecha_Deposito
+	select top 5 t1.Id_Deposito, t1.Importe, CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', t1.Id_Tarjeta)), t1.Fecha_Deposito
  	from SQL_SERVANT.Deposito t1
 	where Id_Cuenta = @p_consulta_cuenta
-	
 END
 GO
 
@@ -905,7 +920,7 @@ BEGIN
 		uc.Id_Usuario 'Username',
 		u.Password 'Password',
 		u.Pregunta_Secreta 'Pregunta Secreta',
-		u.Respuesta_Secreta 'Respuesta Secreta',
+		CONVERT(varchar(50),DecryptByPassphrase ('SQL SERVANT', u.Respuesta_Secreta)) 'Respuesta Secreta',
 		cd.Nombre 'Nombre',
 		cd.Apellido 'Apellido',
 		ti.Id_Tipo_Identificacion 'Tipo_Identificacion',
@@ -1057,7 +1072,7 @@ BEGIN
 			INSERT INTO SQL_SERVANT.Usuario (Id_Usuario, Password, Cantidad_Login, Fecha_Creacion, Pregunta_Secreta,
 				Respuesta_Secreta, Habilitado)
 			VALUES (@p_user_username, @p_user_password, 0, CAST(GETDATE() AS DATE), @p_user_secret_question, 
-			@p_user_secret_answer, 1)
+			EncryptByPassPhrase('SQL SERVANT', @p_user_secret_answer), 1)
 		
 			INSERT INTO SQL_SERVANT.Usuario_Cliente (Id_Usuario, Id_Cliente)
 			VALUES (@p_user_username, @p_client_id)
@@ -1121,7 +1136,7 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_card_get_data](
 AS
 BEGIN
 	SELECT
-		t.Id_Tarjeta,
+		CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', t.Id_Tarjeta)),
 		te.Descripcion "Tarjeta_Descripcion",
 		t.Id_Tarjeta_Empresa,
 		t.Fecha_Emision,
@@ -1131,7 +1146,7 @@ BEGIN
 	FROM SQL_SERVANT.Tarjeta t
 		INNER JOIN SQL_SERVANT.Tarjeta_Empresa te
 			ON t.Id_Tarjeta_Empresa = te.Id_Tarjeta_Empresa
-	WHERE t.Id_Tarjeta = @p_card_id
+	WHERE CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', t.Id_Tarjeta)) = @p_card_id
 END
 GO
 
@@ -1143,7 +1158,7 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_client_tarjeta_disable](
 AS
 BEGIN
 	UPDATE SQL_SERVANT.Cliente_Tarjeta SET Habilitada = 0
-		WHERE Id_Cliente = @p_client_id AND Id_Tarjeta = @p_tarjeta_id
+		WHERE Id_Cliente = @p_client_id AND CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', Id_Tarjeta)) = @p_tarjeta_id
 END
 GO
 
@@ -1163,12 +1178,11 @@ BEGIN
 
 	 FROM SQL_SERVANT.Cliente_Tarjeta ct
 		INNER JOIN SQL_SERVANT.Tarjeta t
-			ON ct.Id_Tarjeta = t.Id_tarjeta
+			ON CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', ct.Id_Tarjeta)) = CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', t.Id_tarjeta))
 		INNER JOIN SQL_SERVANT.Tarjeta_Empresa te
-			ON t.Id_Tarjeta_Empresa = te.Id_Tarjeta_Empresa
-		
+			ON t.Id_Tarjeta_Empresa = te.Id_Tarjeta_Empresa	
 	WHERE ct.Id_Cliente = @p_id_client AND
-	ct.Id_Tarjeta = @p_Id_tarjeta
+	CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', ct.Id_Tarjeta)) = @p_Id_tarjeta
 END
 GO
 
@@ -1179,7 +1193,7 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_card_by_client_id](
 AS
 BEGIN
 	SELECT
-		t.Id_Tarjeta "Numero",
+		CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', t.Id_Tarjeta)) AS Numero,
 		te.Descripcion 'Empresa',
 		t.Fecha_Emision "Fecha Emision",
 		t.Fecha_Vencimiento "Fecha Vencimiento",
@@ -1187,7 +1201,7 @@ BEGIN
 
 		FROM SQL_SERVANT.Cliente_Tarjeta ct
 			INNER JOIN SQL_SERVANT.Tarjeta t
-				ON ct.Id_Tarjeta = t.Id_Tarjeta
+				ON CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', ct.Id_Tarjeta)) = CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', t.Id_Tarjeta))
 			INNER JOIN SQL_SERVANT.Tarjeta_Empresa te
 				ON t.Id_Tarjeta_Empresa = te.Id_Tarjeta_Empresa
 		WHERE ct.Id_Cliente = @p_card_client_id
@@ -1203,7 +1217,7 @@ AS
 BEGIN
 	UPDATE SQL_SERVANT.Cliente_Tarjeta 
 		SET Habilitada = @p_card_associate
-	WHERE Id_Cliente = @p_card_client_id AND Id_Tarjeta = @p_card_id
+	WHERE Id_Cliente = @p_card_client_id AND CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', Id_Tarjeta)) = @p_card_id
 END
 GO
 
@@ -1219,11 +1233,15 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_card_save_with_association](
 AS
 BEGIN
 	BEGIN TRANSACTION
+	
+		Declare @encrypted_card varbinary(100)
+		SET @encrypted_card = EncryptByPassPhrase('SQL SERVANT', @p_card_id)
+		
 		INSERT INTO SQL_SERVANT.Tarjeta (Id_Tarjeta, Fecha_Emision, Fecha_Vencimiento, Id_Tarjeta_Empresa, Codigo_Seguridad)
-		VALUES (@p_card_id, @p_card_creation_date, @p_card_expiration_date, @p_card_company_id, @p_card_security_code)
+		VALUES (@encrypted_card, @p_card_creation_date, @p_card_expiration_date, @p_card_company_id, @p_card_security_code)
 
 		INSERT INTO SQL_SERVANT.Cliente_Tarjeta (Id_Cliente, Id_Tarjeta, Habilitada)
-		VALUES (@p_card_client_id, @p_card_id, SQL_SERVANT.Validar_Tarjeta_Habilitacion(@p_card_id, @p_card_expiration_date, @p_card_date_to_considerate))
+		VALUES (@p_card_client_id, @encrypted_card, SQL_SERVANT.Validar_Tarjeta_Habilitacion(@p_card_id, @p_card_expiration_date, @p_card_date_to_considerate))
 	COMMIT TRANSACTION
 END
 GO
@@ -1234,7 +1252,7 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_card_exist](
 )
 AS
 BEGIN
-	IF EXISTS (SELECT 1 FROM SQL_SERVANT.Tarjeta WHERE Id_Tarjeta = @p_card_id)
+	IF EXISTS (SELECT 1 FROM SQL_SERVANT.Tarjeta WHERE (CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', Id_Tarjeta)) = @p_card_id))
 	BEGIN
 		SET @p_is_valid = 1
 	END
@@ -1261,7 +1279,7 @@ BEGIN
 			UPDATE SQL_SERVANT.Tarjeta SET Fecha_Emision = @p_tarjeta_fecha_emision, 
 			Fecha_Vencimiento = @p_tarjeta_fecha_vencimiento, Id_Tarjeta_Empresa = @p_tarjeta_empresa_id,
 			Codigo_Seguridad = @p_tarjeta_codigo_seguridad
-			WHERE Id_Tarjeta = @p_tarjeta_id
+			WHERE CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', Id_Tarjeta)) = @p_tarjeta_id
 		
 	COMMIT TRANSACTION
 END
@@ -1274,12 +1292,12 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_card_enabled_search](
 AS
 BEGIN
 	SELECT 
-		t.Id_Tarjeta 'Nro Tarjeta', 
+		CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', t.Id_Tarjeta)) 'Nro Tarjeta', 
 		t.Fecha_Vencimiento 'Fecha Vencimiento',
 		te.Descripcion 'Empresa'
 	FROM SQL_SERVANT.Tarjeta t
 	INNER JOIN SQL_SERVANT.Cliente_Tarjeta ct
-		ON t.Id_Tarjeta = ct.Id_Tarjeta
+		ON CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', t.Id_Tarjeta)) = CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', ct.Id_Tarjeta))
 	INNER JOIN SQL_SERVANT.Tarjeta_Empresa te
 		ON t.Id_Tarjeta_Empresa = te.Id_Tarjeta_Empresa
 	WHERE ct.Id_Cliente = @p_card_client_id
@@ -1300,7 +1318,7 @@ BEGIN
 	Declare @p_fecha_vencimiento datetime
 
 	SELECT @p_fecha_vencimiento = Fecha_Vencimiento FROM SQL_SERVANT.Tarjeta
-	WHERE Id_Tarjeta = @p_tarjeta_id
+	WHERE CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', Id_Tarjeta)) = @p_tarjeta_id
 	
 	IF (@p_fecha_vencimiento < CAST(GETDATE() AS DATE))
 		SET @p_notExpired = 0
@@ -1356,7 +1374,7 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_save_deposito](
 @p_deposito_cuenta numeric(18,0),
 @p_deposito_importe numeric(10,2),
 @p_deposito_moneda int,
-@p_deposito_tarjeta numeric(16,0),
+@p_deposito_tarjeta varchar(16),
 @p_deposito_fecha datetime
 )
 
@@ -1371,7 +1389,7 @@ BEGIN
 		WHERE @p_deposito_cuenta = c.Id_Cuenta
 		
 		INSERT INTO SQL_SERVANT.Deposito (Id_Cuenta, Importe, Id_Moneda, Id_Tarjeta, Fecha_Deposito)
-		VALUES (@p_deposito_cuenta, @p_deposito_importe, @p_deposito_moneda, @p_deposito_tarjeta, @p_deposito_fecha)
+		VALUES (@p_deposito_cuenta, @p_deposito_importe, @p_deposito_moneda, EncryptByPassPhrase('SQL SERVANT', @p_deposito_tarjeta), @p_deposito_fecha)
 		
 		UPDATE SQL_SERVANT.Cuenta SET Importe = (@p_deposito_importe + @importe_actual)
 		WHERE @p_deposito_cuenta = SQL_SERVANT.Cuenta.Id_Cuenta
@@ -1514,8 +1532,13 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_create_factura](
 AS
 BEGIN
 
+	Declare @id_tarjeta_enc varbinary(100)
+	
+	SELECT @id_tarjeta_enc = Id_Tarjeta FROM SQL_SERVANT.Tarjeta
+	WHERE @p_id_tarjeta = CONVERT(varchar(50),DecryptByPassphrase ('SQL SERVANT', Id_Tarjeta))
+	
 	INSERT INTO SQL_SERVANT.Facturacion VALUES
-	(@p_id_cliente, @p_fecha, @p_id_tarjeta, @p_importe)
+	(@p_id_cliente, @p_fecha, @id_tarjeta_enc, @p_importe)
 	
 	SET @p_id_factura = @@IDENTITY
 
@@ -1549,11 +1572,18 @@ BEGIN
 		IF(@p_cantidad_suscripciones > 1)
 		BEGIN
 			Declare @fecha_vencimiento datetime
+			Declare @dias_por_tipo_cuenta int
+			Declare @cantidad_dias_aumentar int
+			
+			SELECT @dias_por_tipo_cuenta = ptc.Dias FROM SQL_SERVANT.Periodo_Tipo_Cuenta ptc
+			INNER JOIN SQL_SERVANT.Cuenta c ON ptc.Id_Tipo_Cuenta = c.Id_Tipo_Cuenta
 			
 			SELECT @fecha_vencimiento = Fecha_Vencimiento FROM SQL_SERVANT.Cuenta
 			WHERE Id_Cuenta = @p_id_cuenta
 			
-			UPDATE SQL_SERVANT.Cuenta SET Fecha_Vencimiento = DATEADD(month, @p_cantidad_suscripciones - 1, @fecha_vencimiento)
+			SET @cantidad_dias_aumentar = (@p_cantidad_suscripciones - 1) * @dias_por_tipo_cuenta
+			
+			UPDATE SQL_SERVANT.Cuenta SET Fecha_Vencimiento = DATEADD(day, @cantidad_dias_aumentar, @fecha_vencimiento)
 			
 		END
 	

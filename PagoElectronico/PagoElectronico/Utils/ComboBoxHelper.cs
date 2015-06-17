@@ -1,7 +1,7 @@
-﻿using System.Windows.Forms;
-using System.Data.SqlClient;
+﻿using System;
 using System.Data;
-using System;
+using System.Data.SqlClient;
+using System.Windows.Forms;
 using PagoElectronico.Tarjetas;
 
 namespace PagoElectronico
@@ -76,6 +76,28 @@ namespace PagoElectronico
             comboBox.DataSource = dataSet.Tables[0].DefaultView;
             comboBox.ValueMember = valueMember;
             comboBox.DisplayMember = displayMember;
+            comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox.Text = "(Seleccione una Opcion)";
+
+            Connection.close(conn);
+        }
+
+        public static void fillFromProc(ComboBox comboBox, int idCliente)
+        {
+            SqlConnection conn = Connection.getConnection();
+            SqlCommand cmd = new SqlCommand();
+            DataSet ds = new DataSet();
+
+            //Load user list
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "SQL_SERVANT.sp_card_by_client_id";
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd.CommandText, conn);
+            cmd.Parameters.Add(idCliente);
+            adapter.Fill(ds);
+            comboBox.DataSource = ds.Tables[0].DefaultView;
+            comboBox.DisplayMember = "Numero";
+            comboBox.ValueMember = "Numero";
+            cmd.Parameters.Clear();
             comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox.Text = "(Seleccione una Opcion)";
 

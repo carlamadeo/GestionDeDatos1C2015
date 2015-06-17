@@ -55,7 +55,7 @@ namespace PagoElectronico.DB
 
             if (showMessage)
             {
-                MessageBox.Show(actionDescription + " realizada satisfactoriamente", actionDescription, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(actionDescription, "Correcto", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             Connection.close(conn);

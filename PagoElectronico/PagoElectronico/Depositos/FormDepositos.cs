@@ -58,7 +58,7 @@ namespace PagoElectronico.Depositos
 
             isValid = Validaciones.requiredString(this.comboBoxTarjetas.SelectedValue.ToString(), "Es necesario que seleccione una tarjeta");
             if (isValid)
-                deposito.tarjeta = Convert.ToDecimal(this.comboBoxTarjetas.SelectedValue.ToString());
+                deposito.tarjeta = this.comboBoxTarjetas.SelectedValue.ToString();
             else
                 return null;
 

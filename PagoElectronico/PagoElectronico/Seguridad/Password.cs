@@ -33,7 +33,10 @@ namespace PagoElectronico.Seguridad
             {
                 if (PasswordHelper.isCorrectPassword(textBoxOldPass.Text))
                 {
-                    PasswordHelper.change(textBoxNewPass.Text, textBoxPregSec.Text, textBoxRespSec.Text);
+                    Boolean changePass = false;
+                    if (textBoxNewPass.Text != String.Empty)
+                        changePass = true;
+                    PasswordHelper.change(textBoxNewPass.Text, textBoxPregSec.Text, textBoxRespSec.Text, changePass);
                 }
                 else
                 {
@@ -49,11 +52,10 @@ namespace PagoElectronico.Seguridad
 
         private Boolean validar()
         {
-            return Validaciones.requiredString(textBoxNewPass.Text, "Debe ingresar una nueva contraseña") &&
+            return 
                 Validaciones.requiredString(textBoxOldPass.Text, "Debe ingresar la contraseña actual") &&
-                Validaciones.requiredString(textBoxRespSec.Text, "Debe ingresar una respuesta secreta") &&
-                Validaciones.requiredString(textBoxPregSec.Text, "Debe ingresar una pregunta secreta") &&
-                Validaciones.differentValues(textBoxNewPass.Text, textBoxOldPass.Text, "Las contrseñas deben ser distintas");
+                Validaciones.requiredString(textBoxRespSec.Text, "La respuesta secreta no puede ser vacia") &&
+                Validaciones.requiredString(textBoxPregSec.Text, "La pregunta secreta no puede ser vacia");
 
         }
     }

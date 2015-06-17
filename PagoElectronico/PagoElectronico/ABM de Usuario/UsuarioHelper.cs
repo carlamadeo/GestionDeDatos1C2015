@@ -114,7 +114,7 @@ namespace PagoElectronico.ABM_de_Usuario
                 userData.creationDate = Convert.ToDateTime(reader["Fecha_Creacion"]);
 
                 var question = Convert.ToString(reader["Pregunta_Secreta"]);
-                var answer = Convert.ToString(reader["Respuesta_Secreta"]);
+                var answer = Convert.ToString(reader[7]);
 
                 var questionAnswer = new PreguntaRespuesta(question, answer);
 

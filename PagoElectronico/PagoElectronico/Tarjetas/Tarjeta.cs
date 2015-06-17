@@ -15,13 +15,13 @@ namespace PagoElectronico.Tarjetas
         public static void fillTarjetasByClient(ComboBox comboBoxTarjetas, Int32 idClient)
         {
             ComboBoxHelper.fill(comboBoxTarjetas, "SQL_SERVANT.Cliente_Tarjeta ct",
-                "ct.Id_Tarjeta", "ct.Id_Tarjeta", "ct.Id_Cliente = '" + idClient + "' AND ct.Habilitada = 1", null);
+                "CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', ct.Id_Tarjeta))", "CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', ct.Id_Tarjeta))", "ct.Id_Cliente = '" + idClient + "' AND ct.Habilitada = 1", null);
         }
 
         public static void fillTarjetasByClientWhithout4LastDigits(ComboBox comboBoxTarjetas, Int32 idClient)
         {
             ComboBoxHelper.fillWithoutLast4Digits(comboBoxTarjetas, "SQL_SERVANT.Cliente_Tarjeta ct",
-                "ct.Id_Tarjeta", "ct.Id_Tarjeta", "ct.Id_Cliente = '" + idClient + "' AND ct.Habilitada = 1", null);
+                "CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', ct.Id_Tarjeta))", "CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', ct.Id_Tarjeta))", "ct.Id_Cliente = '" + idClient + "' AND ct.Habilitada = 1", null);
         }
 
         public static string tc4UltimosDigitos(string unString)

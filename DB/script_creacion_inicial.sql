@@ -196,7 +196,7 @@ CREATE TABLE [SQL_SERVANT].[Usuario](
 	[Fecha_Creacion][datetime] NOT NULL,
 	[Ultima_Modificacion][datetime] NULL,
 	[Pregunta_Secreta][varchar](30) NOT NULL,
-	[Respuesta_Secreta][varchar](30) NOT NULL,
+	[Respuesta_Secreta][varbinary](100) NOT NULL,
 	[Habilitado][bit] NULL
 	
 	CONSTRAINT [PK_Usuario_Id_Usuario] PRIMARY KEY(Id_Usuario),
@@ -205,11 +205,11 @@ CREATE TABLE [SQL_SERVANT].[Usuario](
 
 --Se agrega usuario admin con contraseña "shadea" w23e
 INSERT INTO SQL_SERVANT.Usuario(Id_Usuario,Password, Cantidad_Login, Ultima_Fecha, Fecha_Creacion, Ultima_Modificacion, Pregunta_Secreta, Respuesta_Secreta, Habilitado) 
-VALUES ('admin','e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7', 0, GETDATE(), GETDATE(),  GETDATE(),'la default', 'la default', 1)
+VALUES ('admin','e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7', 0, GETDATE(), GETDATE(),  GETDATE(),'la default', (EncryptByPassPhrase('SQL SERVANT', 'la default')), 1)
 
 INSERT INTO SQL_SERVANT.Usuario(Id_Usuario, Password, Cantidad_Login, Ultima_Fecha, Fecha_Creacion, Ultima_Modificacion,Pregunta_Secreta, Respuesta_Secreta, Habilitado)
 SELECT DISTINCT SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido), 
-'e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7', 0, GETDATE(), GETDATE(), GETDATE(),'default', 'default', 1
+'e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7', 0, GETDATE(), GETDATE(), GETDATE(),'default', (EncryptByPassPhrase('SQL SERVANT', 'default')), 1
 FROM gd_esquema.Maestra m
 
 
@@ -510,10 +510,6 @@ CREATE TABLE [SQL_SERVANT].[Cuenta](
 	[Id_Pais_Registro][Int] NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
 	[Fecha_Creacion][datetime] NOT NULL,
-	--Fecha vencimiento valida el periodo de habilitacion de la tarjeta, esto me parece
-	--mas acorde que poner un campo habilitado. Igual entra en juego el estado de la cuenta
-	--que puede estar habilitada o deshabilitida, pero me da a entender que esto puede ser
-	--porque las cuentas se pueden deshabilitar si no se paga su facturacion
 	[Fecha_Vencimiento][datetime],
 	[Importe][numeric](18,2) NOT NULL DEFAULT 0.00,
 	[Id_Tipo_Cuenta][Int] NOT NULL,
@@ -564,18 +560,44 @@ INNER JOIN SQL_SERVANT.Usuario_Cliente uc
 	ON LTRIM(RTRIM(SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido))) = uc.Id_Usuario
 WHERE m.Cuenta_Numero IS NOT NULL
 
+--TABLA TEMPORAL PARA LA ENCRIPTACION DE LOS DATOS DE TARJETA
+CREATE TABLE [SQL_SERVANT].[Temporal_Tarjeta](
+	[Id_Tarjeta][varbinary](100),
+	[Fecha_Emision][datetime],
+	[Fecha_Vencimiento][datetime],
+	[Codigo_Seguridad][varchar](64),
+	[Id_Usuario][varchar](20),
+	[Habilitada][bit],
+	[Id_Deposito][numeric](18,0),
+	[Id_Cuenta][numeric](18,0),
+	[Importe][Numeric](10,2),
+	[Id_Moneda][Int],
+	[Fecha_Deposito][datetime],
+	[Emisor] [varchar](255)	
+)
+
+INSERT INTO SQL_SERVANT.Temporal_Tarjeta (Id_Tarjeta, Fecha_Emision, Fecha_Vencimiento, Codigo_Seguridad, 
+Id_Usuario, Habilitada, Id_Deposito, Id_Cuenta, Importe, Id_Moneda, Fecha_Deposito, Emisor)
+SELECT DISTINCT EncryptByPassPhrase('SQL SERVANT', m.Tarjeta_Numero), m.Tarjeta_Fecha_Emision, m.Tarjeta_Fecha_Vencimiento, 
+m.Tarjeta_Codigo_Seg, LTRIM(RTRIM(SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido))), SQL_SERVANT.Validar_Tarjeta_Habilitacion(CONVERT(VARCHAR, m.Tarjeta_Numero), m.Tarjeta_Fecha_Vencimiento, GETDATE()), 
+m.Deposito_Codigo, m.Cuenta_Numero, m.Deposito_Importe, 1, m.Deposito_Fecha, m.Tarjeta_Emisor_Descripcion
+FROM gd_esquema.Maestra m
+--	INNER JOIN SQL_SERVANT.Moneda mo ON 'USD' = mo.Descripcion
+/*
+	INNER JOIN SQL_SERVANT.Usuario_Cliente uc
+		ON LTRIM(RTRIM(SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido))) = uc.Id_Usuario
+*/
+
 --TABLA TARJETA
 /*
 	Tabla con los datos de cada tarjeta
 	PD: Si se desvincula una tarjeta, se borra del sistema(?)
 */
 CREATE TABLE [SQL_SERVANT].[Tarjeta](
-	[Id_Tarjeta][varchar](16) NOT NULL,
+	[Id_Tarjeta][varbinary](100) NOT NULL,
 	[Fecha_Emision][datetime] NOT NULL,
 	[Fecha_Vencimiento][datetime] NOT NULL,
 	[Id_Tarjeta_Empresa][Int] NOT NULL,
-	--es el mismo formato que el de la password de usuario, como tiene que estar encriptado
-	--lo vamos a encriptar con el mismo algoritmo de SHA256
 	[Codigo_Seguridad][varchar](64) NOT NULL
 
 	CONSTRAINT [PK_Tarjeta] PRIMARY KEY(
@@ -585,11 +607,26 @@ CREATE TABLE [SQL_SERVANT].[Tarjeta](
 	REFERENCES [SQL_SERVANT].[Tarjeta_Empresa](Id_Tarjeta_Empresa)
 )
 INSERT INTO SQL_SERVANT.Tarjeta (Id_Tarjeta, Fecha_Emision, Fecha_Vencimiento, Id_Tarjeta_Empresa, Codigo_Seguridad)
-SELECT DISTINCT m.Tarjeta_Numero, m.Tarjeta_Fecha_Emision, m.Tarjeta_Fecha_Vencimiento, te.Id_Tarjeta_Empresa, m.Tarjeta_Codigo_Seg 
-FROM gd_esquema.Maestra m
-	INNER JOIN SQL_SERVANT.Tarjeta_Empresa te
-		ON UPPER(LTRIM(RTRIM(m.Tarjeta_Emisor_Descripcion))) = UPPER(RTRIM(LTRIM(te.Descripcion)))
-	WHERE m.Tarjeta_Numero IS NOT NULL
+SELECT tt.Id_Tarjeta, tt.Fecha_Emision, tt.Fecha_Vencimiento, te.Id_Tarjeta_Empresa, tt.Codigo_Seguridad 
+FROM SQL_SERVANT.Temporal_Tarjeta tt
+	LEFT JOIN SQL_SERVANT.Tarjeta_Empresa te
+		ON UPPER(LTRIM(RTRIM(tt.Emisor))) = UPPER(RTRIM(LTRIM(te.Descripcion)))
+	WHERE tt.Id_Tarjeta IS NOT NULL
+
+--BORRAMOS LAS TARJETAS DUPLICADAS DEBIDO A LA ENCRIPTACION
+
+ALTER TABLE SQL_SERVANT.Tarjeta
+ADD id Integer identity
+
+DELETE FROM SQL_SERVANT.Tarjeta
+WHERE id > (Select min(id) FROM SQL_SERVANT.Tarjeta AS b 
+WHERE CONVERT(VARCHAR, CONVERT(varchar(50),DecryptByPassphrase ('SQL SERVANT', SQL_SERVANT.Tarjeta.Id_Tarjeta))) = 
+CONVERT(VARCHAR, CONVERT(varchar(50),DecryptByPassphrase ('SQL SERVANT', b.Id_Tarjeta))))
+
+ALTER TABLE SQL_SERVANT.Tarjeta
+DROP COLUMN id
+
+
 
 --TABLA CLIENTE_TARJETA
 /*
@@ -607,8 +644,7 @@ GROUP BY uc.Id_Cliente, m.Tarjeta_Numero
 */
 CREATE TABLE [SQL_SERVANT].[Cliente_Tarjeta](
 	[Id_Cliente][Int] NOT NULL,
-	[Id_Tarjeta][varchar](16) NOT NULL,
-	--VER SI HAY QUE MOVER ESTA PROPERTY A LA TABLA DE LA TARJETA MISMA
+	[Id_Tarjeta][varbinary](100) NOT NULL,
 	[Habilitada][bit] NOT NULL
 
 	CONSTRAINT [PK_Cliente_Tarjeta] PRIMARY KEY(
@@ -621,11 +657,13 @@ CREATE TABLE [SQL_SERVANT].[Cliente_Tarjeta](
 		REFERENCES [SQL_SERVANT].[Tarjeta] (Id_Tarjeta)
 )
 INSERT INTO SQL_SERVANT.Cliente_Tarjeta (Id_Cliente, Id_Tarjeta, Habilitada)
-SELECT DISTINCT uc.Id_Cliente, m.Tarjeta_Numero, SQL_SERVANT.Validar_Tarjeta_Habilitacion(CONVERT(VARCHAR,m.Tarjeta_Numero), m.Tarjeta_Fecha_Vencimiento, GETDATE()) 
-FROM gd_esquema.Maestra m
-INNER JOIN SQL_SERVANT.Usuario_Cliente uc
-	ON LTRIM(RTRIM(SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido))) = uc.Id_Usuario
-WHERE m.Tarjeta_Numero IS NOT NULL
+SELECT DISTINCT uc.Id_Cliente, t.Id_Tarjeta, SQL_SERVANT.Validar_Tarjeta_Habilitacion(CONVERT(VARCHAR, CONVERT(varchar(50),DecryptByPassphrase ('SQL SERVANT', tt.Id_Tarjeta))), tt.Fecha_Vencimiento, GETDATE()) 
+FROM SQL_SERVANT.Temporal_Tarjeta tt
+	INNER JOIN SQL_SERVANT.Usuario_Cliente uc
+		ON tt.Id_Usuario = uc.Id_Usuario
+	INNER JOIN SQL_SERVANT.Tarjeta t
+		ON tt.Id_Tarjeta = t.Id_Tarjeta
+WHERE tt.Id_Tarjeta IS NOT NULL
 
 
 --TABLA DEPOSITO
@@ -634,11 +672,10 @@ WHERE m.Tarjeta_Numero IS NOT NULL
 */
 CREATE TABLE [SQL_SERVANT].[Deposito](
 	[Id_Deposito][numeric](18,0)IDENTITY(1,1) NOT NULL,
-	--Ver si el id de cuenta tiene el tipo de cuenta
 	[Id_Cuenta][numeric](18,0) NOT NULL,
 	[Importe][Numeric](10,2) NOT NULL,
 	[Id_Moneda][Int] NOT NULL,
-	[Id_Tarjeta][varchar](16) NOT NULL,
+	[Id_Tarjeta][varbinary](100),
 	[Fecha_Deposito][datetime] NOT NULL
 
 	CONSTRAINT [PK_Deposito] PRIMARY KEY (Id_Deposito),
@@ -652,10 +689,10 @@ CREATE TABLE [SQL_SERVANT].[Deposito](
 SET IDENTITY_INSERT [SQL_SERVANT].Deposito ON
 
 INSERT INTO SQL_SERVANT.Deposito (Id_Deposito, Id_Cuenta, Importe, Id_Moneda, Id_Tarjeta, Fecha_Deposito)
-SELECT m.Deposito_Codigo, m.Cuenta_Numero, m.Deposito_Importe, mo.Id_Moneda, m.Tarjeta_Numero, m.Deposito_Fecha 
-FROM gd_esquema.Maestra m 
-	INNER JOIN SQL_SERVANT.Moneda mo ON 'USD' = mo.Descripcion
-WHERE m.Deposito_Codigo IS NOT NULL
+SELECT tt.Id_Deposito, tt.Id_Cuenta, tt.Importe, tt.Id_Moneda, t.Id_Tarjeta, tt.Fecha_Deposito 
+FROM SQL_SERVANT.Temporal_Tarjeta tt
+	LEFT JOIN SQL_SERVANT.Tarjeta t ON t.Id_Tarjeta = tt.Id_Tarjeta
+WHERE tt.Id_Deposito IS NOT NULL
 
 SET IDENTITY_INSERT [SQL_SERVANT].Deposito OFF
 
@@ -671,6 +708,9 @@ JOIN    (
                 Id_Cuenta
         ) AS deposito
 ON      cuenta.Id_Cuenta = deposito.Id_Cuenta
+
+--ELIMINAMOS LA TABLA TEMPORAL CON LA ENCRIPTACION DE LAS TARJETAS
+DROP TABLE [SQL_SERVANT].[Temporal_Tarjeta]
 
 --TABLA CHEQUE
 /*
@@ -872,7 +912,7 @@ CREATE TABLE [SQL_SERVANT].[Facturacion](
 	[Id_Factura][Int]IDENTITY(1,1) NOT NULL,
 	[Id_Cliente][Int] NOT NULL,
 	[Fecha][datetime] NOT NULL,	
-	[Id_Tarjeta][varchar](16) NULL,
+	[Id_Tarjeta][varbinary](100) NULL,
 	[Importe][numeric](10,2) NOT NULL
 
 	CONSTRAINT [PK_Facturacion] PRIMARY KEY(Id_Factura),

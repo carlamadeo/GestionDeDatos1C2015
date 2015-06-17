@@ -58,20 +58,23 @@ namespace PagoElectronico.Seguridad
             return false;
         }
 
-        public static void change(string password, string question, string answer)
+        public static void change(string password, string question, string answer, Boolean change)
         {
             SqlCommand sp_check_password = new SqlCommand();
             sp_check_password.CommandText = "SQL_SERVANT.sp_password_change";
             sp_check_password.Parameters.Add(new SqlParameter("@p_id", SqlDbType.VarChar));
             sp_check_password.Parameters["@p_id"].Value = VarGlobal.usuario.id;
-            sp_check_password.Parameters.Add(new SqlParameter("@p_pass", SqlDbType.VarChar));
-            sp_check_password.Parameters["@p_pass"].Value = Encrypt.Sha256(password);
+            if (change)
+            {
+                sp_check_password.Parameters.Add(new SqlParameter("@p_pass", SqlDbType.VarChar));
+                sp_check_password.Parameters["@p_pass"].Value = Encrypt.Sha256(password);
+            }
             sp_check_password.Parameters.Add(new SqlParameter("@p_question", SqlDbType.VarChar, 255));
             sp_check_password.Parameters["@p_question"].Value = question;
             sp_check_password.Parameters.Add(new SqlParameter("@p_answer", SqlDbType.VarChar, 255));
             sp_check_password.Parameters["@p_answer"].Value = answer;
 
-            ProcedureHelper.execute(sp_check_password, "se guardo correctamente el cambio", true);
+            ProcedureHelper.execute(sp_check_password, "Se guardo correctamente el cambio", true);
         }
     }
 }

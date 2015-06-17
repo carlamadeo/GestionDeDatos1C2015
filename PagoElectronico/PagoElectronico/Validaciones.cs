@@ -168,11 +168,11 @@ namespace PagoElectronico
             }
         }
 
-        public static Boolean tarjetaNoVencida(Decimal tarjeta)
+        public static Boolean tarjetaNoVencida(String tarjeta)
         {
             SqlCommand sp_tarjeta_not_expired = new SqlCommand();
             sp_tarjeta_not_expired.CommandText = "SQL_SERVANT.sp_tarjeta_not_expired";
-            sp_tarjeta_not_expired.Parameters.Add(new SqlParameter("@p_tarjeta_id", SqlDbType.BigInt));
+            sp_tarjeta_not_expired.Parameters.Add(new SqlParameter("@p_tarjeta_id", SqlDbType.VarChar));
             sp_tarjeta_not_expired.Parameters["@p_tarjeta_id"].Value = tarjeta;
 
             var returnParametersIsEnabled = sp_tarjeta_not_expired.Parameters.Add(new SqlParameter("@p_notExpired", SqlDbType.Int));
