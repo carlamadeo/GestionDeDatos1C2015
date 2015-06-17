@@ -477,15 +477,14 @@ INSERT INTO SQL_SERVANT.Costo_Tipo_Cuenta
 SELECT tc.Id_Tipo_Cuenta, 0, 0
 FROM SQL_SERVANT.Tipo_Cuenta tc
 
-UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Apertura = 0 WHERE Id_Tipo_Cuenta = 4
-UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Apertura = 5 WHERE Id_Tipo_Cuenta = 3
-UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Apertura = 7 WHERE Id_Tipo_Cuenta = 2
-UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Apertura = 9 WHERE Id_Tipo_Cuenta = 1
-
-UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Transferencia = 1 WHERE Id_Tipo_Cuenta = 4
-UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Transferencia = 0.5 WHERE Id_Tipo_Cuenta = 3
-UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Transferencia = 0.3 WHERE Id_Tipo_Cuenta = 2
-UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Transferencia = 0.1 WHERE Id_Tipo_Cuenta = 1
+UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Apertura = 0, Costo_Transferencia = 1 
+WHERE Id_Tipo_Cuenta = (SELECT tc.Id_Tipo_Cuenta FROM SQL_SERVANT.Tipo_Cuenta tc WHERE tc.Descripcion = 'Gratuita')
+UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Apertura = 5, Costo_Transferencia = 0.5 
+WHERE Id_Tipo_Cuenta = (SELECT tc.Id_Tipo_Cuenta FROM SQL_SERVANT.Tipo_Cuenta tc WHERE tc.Descripcion = 'Bronce')
+UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Apertura = 7, Costo_Transferencia = 0.3 
+WHERE Id_Tipo_Cuenta = (SELECT tc.Id_Tipo_Cuenta FROM SQL_SERVANT.Tipo_Cuenta tc WHERE tc.Descripcion = 'Plata')
+UPDATE SQL_SERVANT.Costo_Tipo_Cuenta SET Costo_Apertura = 9, Costo_Transferencia = 0.1 
+WHERE Id_Tipo_Cuenta = (SELECT tc.Id_Tipo_Cuenta FROM SQL_SERVANT.Tipo_Cuenta tc WHERE tc.Descripcion = 'Oro')
 
 --TABLA ESTADO_CUENTA
 CREATE TABLE [SQL_SERVANT].[Estado_Cuenta](
@@ -580,13 +579,9 @@ INSERT INTO SQL_SERVANT.Temporal_Tarjeta (Id_Tarjeta, Fecha_Emision, Fecha_Venci
 Id_Usuario, Habilitada, Id_Deposito, Id_Cuenta, Importe, Id_Moneda, Fecha_Deposito, Emisor)
 SELECT DISTINCT EncryptByPassPhrase('SQL SERVANT', m.Tarjeta_Numero), m.Tarjeta_Fecha_Emision, m.Tarjeta_Fecha_Vencimiento, 
 m.Tarjeta_Codigo_Seg, LTRIM(RTRIM(SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido))), SQL_SERVANT.Validar_Tarjeta_Habilitacion(CONVERT(VARCHAR, m.Tarjeta_Numero), m.Tarjeta_Fecha_Vencimiento, GETDATE()), 
-m.Deposito_Codigo, m.Cuenta_Numero, m.Deposito_Importe, 1, m.Deposito_Fecha, m.Tarjeta_Emisor_Descripcion
+m.Deposito_Codigo, m.Cuenta_Numero, m.Deposito_Importe, mo.Id_Moneda, m.Deposito_Fecha, m.Tarjeta_Emisor_Descripcion
 FROM gd_esquema.Maestra m
---	INNER JOIN SQL_SERVANT.Moneda mo ON 'USD' = mo.Descripcion
-/*
-	INNER JOIN SQL_SERVANT.Usuario_Cliente uc
-		ON LTRIM(RTRIM(SQL_SERVANT.Crear_Nombre_Usuario(m.Cli_Nombre, m.Cli_Apellido))) = uc.Id_Usuario
-*/
+	INNER JOIN SQL_SERVANT.Moneda mo ON 'USD' = mo.Descripcion
 
 --TABLA TARJETA
 /*
