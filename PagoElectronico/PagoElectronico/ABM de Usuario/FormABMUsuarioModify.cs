@@ -18,10 +18,10 @@ namespace PagoElectronico.ABM_de_Usuario
             this.fromLogin = fromLogin;
         }
 
-        private void reloadGrid()
+        private void reloadGrid(String s_user)
         {
-            UsuarioRolHelper.fill_dgv_user_rol(user, dgvOwnRol);
-            UsuarioRolHelper.fill_dgv_not_user_rol(user, dgvAvailableRol);
+            UsuarioRolHelper.fill_dgv_user_rol(s_user, dgvOwnRol);  
+            UsuarioRolHelper.fill_dgv_not_user_rol(s_user, dgvAvailableRol);
         }
 
         private void disableEditableField()
@@ -48,11 +48,11 @@ namespace PagoElectronico.ABM_de_Usuario
             this.dateTimeModification.Visible = false;
             this.buttonClean.Enabled = false;
 
-            reloadGrid();
+            reloadGrid(user);
 
             if (edit)
             {
-                
+
                 UsuarioDatos userData = UsuarioHelper.getUserData(user);
                 this.textBoxUsername.Text = userData.username;
                 this.textBoxPassword.Text = userData.password;
@@ -66,6 +66,12 @@ namespace PagoElectronico.ABM_de_Usuario
                 this.dateTimeCreation.Visible = true;
                 this.dateTimeModification.Visible = true;
                 disableEditableField();
+            }
+
+            else
+            {
+                this.checkBoxEnable.Enabled = false;
+                this.checkBoxEnable.Checked = true;
             }
         }
 
@@ -155,11 +161,11 @@ namespace PagoElectronico.ABM_de_Usuario
                     UsuarioHelper.save(userData);
                     if (edit)
                     {
-                        MessageBox.Show("Modificacion de usuario realizada con exito");
+                        MessageBox.Show("Modificacion de usuario realizada con exito", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        MessageBox.Show("Creacion de usuario realizada con exito");
+                        MessageBox.Show("Creacion de usuario realizada con exito", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         disableEditableField();
                     }
                 }
@@ -174,17 +180,17 @@ namespace PagoElectronico.ABM_de_Usuario
                 {
                     Int32 idRol = Convert.ToInt32(dgvAvailableRol.CurrentRow.Cells[0].Value);
                     UsuarioRolHelper.addRolToUser(textBoxUsername.Text, idRol);
-                    MessageBox.Show("Se agrego rol al usuario correctamente");
-                    reloadGrid();
+                    MessageBox.Show("Se agrego rol al usuario correctamente", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    reloadGrid(textBoxUsername.Text);
                 }
                 else
                 {
-                    MessageBox.Show("Debe seleccionar una rol a agregar al usuario");
+                    MessageBox.Show("Debe seleccionar un rol a agregar al usuario", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                MessageBox.Show("Primero debe grabar el usuario", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Primero debe crear el usuario", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -196,17 +202,17 @@ namespace PagoElectronico.ABM_de_Usuario
                 {
                     Int32 idRol = Convert.ToInt32(dgvOwnRol.CurrentRow.Cells[0].Value);
                     UsuarioRolHelper.removeRolToUser(textBoxUsername.Text, idRol);
-                    MessageBox.Show("Se quito rol al usuario correctamente");
-                    reloadGrid();
+                    MessageBox.Show("Se quito rol al usuario correctamente", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    reloadGrid(textBoxUsername.Text);
                 }
                 else
                 {
-                    MessageBox.Show("Debe seleccionar una rol a remover al usuario");
+                    MessageBox.Show("Debe seleccionar un rol a remover al usuario", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                MessageBox.Show("Primero debe grabar el usuario", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Primero debe crear el usuario", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
