@@ -309,7 +309,7 @@ namespace PagoElectronico.ABM_Cliente
             else
                 return null;
 
-            isValid = Validaciones.validAndRequiredInt32(textBoxCodSeguridad.Text, "El codigo de seguridad es obligatorio");
+            isValid = Validaciones.validAndRequiredInt32(textBoxCodSeguridad.Text, "Debe incluir un codigo de seguridad numerico");
             if (isValid)
                 tarjetaData.codSeguridad = Convert.ToInt32(textBoxCodSeguridad.Text);
             else
@@ -351,7 +351,8 @@ namespace PagoElectronico.ABM_Cliente
         private void buttonGuardarT_Click(object sender, EventArgs e)
         {
             Tarjeta tarjeta = this.getTarjetaDataFromForm();
-            this.updateTarjeta(tarjeta);
+            if(tarjeta != null)
+                this.updateTarjeta(tarjeta);
         }
 
         private void updateTarjeta(Tarjeta tarjeta)
