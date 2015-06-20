@@ -33,6 +33,12 @@ namespace PagoElectronico
             return truncate(date);
         }
 
+        public static DateTime lastMonthDay(DateTime date)
+        {
+            DateTime lastDay = new DateTime(date.Year, date.Month, 1).AddMonths(1).AddDays(-1);
+            return truncate(lastDay);
+        }
+
         public static DateTime getToday()
         {
             return DateTime.ParseExact(Properties.Settings.Default.fechaSistema, Properties.Settings.Default.formatoFecha, null);

@@ -133,6 +133,7 @@ namespace PagoElectronico
                 return false;
             }
         }
+
         public static Boolean validAndRequiredString(string value, string error)
         {
             Regex objValidString = new Regex(@"[^a-zA-Záéíóú\s]");
@@ -188,6 +189,18 @@ namespace PagoElectronico
             {
                 return true;
             }
+        }
+
+        public static Boolean fecha1EsPosteriorAFecha2(DateTime fecha1, DateTime fecha2, string error)
+        {
+            int esAnterior = DateTime.Compare(fecha1, fecha2);
+            if (esAnterior < 1)
+            {
+                MessageBox.Show(error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            else
+                return true;
         }
     }
 }

@@ -615,8 +615,8 @@ ADD id Integer identity
 
 DELETE FROM SQL_SERVANT.Tarjeta
 WHERE id > (Select min(id) FROM SQL_SERVANT.Tarjeta AS b 
-WHERE CONVERT(VARCHAR, CONVERT(varchar(50),DecryptByPassphrase ('SQL SERVANT', SQL_SERVANT.Tarjeta.Id_Tarjeta))) = 
-CONVERT(VARCHAR, CONVERT(varchar(50),DecryptByPassphrase ('SQL SERVANT', b.Id_Tarjeta))))
+WHERE CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', SQL_SERVANT.Tarjeta.Id_Tarjeta)) = 
+CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', b.Id_Tarjeta)))
 
 ALTER TABLE SQL_SERVANT.Tarjeta
 DROP COLUMN id

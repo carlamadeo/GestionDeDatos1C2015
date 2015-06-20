@@ -45,30 +45,30 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(33, 31);
+            this.label1.Location = new System.Drawing.Point(33, 44);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(31, 13);
+            this.label1.Size = new System.Drawing.Size(80, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Nro °";
+            this.label1.Text = "Nro (16 dígitos)";
             // 
             // textBoxID
             // 
-            this.textBoxID.Location = new System.Drawing.Point(139, 28);
+            this.textBoxID.Location = new System.Drawing.Point(139, 41);
             this.textBoxID.Name = "textBoxID";
             this.textBoxID.Size = new System.Drawing.Size(143, 20);
             this.textBoxID.TabIndex = 1;
             // 
             // textBoxSecurityCod
             // 
-            this.textBoxSecurityCod.Location = new System.Drawing.Point(139, 125);
+            this.textBoxSecurityCod.Location = new System.Drawing.Point(139, 130);
             this.textBoxSecurityCod.Name = "textBoxSecurityCod";
-            this.textBoxSecurityCod.Size = new System.Drawing.Size(143, 20);
+            this.textBoxSecurityCod.Size = new System.Drawing.Size(60, 20);
             this.textBoxSecurityCod.TabIndex = 2;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(36, 78);
+            this.label2.Location = new System.Drawing.Point(33, 88);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(48, 13);
             this.label2.TabIndex = 3;
@@ -77,7 +77,7 @@
             // comboBoxCompany
             // 
             this.comboBoxCompany.FormattingEnabled = true;
-            this.comboBoxCompany.Location = new System.Drawing.Point(139, 75);
+            this.comboBoxCompany.Location = new System.Drawing.Point(139, 85);
             this.comboBoxCompany.Name = "comboBoxCompany";
             this.comboBoxCompany.Size = new System.Drawing.Size(143, 21);
             this.comboBoxCompany.TabIndex = 4;
@@ -85,7 +85,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(36, 128);
+            this.label3.Location = new System.Drawing.Point(33, 133);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(80, 13);
             this.label3.TabIndex = 5;
@@ -93,7 +93,7 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(190, 177);
+            this.buttonSave.Location = new System.Drawing.Point(544, 190);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 6;
@@ -103,7 +103,7 @@
             // 
             // buttonBack
             // 
-            this.buttonBack.Location = new System.Drawing.Point(360, 177);
+            this.buttonBack.Location = new System.Drawing.Point(36, 190);
             this.buttonBack.Name = "buttonBack";
             this.buttonBack.Size = new System.Drawing.Size(75, 23);
             this.buttonBack.TabIndex = 7;
@@ -113,14 +113,14 @@
             // 
             // dtpCreation
             // 
-            this.dtpCreation.Location = new System.Drawing.Point(419, 27);
+            this.dtpCreation.Location = new System.Drawing.Point(419, 40);
             this.dtpCreation.Name = "dtpCreation";
             this.dtpCreation.Size = new System.Drawing.Size(200, 20);
             this.dtpCreation.TabIndex = 8;
             // 
             // dtpExpiration
             // 
-            this.dtpExpiration.Location = new System.Drawing.Point(419, 74);
+            this.dtpExpiration.Location = new System.Drawing.Point(419, 84);
             this.dtpExpiration.Name = "dtpExpiration";
             this.dtpExpiration.Size = new System.Drawing.Size(200, 20);
             this.dtpExpiration.TabIndex = 9;
@@ -128,7 +128,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(304, 31);
+            this.label4.Location = new System.Drawing.Point(304, 44);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(76, 13);
             this.label4.TabIndex = 10;
@@ -137,7 +137,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(304, 78);
+            this.label5.Location = new System.Drawing.Point(304, 88);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(98, 13);
             this.label5.TabIndex = 11;
@@ -147,7 +147,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(665, 258);
+            this.ClientSize = new System.Drawing.Size(661, 255);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.dtpExpiration);

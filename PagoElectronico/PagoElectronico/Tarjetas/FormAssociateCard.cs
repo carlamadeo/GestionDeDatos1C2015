@@ -25,11 +25,6 @@ namespace PagoElectronico.Tarjetas
             reloadGrid();
         }
 
-        private void buttonReload_Click(object sender, EventArgs e)
-        {
-            reloadGrid();
-        }
-
         private void reloadGrid()
         {
             TarjetaHelper.getClientCard(VarGlobal.usuario.clientId, dgvCard);
@@ -53,11 +48,11 @@ namespace PagoElectronico.Tarjetas
                 Int16 idCliente = VarGlobal.usuario.clientId;
                 TarjetaHelper.associate(cardId, idCliente, !associate);
                 reloadGrid();
-                MessageBox.Show("Se asocio/desasocio la tarjeta correctamente");                
+                MessageBox.Show("Se asocio/desasocio la tarjeta correctamente", "Correcto", MessageBoxButtons.OK, MessageBoxIcon.Information);                
             }
             else
             {
-                MessageBox.Show("Debe seleccionar una cuenta a modificar");
+                MessageBox.Show("Debe seleccionar una cuenta a modificar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); 
             }
         }
 
@@ -84,7 +79,7 @@ namespace PagoElectronico.Tarjetas
             }
             else
             {
-                MessageBox.Show("Debe seleccionar una tarjeta ha modificar");
+                MessageBox.Show("Debe seleccionar una tarjeta a modificar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
