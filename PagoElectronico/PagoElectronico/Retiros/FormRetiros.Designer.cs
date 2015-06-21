@@ -37,12 +37,13 @@
             this.textBoxCount = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxBank = new System.Windows.Forms.ComboBox();
+            this.labelMax = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAccount)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonBack
             // 
-            this.buttonBack.Location = new System.Drawing.Point(236, 319);
+            this.buttonBack.Location = new System.Drawing.Point(41, 301);
             this.buttonBack.Name = "buttonBack";
             this.buttonBack.Size = new System.Drawing.Size(75, 23);
             this.buttonBack.TabIndex = 0;
@@ -55,12 +56,13 @@
             this.dgvAccount.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvAccount.Location = new System.Drawing.Point(41, 29);
             this.dgvAccount.Name = "dgvAccount";
-            this.dgvAccount.Size = new System.Drawing.Size(665, 150);
+            this.dgvAccount.Size = new System.Drawing.Size(568, 150);
             this.dgvAccount.TabIndex = 1;
+            this.dgvAccount.SelectionChanged += new System.EventHandler(this.dgvAccount_SelectionChanged);
             // 
             // buttonRetire
             // 
-            this.buttonRetire.Location = new System.Drawing.Point(459, 319);
+            this.buttonRetire.Location = new System.Drawing.Point(534, 301);
             this.buttonRetire.Name = "buttonRetire";
             this.buttonRetire.Size = new System.Drawing.Size(75, 23);
             this.buttonRetire.TabIndex = 3;
@@ -79,15 +81,15 @@
             // 
             // textBoxNroDoc
             // 
-            this.textBoxNroDoc.Location = new System.Drawing.Point(156, 215);
+            this.textBoxNroDoc.Location = new System.Drawing.Point(150, 215);
             this.textBoxNroDoc.Name = "textBoxNroDoc";
-            this.textBoxNroDoc.Size = new System.Drawing.Size(161, 20);
+            this.textBoxNroDoc.Size = new System.Drawing.Size(114, 20);
             this.textBoxNroDoc.TabIndex = 5;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(429, 218);
+            this.label2.Location = new System.Drawing.Point(38, 256);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(42, 13);
             this.label2.TabIndex = 6;
@@ -95,15 +97,15 @@
             // 
             // textBoxCount
             // 
-            this.textBoxCount.Location = new System.Drawing.Point(545, 215);
+            this.textBoxCount.Location = new System.Drawing.Point(150, 253);
             this.textBoxCount.Name = "textBoxCount";
-            this.textBoxCount.Size = new System.Drawing.Size(161, 20);
+            this.textBoxCount.Size = new System.Drawing.Size(58, 20);
             this.textBoxCount.TabIndex = 7;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(41, 260);
+            this.label3.Location = new System.Drawing.Point(400, 218);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(38, 13);
             this.label3.TabIndex = 8;
@@ -112,16 +114,25 @@
             // comboBoxBank
             // 
             this.comboBoxBank.FormattingEnabled = true;
-            this.comboBoxBank.Location = new System.Drawing.Point(156, 257);
+            this.comboBoxBank.Location = new System.Drawing.Point(474, 215);
             this.comboBoxBank.Name = "comboBoxBank";
-            this.comboBoxBank.Size = new System.Drawing.Size(155, 21);
+            this.comboBoxBank.Size = new System.Drawing.Size(135, 21);
             this.comboBoxBank.TabIndex = 9;
+            // 
+            // labelMax
+            // 
+            this.labelMax.AutoSize = true;
+            this.labelMax.Location = new System.Drawing.Point(215, 256);
+            this.labelMax.Name = "labelMax";
+            this.labelMax.Size = new System.Drawing.Size(0, 13);
+            this.labelMax.TabIndex = 10;
             // 
             // FormRetiros
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(770, 373);
+            this.ClientSize = new System.Drawing.Size(624, 356);
+            this.Controls.Add(this.labelMax);
             this.Controls.Add(this.comboBoxBank);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBoxCount);
@@ -151,5 +162,6 @@
         private System.Windows.Forms.TextBox textBoxCount;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboBoxBank;
+        private System.Windows.Forms.Label labelMax;
     }
 }

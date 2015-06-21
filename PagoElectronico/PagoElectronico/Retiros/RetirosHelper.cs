@@ -10,7 +10,7 @@ namespace PagoElectronico.Retiros
 {
     public class RetirosHelper
     {
-        public static String generateExtraction(String accountId, Double amount, String currency, Int32 bankId)
+        public static String generateExtraction(String accountId, Decimal amount, String currency, Int32 bankId)
         {
             SqlCommand sp_retirement_generate_extraction = new SqlCommand();
             sp_retirement_generate_extraction.CommandText = "SQL_SERVANT.sp_retirement_generate_extraction";

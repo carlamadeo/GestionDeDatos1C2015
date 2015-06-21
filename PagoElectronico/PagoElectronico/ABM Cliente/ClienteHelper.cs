@@ -306,6 +306,7 @@ namespace PagoElectronico.ABM_Cliente
 
             if (Convert.ToInt16(returnParametersIsValid.Value) == 0)
             {
+                MessageBox.Show("El numero de documento ingresado es incorrecto", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             else

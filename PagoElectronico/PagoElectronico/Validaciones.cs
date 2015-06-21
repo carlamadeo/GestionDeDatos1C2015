@@ -14,10 +14,10 @@ namespace PagoElectronico
     public class Validaciones
     {
 
-        public static Boolean validAndRequiredDecimal(string value, string error)
+        public static Boolean validAndRequiredDecimalMoreThan0(string value, string error)
         {
             Decimal aux;
-            if (Decimal.TryParse(value, out aux) && value != "")
+            if (Decimal.TryParse(value, out aux) && value != "" && aux > 0)
             {
                 return true;
             }

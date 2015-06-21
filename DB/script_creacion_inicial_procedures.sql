@@ -1404,23 +1404,17 @@ GO
 
 --**PROCEDIMIENTOS DE TRANSFERENCIAS**--
 
---SE VERIFICA CUAL ES EL IMPORTE MAXIMO QUE SE PUEDE TRANSFERIR
---POR CUENTA
+--SE VERIFICA CUAL ES EL IMPORTE MAXIMO QUE SE PUEDE
+--TRANSFERIR/RETIRAR POR CUENTA
 CREATE PROCEDURE [SQL_SERVANT].[sp_get_importe_maximo_por_cuenta](
 @p_cuenta_id numeric(18,0) = 0,
-@p_cuenta_propia bit = 0,
 @p_importe_maximo numeric(18,2) = 0 OUTPUT
 )
 AS
 BEGIN
 
-	Declare @importe_cuenta numeric(18,2)
-	Declare @id_tipo_cuenta int
-
-	SELECT @importe_cuenta = Importe, @id_tipo_cuenta = Id_Tipo_Cuenta FROM SQL_SERVANT.Cuenta
+	SELECT @p_importe_maximo = Importe FROM SQL_SERVANT.Cuenta
 	WHERE Id_Cuenta = @p_cuenta_id
-	
-	SET @p_importe_maximo = @importe_cuenta
 	
 	IF (@p_importe_maximo < 0)
 		SET @p_importe_maximo = 0
@@ -1438,12 +1432,10 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_save_transferencia](
 @p_tranferencia_fecha datetime,
 @p_tranferencia_mismo_cliente bit
 )
-
 AS
 BEGIN
 
 	BEGIN TRANSACTION
-
 		Declare @p_importe_actual_origen numeric(18,2)
 		Declare @p_importe_actual_destino numeric(18,2)
 		Declare @p_importe_final_origen numeric(18,2)
@@ -1472,19 +1464,18 @@ BEGIN
 		SET @p_importe_final_origen = @p_importe_actual_origen - @p_transferencia_monto
 		SET @p_importe_final_destino = @p_importe_actual_destino + @p_transferencia_monto
 		
-		IF (@p_tranferencia_mismo_cliente = 0)
-			SET @p_importe_final_origen = @p_importe_final_origen -  @p_transferencia_costo
-		
 		UPDATE SQL_SERVANT.Cuenta SET Importe = (@p_importe_final_origen)
 		WHERE @p_transferencia_origen = SQL_SERVANT.Cuenta.Id_Cuenta
 		
 		UPDATE SQL_SERVANT.Cuenta SET Importe = (@p_importe_final_destino)
 		WHERE @p_transferencia_destino = SQL_SERVANT.Cuenta.Id_Cuenta
 		
-		INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Fecha, Importe, Id_Tipo_Item)
-		VALUES (@p_transferencia_origen, @p_tranferencia_fecha, 
-		@p_transferencia_costo, 1)
-		
+		IF (@p_tranferencia_mismo_cliente = 0)
+		BEGIN
+			INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Fecha, Importe, Id_Tipo_Item)
+			VALUES (@p_transferencia_origen, @p_tranferencia_fecha, 
+			@p_transferencia_costo, 1)
+		END
 	COMMIT TRANSACTION
 END
 GO

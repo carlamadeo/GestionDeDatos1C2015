@@ -50,9 +50,9 @@ namespace PagoElectronico.Depositos
             else
                 return null;
 
-            isValid = Validaciones.validAndRequiredDoubleMoreThan0(this.textBoxImporte.Text.ToString(), "El monto a depositar debe ser mayor a 0");
+            isValid = Validaciones.validAndRequiredDecimalMoreThan0(this.textBoxImporte.Text.ToString().Replace(".", ","), "El monto a depositar debe ser mayor a 0");
             if (isValid)
-                deposito.importe = Convert.ToDecimal(this.textBoxImporte.Text.ToString());
+                deposito.importe = Convert.ToDecimal(this.textBoxImporte.Text.ToString().Replace(".", ","));
             else
                 return null;
 

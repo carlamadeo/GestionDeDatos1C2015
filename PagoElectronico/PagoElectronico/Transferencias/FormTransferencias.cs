@@ -55,13 +55,6 @@ namespace PagoElectronico.Transferencias
             else
                 return null;
 
-            isValid = (Validaciones.validAndRequiredDoubleMoreThan0(this.textBoxImporte.Text.ToString(), "El monto a transferir debe ser mayor a 0")
-                && (Convert.ToDecimal(this.textBoxImporte.Text.ToString()) <= importeMaximo));
-            if (isValid)
-                transferencia.monto = Convert.ToDecimal(this.textBoxImporte.Text.ToString());
-            else
-                return null;
-
             if ((this.comboBoxCuentaPropia.SelectedIndex == 0) && (this.comboBoxCuentaTercero.SelectedIndex == 0))
             {
                 MessageBox.Show("Es necesario que seleccione una cuenta de destino", "Verifique los datos ingresados", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -86,6 +79,13 @@ namespace PagoElectronico.Transferencias
                 return null;
             }
 
+            isValid = (Validaciones.validAndRequiredDecimalMoreThan0(this.textBoxImporte.Text.ToString().Replace(".", ","), "El importe a transferir debe ser mayor a 0")
+                && (Validaciones.condition(Convert.ToDecimal(this.textBoxImporte.Text.ToString().Replace(".", ",")) <= importeMaximo, "El importe maximo a transferir es de " + String.Format("{0:C}", importeMaximo))));
+            if (isValid)
+                transferencia.monto = Convert.ToDecimal(this.textBoxImporte.Text.ToString().Replace(".", ","));
+            else
+                return null;
+
             return transferencia;
         }
 
@@ -97,25 +97,13 @@ namespace PagoElectronico.Transferencias
                 transferencia.fecha = DateHelper.getToday();
                 TransferenciaHelper.saveTransferencia(transferencia);
                 MessageBox.Show("Se ha realizado correctamente la tranferencia por un monto de " + String.Format("{0:C}", transferencia.monto), "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                reloadImporteMaximo();
             }
         }
 
         private void comboBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (comboBoxCuentaOrigen.SelectedIndex != 0)
-            {
-                if (comboBoxCuentaPropia.SelectedIndex != 0)
-                    importeMaximo = TransferenciaHelper.getImporteMaximo(Convert.ToDecimal(comboBoxCuentaOrigen.SelectedValue.ToString()), 1);
-
-                if (comboBoxCuentaTercero.SelectedIndex != 0)
-                    importeMaximo = TransferenciaHelper.getImporteMaximo(Convert.ToDecimal(comboBoxCuentaOrigen.SelectedValue.ToString()), 0);
-
-                labelMax.Text = String.Format("Max. {0:C}", importeMaximo);
-            }
-
-            else
-                labelMax.Text = "Max. $ 0,00";
-
+            reloadImporteMaximo();
         }
 
         private void comboBoxCuentaPropia_SelectedValueChanged(object sender, EventArgs e)
@@ -140,6 +128,18 @@ namespace PagoElectronico.Transferencias
 
             else
                 comboBoxCuentaPropia.Enabled = true;
+        }
+
+        public void reloadImporteMaximo()
+        {
+            if (comboBoxCuentaOrigen.SelectedIndex != 0)
+            {
+                importeMaximo = CuentaHelper.getImporteMaximo(Convert.ToDecimal(comboBoxCuentaOrigen.SelectedValue.ToString()));
+                labelMax.Text = String.Format("Max. {0:C}", importeMaximo);
+            }
+
+            else
+                labelMax.Text = "Max. $ 0,00";
         }
     }
 }
