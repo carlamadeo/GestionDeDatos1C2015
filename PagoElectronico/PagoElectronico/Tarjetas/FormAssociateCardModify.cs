@@ -73,7 +73,7 @@ namespace PagoElectronico.Tarjetas
                 Tarjeta card = new Tarjeta();
                 card.id = textBoxID.Text;
                 card.fechaEmision = DateHelper.firstMonthDay(dtpCreation.Value);
-                card.fechaVencimiento = DateHelper.lastMonthDay(dtpExpiration.Value);
+                card.fechaVencimiento = DateHelper.nextMonthFirstDay(dtpExpiration.Value);
                 card.codSeguridad = Convert.ToInt16(textBoxSecurityCod.Text);
                 card.idEmpresa = Convert.ToInt16(this.comboBoxCompany.SelectedValue.ToString());
 
@@ -92,8 +92,8 @@ namespace PagoElectronico.Tarjetas
                 Validaciones.requiredString(this.comboBoxCompany.Text, "Debe seleccionar una empresa") &&
                 Validaciones.validInt32(this.textBoxSecurityCod.Text, "El codigo de seguridad debe ser numerico") &&
                 Validaciones.condition(this.textBoxSecurityCod.Text.Length == 3, "La cantidad de numeros del codigo de seguridad deben ser 3") &&
-                Validaciones.fecha1EsPosteriorAFecha2(DateHelper.lastMonthDay(dtpExpiration.Value), DateHelper.getToday(), "No se puede asociar una tarjeta vencida") &&
-                Validaciones.fecha1EsPosteriorAFecha2(DateHelper.lastMonthDay(dtpExpiration.Value), DateHelper.firstMonthDay(dtpCreation.Value), "La fecha de emision no puede ser posterior a la de vencimiento") &&
+                Validaciones.fecha1EsPosteriorAFecha2(DateHelper.nextMonthFirstDay(dtpExpiration.Value), DateHelper.getToday(), "No se puede asociar una tarjeta vencida") &&
+                Validaciones.fecha1EsPosteriorAFecha2(DateHelper.nextMonthFirstDay(dtpExpiration.Value), DateHelper.firstMonthDay(dtpCreation.Value), "La fecha de emision no puede ser posterior a la de vencimiento") &&
                 Validaciones.condition(!TarjetaHelper.existCard(this.textBoxID.Text), "Ya existe una tarjeta con ese numero");
         }
     }
