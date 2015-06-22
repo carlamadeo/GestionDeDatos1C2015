@@ -131,7 +131,6 @@ namespace PagoElectronico.Tarjetas
             if (reader.HasRows)
             {
                 reader.Read();
-                card.id = Convert.ToString(reader["Id_Tarjeta"]);
                 card.empresa = Convert.ToString(reader["Tarjeta_Descripcion"]);
                 card.idEmpresa = Convert.ToInt16(reader["Id_Tarjeta_Empresa"]);
                 card.fechaEmision = Convert.ToDateTime(reader["Fecha_Emision"]);

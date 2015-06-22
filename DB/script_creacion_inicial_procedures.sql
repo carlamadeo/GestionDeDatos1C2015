@@ -1136,7 +1136,6 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_card_get_data](
 AS
 BEGIN
 	SELECT
-		CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', t.Id_Tarjeta)) 'Id_Tarjeta',
 		te.Descripcion 'Tarjeta_Descripcion',
 		t.Id_Tarjeta_Empresa 'Id_Tarjeta_Empresa',
 		t.Fecha_Emision 'Fecha_Emision',
@@ -1377,7 +1376,6 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_save_deposito](
 @p_deposito_tarjeta varchar(16),
 @p_deposito_fecha datetime
 )
-
 AS
 BEGIN
 
@@ -1389,8 +1387,8 @@ BEGIN
 		SELECT @importe_actual = Importe FROM SQL_SERVANT.Cuenta c
 		WHERE @p_deposito_cuenta = c.Id_Cuenta
 		
-		SELECT @numero_tarjeta_encrypted = Id_Tarjeta FROM SQL_SERVANT.Tarjeta t
-		WHERE CONVERT(varchar(50),DecryptByPassphrase ('SQL SERVANT', @numero_tarjeta_encrypted)) = @p_deposito_tarjeta
+		SELECT @numero_tarjeta_encrypted = Id_Tarjeta FROM SQL_SERVANT.Tarjeta
+		WHERE CONVERT(varchar(50),DecryptByPassphrase ('SQL SERVANT', Id_Tarjeta)) = @p_deposito_tarjeta
 		
 		INSERT INTO SQL_SERVANT.Deposito (Id_Cuenta, Importe, Id_Moneda, Id_Tarjeta, Fecha_Deposito)
 		VALUES (@p_deposito_cuenta, @p_deposito_importe, @p_deposito_moneda, @numero_tarjeta_encrypted, @p_deposito_fecha)

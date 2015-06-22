@@ -52,6 +52,7 @@ namespace PagoElectronico.Tarjetas
             {
                 textBoxID.Text = idCard;
                 Tarjeta card = TarjetaHelper.getData(idCard);
+                card.id = idCard;
                 textBoxSecurityCod.Text = card.codSeguridad.ToString();
                 this.comboBoxCompany.SelectedIndex = this.comboBoxCompany.FindStringExact(card.empresa);
                 this.dtpCreation.Value = card.fechaEmision;
