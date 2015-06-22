@@ -24,9 +24,11 @@ namespace PagoElectronico.Facturacion
 
         private void FormSeleccionTarjeta_Load(object sender, EventArgs e)
         {
+            this.ControlBox = false;
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
             Tarjeta.fillTarjetasByClientWhithout4LastDigits(comboBoxTarjetas, idCliente);
-            labelImporte.Text = "Importe a Pagar: " + String.Format("{0:C}", FacturacionHelper.getImporteAPagar(facturacionesAPagar));
-            
+            labelImporte.Text = "Importe a Pagar: " + String.Format("{0:C}", FacturacionHelper.getImporteAPagar(facturacionesAPagar));    
         }
 
         private void buttonPagar_Click(object sender, EventArgs e)

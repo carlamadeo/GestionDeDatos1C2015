@@ -759,7 +759,7 @@ BEGIN
 			INSERT INTO SQL_SERVANT.Cuenta (Id_Pais_Registro, Id_Moneda, Fecha_Creacion, Fecha_Vencimiento, Importe,
 				Id_Tipo_Cuenta, Id_Estado_Cuenta)
 				VALUES(@p_account_country_id, @p_account_currency_id, @p_account_date, DATEADD(DAY, @type_account_day, @p_account_date),
-				0.00, @p_account_type_account_id, 4)
+				0.00, @p_account_type_account_id, 1)
 			Declare @account_id numeric(18,0)
 			SET @account_id = @@IDENTITY
 			INSERT INTO SQL_SERVANT.Cliente_Cuenta (Id_Cliente, Id_Cuenta)
@@ -828,8 +828,8 @@ BEGIN
 		ON mo.Id_Moneda = cu.Id_Moneda
 	WHERE ec.Descripcion = 'Habilitada'
 	AND cc.Id_Cliente = @p_account_client_id
-	AND cu.Fecha_Creacion <= @p_account_today
-	AND cu.Fecha_Vencimiento <= @p_account_today
+	--AND cu.Fecha_Creacion <= @p_account_today
+	--AND cu.Fecha_Vencimiento <= @p_account_today
 	AND cu.Importe > 0.00
 	AND UPPER(mo.Descripcion) = UPPER('USD')
 END

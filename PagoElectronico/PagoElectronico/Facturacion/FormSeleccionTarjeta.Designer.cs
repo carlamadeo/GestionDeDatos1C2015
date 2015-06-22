@@ -38,7 +38,7 @@
             // labelTarjeta
             // 
             this.labelTarjeta.AutoSize = true;
-            this.labelTarjeta.Location = new System.Drawing.Point(34, 74);
+            this.labelTarjeta.Location = new System.Drawing.Point(36, 92);
             this.labelTarjeta.Name = "labelTarjeta";
             this.labelTarjeta.Size = new System.Drawing.Size(40, 13);
             this.labelTarjeta.TabIndex = 0;
@@ -47,14 +47,14 @@
             // comboBoxTarjetas
             // 
             this.comboBoxTarjetas.FormattingEnabled = true;
-            this.comboBoxTarjetas.Location = new System.Drawing.Point(114, 71);
+            this.comboBoxTarjetas.Location = new System.Drawing.Point(116, 89);
             this.comboBoxTarjetas.Name = "comboBoxTarjetas";
             this.comboBoxTarjetas.Size = new System.Drawing.Size(154, 21);
             this.comboBoxTarjetas.TabIndex = 1;
             // 
             // buttonPagar
             // 
-            this.buttonPagar.Location = new System.Drawing.Point(193, 129);
+            this.buttonPagar.Location = new System.Drawing.Point(195, 147);
             this.buttonPagar.Name = "buttonPagar";
             this.buttonPagar.Size = new System.Drawing.Size(75, 23);
             this.buttonPagar.TabIndex = 2;
@@ -64,7 +64,7 @@
             // 
             // buttonVolver
             // 
-            this.buttonVolver.Location = new System.Drawing.Point(37, 129);
+            this.buttonVolver.Location = new System.Drawing.Point(39, 147);
             this.buttonVolver.Name = "buttonVolver";
             this.buttonVolver.Size = new System.Drawing.Size(75, 23);
             this.buttonVolver.TabIndex = 3;
@@ -75,7 +75,7 @@
             // labelImporte
             // 
             this.labelImporte.AutoSize = true;
-            this.labelImporte.Location = new System.Drawing.Point(34, 22);
+            this.labelImporte.Location = new System.Drawing.Point(36, 40);
             this.labelImporte.Name = "labelImporte";
             this.labelImporte.Size = new System.Drawing.Size(85, 13);
             this.labelImporte.TabIndex = 4;

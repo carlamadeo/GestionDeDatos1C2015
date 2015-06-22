@@ -81,7 +81,6 @@ namespace PagoElectronico.Facturacion
             {
                 importeTotal = importeTotal + facturacionesAPagar[indice].importe *
                     facturacionesAPagar[indice].suscripciones;
-                eliminarFacturacionesPendientes(item);
                 indice++;
             }
 
