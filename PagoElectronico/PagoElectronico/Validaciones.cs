@@ -183,6 +183,7 @@ namespace PagoElectronico
 
             if (Convert.ToInt16(returnParametersIsEnabled.Value) == 1)
             {
+                MessageBox.Show("La tarjeta seleccionada se encuentra vencida", "Error",  MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             else

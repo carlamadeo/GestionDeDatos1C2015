@@ -33,9 +33,11 @@ namespace PagoElectronico.Facturacion
 
         private void buttonPagar_Click(object sender, EventArgs e)
         {
-            if (Validaciones.requiredString(comboBoxTarjetas.Text.ToString(), "Debe seleccionar una tarjeta"))
+            String numberCard = comboBoxTarjetas.SelectedValue.ToString();
+            if (Validaciones.requiredString(numberCard, "Debe seleccionar una tarjeta")
+                && Validaciones.tarjetaNoVencida(numberCard))
             {
-                FacturacionHelper.saveFacturacion(facturacionesAPagar, idCliente, comboBoxTarjetas.SelectedValue.ToString());
+                FacturacionHelper.saveFacturacion(facturacionesAPagar, idCliente, numberCard);
                 MessageBox.Show("Se han facturado los cargos correctamente", "Facturacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.irAFormFacturacion();
             }

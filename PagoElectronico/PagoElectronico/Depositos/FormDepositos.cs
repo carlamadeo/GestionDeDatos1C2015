@@ -72,10 +72,13 @@ namespace PagoElectronico.Depositos
             Deposito deposito = this.getDataFromForm();
             if (deposito != null)
             {
-                Validaciones.tarjetaNoVencida(deposito.tarjeta);
-                deposito.fecha = DateHelper.getToday();
-                this.saveDeposito(deposito);
-                MessageBox.Show("Se ha realizado correctamente el deposito por un monto de " + String.Format("{0:C}", deposito.importe), "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Boolean tarjetaValida = Validaciones.tarjetaNoVencida(deposito.tarjeta);
+                if (tarjetaValida)
+                {
+                    deposito.fecha = DateHelper.getToday();
+                    this.saveDeposito(deposito);
+                    MessageBox.Show("Se ha realizado correctamente el deposito por un monto de " + String.Format("{0:C}", deposito.importe), "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
 
