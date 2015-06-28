@@ -8,7 +8,7 @@ namespace PagoElectronico.Facturacion
     public class Facturacion
     {
         public Int32 id { get; set; }
-        public int? idReferencia { get; set; }
+        public String idReferencia { get; set; }
         public Decimal idCuenta { get; set; }
         public String descripcionGasto { get; set; }
         public DateTime fecha { get; set; }

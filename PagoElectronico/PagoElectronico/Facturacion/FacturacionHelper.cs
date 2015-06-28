@@ -47,7 +47,11 @@ namespace PagoElectronico.Facturacion
             facturacion.fecha = Convert.ToDateTime(reader["Fecha"]);
             facturacion.importe = Convert.ToDecimal(reader["Importe"]);
             facturacion.descripcionGasto = Convert.ToString(reader["Descripcion"]);
-            facturacion.idReferencia = reader["Id_Referencia"] as int?;
+            int? idReferencia = reader["Id_Referencia"] as int?;
+            if (idReferencia == null)
+                facturacion.idReferencia = "--";
+            else
+                facturacion.idReferencia = Convert.ToString(idReferencia);
 
             return facturacion;
         }
