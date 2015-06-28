@@ -16,7 +16,7 @@ namespace PagoElectronico.Facturacion
             SqlConnection conn = Connection.getConnection();
 
             string query = @"SELECT fp.Id_Facturacion_Pendiente, fp.Id_Cuenta, fp.Fecha,
-            fp.Importe, ti.Descripcion FROM SQL_SERVANT.Facturacion_Pendiente fp 
+            fp.Importe, ti.Descripcion, fp.Id_Referencia FROM SQL_SERVANT.Facturacion_Pendiente fp 
             INNER JOIN SQL_SERVANT.Tipo_Item ti ON fp.Id_Tipo_Item = ti.Id_Tipo_Item
             INNER JOIN SQL_SERVANT.Cliente_Cuenta cc ON cc.Id_Cuenta = fp.Id_Cuenta
             WHERE cc.Id_Cliente = " + idCliente;
@@ -47,6 +47,7 @@ namespace PagoElectronico.Facturacion
             facturacion.fecha = Convert.ToDateTime(reader["Fecha"]);
             facturacion.importe = Convert.ToDecimal(reader["Importe"]);
             facturacion.descripcionGasto = Convert.ToString(reader["Descripcion"]);
+            facturacion.idReferencia = reader["Id_Referencia"] as int?;
 
             return facturacion;
         }
@@ -62,13 +63,15 @@ namespace PagoElectronico.Facturacion
                 dgv.AllowUserToAddRows = false;
                 dgv.Columns[0].Width = 25;
                 dgv.Columns[1].Width = 120;
-                dgv.Columns[2].Width = 200;
+                dgv.Columns[2].Width = 120;
+                dgv.Columns[3].Width = 200;
                 dgv.Columns[0].HeaderCell.Value = "Id";
-                dgv.Columns[1].HeaderCell.Value = "Cuenta";
-                dgv.Columns[2].HeaderCell.Value = "Detalle";
-                dgv.Columns[3].HeaderCell.Value = "Fecha";
-                dgv.Columns[4].HeaderCell.Value = "Importe";
-                dgv.Columns[5].HeaderCell.Value = "Suscripciones";
+                dgv.Columns[1].HeaderCell.Value = "N° Referencia";
+                dgv.Columns[2].HeaderCell.Value = "Cuenta";
+                dgv.Columns[3].HeaderCell.Value = "Detalle";
+                dgv.Columns[4].HeaderCell.Value = "Fecha";
+                dgv.Columns[5].HeaderCell.Value = "Importe";
+                dgv.Columns[6].HeaderCell.Value = "Suscripciones";
             }
         }
 
@@ -150,6 +153,7 @@ namespace PagoElectronico.Facturacion
             sp_create_facturacion_item.Parameters.AddWithValue("@p_descripcion_gasto", item.descripcionGasto);
             sp_create_facturacion_item.Parameters.AddWithValue("@p_importe", item.importe);
             sp_create_facturacion_item.Parameters.AddWithValue("@p_cantidad_suscripciones", item.suscripciones);
+            sp_create_facturacion_item.Parameters.AddWithValue("@p_id_referencia", item.idReferencia);
 
             ProcedureHelper.execute(sp_create_facturacion_item, "create facturacion item", false);
         }

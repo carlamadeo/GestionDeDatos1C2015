@@ -1470,9 +1470,13 @@ BEGIN
 		
 		IF (@p_tranferencia_mismo_cliente = 0)
 		BEGIN
-			INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Fecha, Importe, Id_Tipo_Item)
+			Declare @tipo_item int
+			
+			SELECT @tipo_item = Id_Tipo_Item FROM SQL_SERVANT.Tipo_Item WHERE Descripcion = ('Comisión por transferencia.')
+			
+			INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Fecha, Importe, Id_Tipo_Item, Id_Referencia)
 			VALUES (@p_transferencia_origen, @p_tranferencia_fecha, 
-			@p_transferencia_costo, 1)
+			@p_transferencia_costo, @tipo_item, @p_id_transferencia)
 		END
 	COMMIT TRANSACTION
 END
@@ -1543,7 +1547,8 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_create_facturacion_item](
 @p_id_cuenta numeric(18,0),
 @p_descripcion_gasto varchar(255),
 @p_importe numeric(10,2),
-@p_cantidad_suscripciones int
+@p_cantidad_suscripciones int,
+@p_id_referencia int
 )
 AS
 BEGIN
@@ -1552,7 +1557,7 @@ BEGIN
 	WHERE @p_descripcion_gasto = Descripcion
 	
 	INSERT INTO SQL_SERVANT.Facturacion_Item VALUES
-	(@p_id_factura, @p_id_cuenta, @id_tipo_item, @p_importe)
+	(@p_id_factura, @p_id_cuenta, @id_tipo_item, @p_importe, @p_id_referencia)
 	
 	IF(@id_tipo_item = 2)
 	BEGIN

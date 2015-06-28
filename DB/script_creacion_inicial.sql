@@ -878,7 +878,8 @@ CREATE TABLE [SQL_SERVANT].[Facturacion_Pendiente](
 	[Id_Cuenta][numeric](18,0) NOT NULL,
 	[Fecha][datetime] NOT NULL,
 	[Importe][Numeric](10,2) NOT NULL,
-	[Id_Tipo_Item][Int] NOT NULL
+	[Id_Tipo_Item][Int] NOT NULL,
+	[Id_Referencia][Int]
 
 	CONSTRAINT [PK_Facturacion_Pendiente] PRIMARY KEY(Id_Facturacion_Pendiente),
 	CONSTRAINT [FK_Facturacion_Pendiente_Id_Cuenta] FOREIGN KEY (Id_Cuenta)
@@ -887,8 +888,8 @@ CREATE TABLE [SQL_SERVANT].[Facturacion_Pendiente](
 		REFERENCES [SQL_SERVANT].[Tipo_Item] (Id_Tipo_Item)
 )
 
-INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Fecha, Importe, Id_Tipo_Item)
-SELECT m.Cuenta_Numero, m.Transf_Fecha, m.Trans_Importe, 1
+INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Fecha, Importe, Id_Tipo_Item, Id_Referencia)
+SELECT m.Cuenta_Numero, m.Transf_Fecha, m.Trans_Importe, 1, 0
 FROM gd_esquema.Maestra m 
 INNER JOIN SQL_SERVANT.Cuenta cu
 	ON cu.Id_Cuenta = m.Cuenta_Numero
@@ -935,7 +936,8 @@ CREATE TABLE [SQL_SERVANT].[Facturacion_Item](
 	[Id_Factura][Int] NOT NULL,
 	[Id_Cuenta][numeric](18,0) NOT NULL,
 	[Id_Tipo_Item][Int] NOT NULL,
-	[Importe][numeric](10,2) NOT NULL
+	[Importe][numeric](10,2) NOT NULL,
+	[Id_Referencia][Int]
 
 	CONSTRAINT [FK_Facturacion_Item_Id_Factura] FOREIGN KEY (Id_Factura)
 	REFERENCES [SQL_SERVANT].[Facturacion] (Id_Factura),
@@ -945,8 +947,8 @@ CREATE TABLE [SQL_SERVANT].[Facturacion_Item](
 		REFERENCES [SQL_SERVANT].[Tipo_Item] (Id_Tipo_Item)
 )
 
-INSERT INTO SQL_SERVANT.Facturacion_Item (Id_Factura, Id_Cuenta, Id_Tipo_Item, Importe)
-SELECT m.Factura_Numero, cc.Id_Cuenta, 1, m.Item_Factura_Importe
+INSERT INTO SQL_SERVANT.Facturacion_Item (Id_Factura, Id_Cuenta, Id_Tipo_Item, Importe, Id_Referencia)
+SELECT m.Factura_Numero, cc.Id_Cuenta, 1, m.Item_Factura_Importe, t.Id_Transferencia
 FROM gd_esquema.Maestra m
 	INNER JOIN SQL_SERVANT.Cliente_Datos cd
 		ON UPPER(LTRIM(RTRIM(m.Cli_Nombre))) = UPPER(LTRIM(RTRIM(cd.Nombre)))
@@ -956,6 +958,11 @@ FROM gd_esquema.Maestra m
 		AND cc.Id_Cliente = cd.Id_Cliente
 	INNER JOIN SQL_SERVANT.Cuenta cu
 		ON cu.Id_Cuenta = cc.Id_Cuenta
+	INNER JOIN SQL_SERVANT.Transferencia t
+		ON t.Id_Cuenta_Origen = m.Cuenta_Numero
+		AND t.Id_Cuenta_Destino = m.Cuenta_Dest_Numero
+		AND t.Fecha_Transferencia = m.Transf_Fecha
+		AND t.Importe = m.Trans_Importe
 		
 WHERE Factura_Numero IS NOT NULL
 

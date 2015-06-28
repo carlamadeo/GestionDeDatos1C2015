@@ -65,7 +65,7 @@
             this.dgvPendientes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvPendientes.Location = new System.Drawing.Point(27, 92);
             this.dgvPendientes.Name = "dgvPendientes";
-            this.dgvPendientes.Size = new System.Drawing.Size(610, 163);
+            this.dgvPendientes.Size = new System.Drawing.Size(689, 163);
             this.dgvPendientes.TabIndex = 2;
             // 
             // dgvAPagar
@@ -73,7 +73,7 @@
             this.dgvAPagar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvAPagar.Location = new System.Drawing.Point(27, 293);
             this.dgvAPagar.Name = "dgvAPagar";
-            this.dgvAPagar.Size = new System.Drawing.Size(610, 163);
+            this.dgvAPagar.Size = new System.Drawing.Size(689, 163);
             this.dgvAPagar.TabIndex = 3;
             // 
             // labelPendientes
@@ -118,7 +118,7 @@
             // buttonDel
             // 
             this.buttonDel.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonDel.Location = new System.Drawing.Point(390, 264);
+            this.buttonDel.Location = new System.Drawing.Point(423, 264);
             this.buttonDel.Name = "buttonDel";
             this.buttonDel.Size = new System.Drawing.Size(34, 23);
             this.buttonDel.TabIndex = 2;
@@ -129,7 +129,7 @@
             // buttonAdd
             // 
             this.buttonAdd.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonAdd.Location = new System.Drawing.Point(241, 264);
+            this.buttonAdd.Location = new System.Drawing.Point(285, 264);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(34, 23);
             this.buttonAdd.TabIndex = 1;
@@ -143,7 +143,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonVolver;
-            this.ClientSize = new System.Drawing.Size(654, 546);
+            this.ClientSize = new System.Drawing.Size(733, 546);
             this.Controls.Add(this.buttonAdd);
             this.Controls.Add(this.buttonDel);
             this.Controls.Add(this.buttonContinuar);
