@@ -52,7 +52,7 @@
             this.buttonMovimientos.Location = new System.Drawing.Point(459, 236);
             this.buttonMovimientos.Name = "buttonMovimientos";
             this.buttonMovimientos.Size = new System.Drawing.Size(86, 23);
-            this.buttonMovimientos.TabIndex = 3;
+            this.buttonMovimientos.TabIndex = 1;
             this.buttonMovimientos.Text = "Movimientos";
             this.buttonMovimientos.UseVisualStyleBackColor = true;
             this.buttonMovimientos.Click += new System.EventHandler(this.buttonMovimientos_Click);
@@ -62,7 +62,7 @@
             this.btnVolver.Location = new System.Drawing.Point(33, 236);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(75, 23);
-            this.btnVolver.TabIndex = 13;
+            this.btnVolver.TabIndex = 2;
             this.btnVolver.Text = "Volver";
             this.btnVolver.UseVisualStyleBackColor = true;
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
@@ -73,7 +73,7 @@
             this.comboBoxAccount.Location = new System.Drawing.Point(146, 146);
             this.comboBoxAccount.Name = "comboBoxAccount";
             this.comboBoxAccount.Size = new System.Drawing.Size(172, 21);
-            this.comboBoxAccount.TabIndex = 14;
+            this.comboBoxAccount.TabIndex = 0;
             this.comboBoxAccount.SelectedValueChanged += new System.EventHandler(this.comboBoxAccount_SelectedValueChanged);
             // 
             // dgvClient
@@ -91,7 +91,7 @@
             this.txtBoxSaldo.Name = "txtBoxSaldo";
             this.txtBoxSaldo.ReadOnly = true;
             this.txtBoxSaldo.Size = new System.Drawing.Size(172, 20);
-            this.txtBoxSaldo.TabIndex = 17;
+            this.txtBoxSaldo.TabIndex = 1;
             // 
             // labelSaldo
             // 
@@ -104,6 +104,7 @@
             // 
             // FormConsultaSaldos
             // 
+            this.AcceptButton = this.buttonMovimientos;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(557, 303);

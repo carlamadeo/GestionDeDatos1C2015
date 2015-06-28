@@ -26,6 +26,7 @@ namespace PagoElectronico.Login
 
         private void FormSeleccionRol_Load(object sender, EventArgs e)
         {
+            Login.checkAccounts();
             if (countRol == 1)
             {
                 goToMenu();

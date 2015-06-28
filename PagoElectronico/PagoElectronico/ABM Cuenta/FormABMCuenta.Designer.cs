@@ -45,30 +45,31 @@
             // 
             // buttonBack
             // 
+            this.buttonBack.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonBack.Location = new System.Drawing.Point(42, 448);
             this.buttonBack.Name = "buttonBack";
             this.buttonBack.Size = new System.Drawing.Size(75, 23);
-            this.buttonBack.TabIndex = 0;
+            this.buttonBack.TabIndex = 5;
             this.buttonBack.Text = "Volver";
             this.buttonBack.UseVisualStyleBackColor = true;
             this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
             // 
             // buttonCreate
             // 
-            this.buttonCreate.Location = new System.Drawing.Point(310, 448);
+            this.buttonCreate.Location = new System.Drawing.Point(362, 448);
             this.buttonCreate.Name = "buttonCreate";
             this.buttonCreate.Size = new System.Drawing.Size(75, 23);
-            this.buttonCreate.TabIndex = 1;
+            this.buttonCreate.TabIndex = 4;
             this.buttonCreate.Text = "Crear";
             this.buttonCreate.UseVisualStyleBackColor = true;
             this.buttonCreate.Click += new System.EventHandler(this.buttonCreate_Click);
             // 
             // buttonModify
             // 
-            this.buttonModify.Location = new System.Drawing.Point(575, 448);
+            this.buttonModify.Location = new System.Drawing.Point(677, 448);
             this.buttonModify.Name = "buttonModify";
             this.buttonModify.Size = new System.Drawing.Size(75, 23);
-            this.buttonModify.TabIndex = 2;
+            this.buttonModify.TabIndex = 3;
             this.buttonModify.Text = "Modificar";
             this.buttonModify.UseVisualStyleBackColor = true;
             this.buttonModify.Click += new System.EventHandler(this.buttonModify_Click);
@@ -78,7 +79,7 @@
             this.textBoxLastname.Location = new System.Drawing.Point(110, 37);
             this.textBoxLastname.Name = "textBoxLastname";
             this.textBoxLastname.Size = new System.Drawing.Size(100, 20);
-            this.textBoxLastname.TabIndex = 3;
+            this.textBoxLastname.TabIndex = 0;
             // 
             // label1
             // 
@@ -92,7 +93,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(428, 40);
+            this.label2.Location = new System.Drawing.Point(530, 39);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 13);
             this.label2.TabIndex = 5;
@@ -101,17 +102,17 @@
             // comboBoxTypeAccount
             // 
             this.comboBoxTypeAccount.FormattingEnabled = true;
-            this.comboBoxTypeAccount.Location = new System.Drawing.Point(529, 37);
+            this.comboBoxTypeAccount.Location = new System.Drawing.Point(631, 36);
             this.comboBoxTypeAccount.Name = "comboBoxTypeAccount";
             this.comboBoxTypeAccount.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxTypeAccount.TabIndex = 6;
+            this.comboBoxTypeAccount.TabIndex = 1;
             // 
             // dgvAccount
             // 
             this.dgvAccount.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvAccount.Location = new System.Drawing.Point(42, 268);
             this.dgvAccount.Name = "dgvAccount";
-            this.dgvAccount.Size = new System.Drawing.Size(608, 150);
+            this.dgvAccount.Size = new System.Drawing.Size(710, 150);
             this.dgvAccount.TabIndex = 7;
             // 
             // buttonClean
@@ -126,10 +127,10 @@
             // 
             // buttonSearch
             // 
-            this.buttonSearch.Location = new System.Drawing.Point(575, 76);
+            this.buttonSearch.Location = new System.Drawing.Point(677, 75);
             this.buttonSearch.Name = "buttonSearch";
             this.buttonSearch.Size = new System.Drawing.Size(75, 23);
-            this.buttonSearch.TabIndex = 9;
+            this.buttonSearch.TabIndex = 2;
             this.buttonSearch.Text = "Buscar";
             this.buttonSearch.UseVisualStyleBackColor = true;
             this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
@@ -139,15 +140,17 @@
             this.dgvClient.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvClient.Location = new System.Drawing.Point(42, 118);
             this.dgvClient.Name = "dgvClient";
-            this.dgvClient.Size = new System.Drawing.Size(608, 117);
+            this.dgvClient.Size = new System.Drawing.Size(710, 117);
             this.dgvClient.TabIndex = 10;
             this.dgvClient.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvClient_SelectionChanged);
             // 
             // FormABMCuenta
             // 
+            this.AcceptButton = this.buttonSearch;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(665, 512);
+            this.CancelButton = this.buttonBack;
+            this.ClientSize = new System.Drawing.Size(764, 512);
             this.Controls.Add(this.dgvClient);
             this.Controls.Add(this.buttonSearch);
             this.Controls.Add(this.buttonClean);

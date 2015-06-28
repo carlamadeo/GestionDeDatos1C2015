@@ -61,7 +61,7 @@
             this.buttonTransferencia.Location = new System.Drawing.Point(338, 431);
             this.buttonTransferencia.Name = "buttonTransferencia";
             this.buttonTransferencia.Size = new System.Drawing.Size(80, 23);
-            this.buttonTransferencia.TabIndex = 1;
+            this.buttonTransferencia.TabIndex = 0;
             this.buttonTransferencia.Text = "Transferencia";
             this.buttonTransferencia.UseVisualStyleBackColor = true;
             this.buttonTransferencia.Click += new System.EventHandler(this.buttonTransferencia_Click);
@@ -71,7 +71,7 @@
             this.buttonVolver.Location = new System.Drawing.Point(44, 431);
             this.buttonVolver.Name = "buttonVolver";
             this.buttonVolver.Size = new System.Drawing.Size(80, 23);
-            this.buttonVolver.TabIndex = 2;
+            this.buttonVolver.TabIndex = 1;
             this.buttonVolver.Text = "Volver";
             this.buttonVolver.UseVisualStyleBackColor = true;
             this.buttonVolver.Click += new System.EventHandler(this.buttonVolver_Click);
@@ -99,7 +99,7 @@
             this.textBoxImporte.Location = new System.Drawing.Point(139, 64);
             this.textBoxImporte.Name = "textBoxImporte";
             this.textBoxImporte.Size = new System.Drawing.Size(100, 20);
-            this.textBoxImporte.TabIndex = 5;
+            this.textBoxImporte.TabIndex = 1;
             // 
             // groupBoxDestino
             // 
@@ -131,7 +131,7 @@
             this.listBoxUsuario.Location = new System.Drawing.Point(139, 96);
             this.listBoxUsuario.Name = "listBoxUsuario";
             this.listBoxUsuario.Size = new System.Drawing.Size(165, 95);
-            this.listBoxUsuario.TabIndex = 4;
+            this.listBoxUsuario.TabIndex = 1;
             this.listBoxUsuario.SelectedValueChanged += new System.EventHandler(this.listBoxUsuario_SelectedValueChanged);
             // 
             // comboBoxCuentaTercero
@@ -140,7 +140,7 @@
             this.comboBoxCuentaTercero.Location = new System.Drawing.Point(139, 229);
             this.comboBoxCuentaTercero.Name = "comboBoxCuentaTercero";
             this.comboBoxCuentaTercero.Size = new System.Drawing.Size(165, 21);
-            this.comboBoxCuentaTercero.TabIndex = 3;
+            this.comboBoxCuentaTercero.TabIndex = 2;
             this.comboBoxCuentaTercero.SelectionChangeCommitted += new System.EventHandler(this.comboBox_SelectionChangeCommitted);
             this.comboBoxCuentaTercero.SelectedValueChanged += new System.EventHandler(this.comboBoxCuentaTercero_SelectedValueChanged);
             // 
@@ -159,7 +159,7 @@
             this.comboBoxCuentaPropia.Location = new System.Drawing.Point(139, 33);
             this.comboBoxCuentaPropia.Name = "comboBoxCuentaPropia";
             this.comboBoxCuentaPropia.Size = new System.Drawing.Size(165, 21);
-            this.comboBoxCuentaPropia.TabIndex = 1;
+            this.comboBoxCuentaPropia.TabIndex = 0;
             this.comboBoxCuentaPropia.SelectionChangeCommitted += new System.EventHandler(this.comboBox_SelectionChangeCommitted);
             this.comboBoxCuentaPropia.SelectedValueChanged += new System.EventHandler(this.comboBoxCuentaPropia_SelectedValueChanged);
             // 

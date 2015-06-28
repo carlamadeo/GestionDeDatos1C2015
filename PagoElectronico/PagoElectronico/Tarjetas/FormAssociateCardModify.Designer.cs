@@ -56,7 +56,7 @@
             this.textBoxID.Location = new System.Drawing.Point(139, 41);
             this.textBoxID.Name = "textBoxID";
             this.textBoxID.Size = new System.Drawing.Size(143, 20);
-            this.textBoxID.TabIndex = 1;
+            this.textBoxID.TabIndex = 0;
             // 
             // textBoxSecurityCod
             // 
@@ -80,7 +80,7 @@
             this.comboBoxCompany.Location = new System.Drawing.Point(139, 85);
             this.comboBoxCompany.Name = "comboBoxCompany";
             this.comboBoxCompany.Size = new System.Drawing.Size(143, 21);
-            this.comboBoxCompany.TabIndex = 4;
+            this.comboBoxCompany.TabIndex = 1;
             // 
             // label3
             // 
@@ -96,7 +96,7 @@
             this.buttonSave.Location = new System.Drawing.Point(544, 190);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
-            this.buttonSave.TabIndex = 6;
+            this.buttonSave.TabIndex = 5;
             this.buttonSave.Text = "Guardar";
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
@@ -106,7 +106,7 @@
             this.buttonBack.Location = new System.Drawing.Point(36, 190);
             this.buttonBack.Name = "buttonBack";
             this.buttonBack.Size = new System.Drawing.Size(75, 23);
-            this.buttonBack.TabIndex = 7;
+            this.buttonBack.TabIndex = 6;
             this.buttonBack.Text = "Volver";
             this.buttonBack.UseVisualStyleBackColor = true;
             this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
@@ -116,14 +116,14 @@
             this.dtpCreation.Location = new System.Drawing.Point(419, 40);
             this.dtpCreation.Name = "dtpCreation";
             this.dtpCreation.Size = new System.Drawing.Size(200, 20);
-            this.dtpCreation.TabIndex = 8;
+            this.dtpCreation.TabIndex = 3;
             // 
             // dtpExpiration
             // 
             this.dtpExpiration.Location = new System.Drawing.Point(419, 84);
             this.dtpExpiration.Name = "dtpExpiration";
             this.dtpExpiration.Size = new System.Drawing.Size(200, 20);
-            this.dtpExpiration.TabIndex = 9;
+            this.dtpExpiration.TabIndex = 4;
             // 
             // label4
             // 
@@ -145,8 +145,10 @@
             // 
             // FormAssociateCardModify
             // 
+            this.AcceptButton = this.buttonSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.buttonBack;
             this.ClientSize = new System.Drawing.Size(661, 255);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);

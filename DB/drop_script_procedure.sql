@@ -15,6 +15,8 @@ DROP PROCEDURE SQL_SERVANT.sp_check_user_is_admin
 
 DROP PROCEDURE SQL_SERVANT.sp_menu_list_functionality_by_user
 
+DROP PROCEDURE SQL_SERVANT.check_and_update_accounts
+
 DROP PROCEDURE SQL_SERVANT.sp_rol_exist_one_by_user
 
 DROP PROCEDURE SQL_SERVANT.sp_rol_search

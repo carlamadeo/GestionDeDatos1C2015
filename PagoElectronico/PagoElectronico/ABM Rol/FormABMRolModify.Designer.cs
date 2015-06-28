@@ -39,11 +39,11 @@
             this.buttonRemove = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxCrearRol = new System.Windows.Forms.GroupBox();
+            this.labelFuncionalidad = new System.Windows.Forms.Label();
+            this.comboBoxFuncionalidad = new System.Windows.Forms.ComboBox();
             this.checkBoxHabilitado = new System.Windows.Forms.CheckBox();
             this.labelHabilitado = new System.Windows.Forms.Label();
             this.groupBoxFuncionalidades = new System.Windows.Forms.GroupBox();
-            this.comboBoxFuncionalidad = new System.Windows.Forms.ComboBox();
-            this.labelFuncionalidad = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvToAdd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSelected)).BeginInit();
             this.groupBoxCrearRol.SuspendLayout();
@@ -64,14 +64,14 @@
             this.txtRolDescription.Location = new System.Drawing.Point(135, 33);
             this.txtRolDescription.Name = "txtRolDescription";
             this.txtRolDescription.Size = new System.Drawing.Size(114, 20);
-            this.txtRolDescription.TabIndex = 1;
+            this.txtRolDescription.TabIndex = 0;
             // 
             // buttonSaveName
             // 
             this.buttonSaveName.Location = new System.Drawing.Point(518, 174);
             this.buttonSaveName.Name = "buttonSaveName";
             this.buttonSaveName.Size = new System.Drawing.Size(72, 23);
-            this.buttonSaveName.TabIndex = 2;
+            this.buttonSaveName.TabIndex = 0;
             this.buttonSaveName.Text = "Crear";
             this.buttonSaveName.UseVisualStyleBackColor = true;
             this.buttonSaveName.Click += new System.EventHandler(this.buttonSaveName_Click);
@@ -115,7 +115,7 @@
             this.buttonAdd.Location = new System.Drawing.Point(264, 106);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(33, 23);
-            this.buttonAdd.TabIndex = 7;
+            this.buttonAdd.TabIndex = 0;
             this.buttonAdd.Text = "->";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
@@ -125,7 +125,7 @@
             this.buttonRemove.Location = new System.Drawing.Point(264, 145);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(33, 23);
-            this.buttonRemove.TabIndex = 8;
+            this.buttonRemove.TabIndex = 1;
             this.buttonRemove.Text = "<-";
             this.buttonRemove.UseVisualStyleBackColor = true;
             this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
@@ -135,7 +135,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(30, 475);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 9;
+            this.buttonCancel.TabIndex = 1;
             this.buttonCancel.Text = "Volver";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -155,6 +155,23 @@
             this.groupBoxCrearRol.TabStop = false;
             this.groupBoxCrearRol.Text = "Creación de Rol";
             // 
+            // labelFuncionalidad
+            // 
+            this.labelFuncionalidad.AutoSize = true;
+            this.labelFuncionalidad.Location = new System.Drawing.Point(284, 36);
+            this.labelFuncionalidad.Name = "labelFuncionalidad";
+            this.labelFuncionalidad.Size = new System.Drawing.Size(73, 13);
+            this.labelFuncionalidad.TabIndex = 5;
+            this.labelFuncionalidad.Text = "Funcionalidad";
+            // 
+            // comboBoxFuncionalidad
+            // 
+            this.comboBoxFuncionalidad.FormattingEnabled = true;
+            this.comboBoxFuncionalidad.Location = new System.Drawing.Point(392, 33);
+            this.comboBoxFuncionalidad.Name = "comboBoxFuncionalidad";
+            this.comboBoxFuncionalidad.Size = new System.Drawing.Size(150, 21);
+            this.comboBoxFuncionalidad.TabIndex = 1;
+            // 
             // checkBoxHabilitado
             // 
             this.checkBoxHabilitado.AutoSize = true;
@@ -162,7 +179,7 @@
             this.checkBoxHabilitado.MaximumSize = new System.Drawing.Size(20, 20);
             this.checkBoxHabilitado.Name = "checkBoxHabilitado";
             this.checkBoxHabilitado.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxHabilitado.TabIndex = 3;
+            this.checkBoxHabilitado.TabIndex = 2;
             this.checkBoxHabilitado.UseVisualStyleBackColor = true;
             // 
             // labelHabilitado
@@ -189,25 +206,9 @@
             this.groupBoxFuncionalidades.TabStop = false;
             this.groupBoxFuncionalidades.Text = "Editar Funcionalidades";
             // 
-            // comboBoxFuncionalidad
-            // 
-            this.comboBoxFuncionalidad.FormattingEnabled = true;
-            this.comboBoxFuncionalidad.Location = new System.Drawing.Point(392, 33);
-            this.comboBoxFuncionalidad.Name = "comboBoxFuncionalidad";
-            this.comboBoxFuncionalidad.Size = new System.Drawing.Size(150, 21);
-            this.comboBoxFuncionalidad.TabIndex = 4;
-            // 
-            // labelFuncionalidad
-            // 
-            this.labelFuncionalidad.AutoSize = true;
-            this.labelFuncionalidad.Location = new System.Drawing.Point(284, 36);
-            this.labelFuncionalidad.Name = "labelFuncionalidad";
-            this.labelFuncionalidad.Size = new System.Drawing.Size(73, 13);
-            this.labelFuncionalidad.TabIndex = 5;
-            this.labelFuncionalidad.Text = "Funcionalidad";
-            // 
             // FormABMRolModify
             // 
+            this.AcceptButton = this.buttonSaveName;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(612, 517);

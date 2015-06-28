@@ -13,6 +13,6 @@ namespace PagoElectronico.Facturacion
         public String descripcionGasto { get; set; }
         public DateTime fecha { get; set; }
         public Decimal importe { get; set; }
-        public Int16 suscripciones { get; set; }
+        public Int32 suscripciones { get; set; }
     }
 }

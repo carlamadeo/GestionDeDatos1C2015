@@ -132,6 +132,21 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [SQL_SERVANT].[check_and_update_accounts](
+@p_today datetime
+)
+AS
+BEGIN
+	UPDATE SQL_SERVANT.Cuenta SET Id_Estado_Cuenta = 
+	(SELECT Id_Estado_Cuenta FROM SQL_SERVANT.Estado_Cuenta WHERE Descripcion = 'Inhabilitada')
+	WHERE (@p_today NOT BETWEEN Fecha_Creacion AND Fecha_Vencimiento)
+	
+	UPDATE SQL_SERVANT.Cuenta SET Id_Estado_Cuenta = 
+	(SELECT Id_Estado_Cuenta FROM SQL_SERVANT.Estado_Cuenta WHERE Descripcion = 'Habilitada')
+	WHERE (@p_today BETWEEN Fecha_Creacion AND Fecha_Vencimiento)
+END
+GO
+
 CREATE PROCEDURE [SQL_SERVANT].[sp_rol_exist_one_by_user](
 @p_id varchar(255) = null,
 @p_count_rol int = 0 OUTPUT,
@@ -683,7 +698,7 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_account_search](
 AS
 BEGIN
 	SELECT DISTINCT 
-	cd.Id_Cliente 'Id Cliente',
+	cd.Id_Cliente 'Id',
 	cd.Nombre 'Nombre',
 	cd.Apellido 'Apellido',
 	cc.Id_Cuenta 'Cuenta',
@@ -757,14 +772,16 @@ BEGIN
 		BEGIN
 			
 			INSERT INTO SQL_SERVANT.Cuenta (Id_Pais_Registro, Id_Moneda, Fecha_Creacion, Fecha_Vencimiento, Importe,
-				Id_Tipo_Cuenta, Id_Estado_Cuenta)
-				VALUES(@p_account_country_id, @p_account_currency_id, @p_account_date, DATEADD(DAY, @type_account_day, @p_account_date),
-				0.00, @p_account_type_account_id, 1)
+			Id_Tipo_Cuenta, Id_Estado_Cuenta)
+			VALUES(@p_account_country_id, @p_account_currency_id, @p_account_date, DATEADD(DAY, @type_account_day,									@p_account_date), 0.00, @p_account_type_account_id, 1)
+			
 			Declare @account_id numeric(18,0)
 			SET @account_id = @@IDENTITY
+			
 			INSERT INTO SQL_SERVANT.Cliente_Cuenta (Id_Cliente, Id_Cuenta)
-				VALUES (@p_account_client_id, @account_id)
+			VALUES (@p_account_client_id, @account_id)
 
+			IF((SELECT Id_Tipo_Cuenta FROM Tipo_Cuenta WHERE Descripcion = 'Gratuita') <> @p_account_type_account_id)
 			INSERT INTO SQL_SERVANT.Facturacion_Pendiente (Id_Cuenta, Fecha, Importe, Id_Tipo_Item)
 			SELECT @account_id, @p_account_date, ctc.Costo_Apertura, ti.Id_Tipo_Item
 			FROM SQL_SERVANT.Costo_Tipo_Cuenta ctc, SQL_SERVANT.Tipo_Item ti
@@ -1557,11 +1574,14 @@ CREATE PROCEDURE [SQL_SERVANT].[sp_create_facturacion_item](
 AS
 BEGIN
 	Declare @id_tipo_item int
+	
 	SELECT @id_tipo_item = Id_Tipo_Item FROM SQL_SERVANT.Tipo_Item
 	WHERE @p_descripcion_gasto = Descripcion
 	
-	INSERT INTO SQL_SERVANT.Facturacion_Item VALUES
-	(@p_id_factura, @p_id_cuenta, @id_tipo_item, @p_importe, @p_id_referencia)
+	IF(@p_id_referencia = 0)
+		INSERT INTO SQL_SERVANT.Facturacion_Item VALUES (@p_id_factura, @p_id_cuenta, @id_tipo_item, @p_importe, NULL)
+	ELSE
+		INSERT INTO SQL_SERVANT.Facturacion_Item VALUES (@p_id_factura, @p_id_cuenta, @id_tipo_item, @p_importe, @p_id_referencia)
 	
 	IF(@id_tipo_item = 2)
 	BEGIN
@@ -1586,6 +1606,7 @@ BEGIN
 			SET @cantidad_dias_aumentar = (@p_cantidad_suscripciones - 1) * @dias_por_tipo_cuenta
 			
 			UPDATE SQL_SERVANT.Cuenta SET Fecha_Vencimiento = DATEADD(day, @cantidad_dias_aumentar, @fecha_vencimiento)
+			WHERE Id_Cuenta = @p_id_cuenta
 			
 		END
 	

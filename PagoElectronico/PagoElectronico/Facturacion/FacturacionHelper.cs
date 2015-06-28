@@ -157,7 +157,10 @@ namespace PagoElectronico.Facturacion
             sp_create_facturacion_item.Parameters.AddWithValue("@p_descripcion_gasto", item.descripcionGasto);
             sp_create_facturacion_item.Parameters.AddWithValue("@p_importe", item.importe);
             sp_create_facturacion_item.Parameters.AddWithValue("@p_cantidad_suscripciones", item.suscripciones);
-            sp_create_facturacion_item.Parameters.AddWithValue("@p_id_referencia", item.idReferencia);
+            if(item.idReferencia == "--")
+                sp_create_facturacion_item.Parameters.AddWithValue("@p_id_referencia", 0);
+            else
+                sp_create_facturacion_item.Parameters.AddWithValue("@p_id_referencia", Convert.ToInt32(item.idReferencia));
 
             ProcedureHelper.execute(sp_create_facturacion_item, "create facturacion item", false);
         }

@@ -50,14 +50,14 @@
             this.comboBoxTarjetas.Location = new System.Drawing.Point(116, 89);
             this.comboBoxTarjetas.Name = "comboBoxTarjetas";
             this.comboBoxTarjetas.Size = new System.Drawing.Size(154, 21);
-            this.comboBoxTarjetas.TabIndex = 1;
+            this.comboBoxTarjetas.TabIndex = 0;
             // 
             // buttonPagar
             // 
             this.buttonPagar.Location = new System.Drawing.Point(195, 147);
             this.buttonPagar.Name = "buttonPagar";
             this.buttonPagar.Size = new System.Drawing.Size(75, 23);
-            this.buttonPagar.TabIndex = 2;
+            this.buttonPagar.TabIndex = 1;
             this.buttonPagar.Text = "Pagar";
             this.buttonPagar.UseVisualStyleBackColor = true;
             this.buttonPagar.Click += new System.EventHandler(this.buttonPagar_Click);
@@ -67,7 +67,7 @@
             this.buttonVolver.Location = new System.Drawing.Point(39, 147);
             this.buttonVolver.Name = "buttonVolver";
             this.buttonVolver.Size = new System.Drawing.Size(75, 23);
-            this.buttonVolver.TabIndex = 3;
+            this.buttonVolver.TabIndex = 2;
             this.buttonVolver.Text = "Volver";
             this.buttonVolver.UseVisualStyleBackColor = true;
             this.buttonVolver.Click += new System.EventHandler(this.buttonVolver_Click);

@@ -107,7 +107,7 @@
             // 
             // buttonContinuar
             // 
-            this.buttonContinuar.Location = new System.Drawing.Point(562, 477);
+            this.buttonContinuar.Location = new System.Drawing.Point(641, 477);
             this.buttonContinuar.Name = "buttonContinuar";
             this.buttonContinuar.Size = new System.Drawing.Size(75, 23);
             this.buttonContinuar.TabIndex = 3;

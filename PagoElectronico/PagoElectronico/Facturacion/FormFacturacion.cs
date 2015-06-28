@@ -71,7 +71,7 @@ namespace PagoElectronico.Facturacion
                     FormSeleccionSuscripciones formSeleccionSuscripciones = new FormSeleccionSuscripciones();
                     formSeleccionSuscripciones.ShowDialog();
                     string userEnteredText = formSeleccionSuscripciones.EnteredText;
-                    facturacionElegida.suscripciones = Convert.ToInt16(userEnteredText);
+                    facturacionElegida.suscripciones = Convert.ToInt32(userEnteredText);
                     formSeleccionSuscripciones.Dispose();
                 }
 

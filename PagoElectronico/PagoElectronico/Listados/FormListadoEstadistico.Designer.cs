@@ -55,7 +55,7 @@
             this.comboBoxEstadistic.Location = new System.Drawing.Point(123, 39);
             this.comboBoxEstadistic.Name = "comboBoxEstadistic";
             this.comboBoxEstadistic.Size = new System.Drawing.Size(412, 21);
-            this.comboBoxEstadistic.TabIndex = 1;
+            this.comboBoxEstadistic.TabIndex = 0;
             // 
             // label2
             // 
@@ -72,7 +72,7 @@
             this.comboBoxQuater.Location = new System.Drawing.Point(123, 85);
             this.comboBoxQuater.Name = "comboBoxQuater";
             this.comboBoxQuater.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxQuater.TabIndex = 3;
+            this.comboBoxQuater.TabIndex = 1;
             // 
             // buttonBack
             // 
@@ -90,7 +90,7 @@
             this.comboBoxYear.Location = new System.Drawing.Point(414, 85);
             this.comboBoxYear.Name = "comboBoxYear";
             this.comboBoxYear.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxYear.TabIndex = 5;
+            this.comboBoxYear.TabIndex = 2;
             // 
             // label3
             // 
@@ -106,7 +106,7 @@
             this.buttonSearch.Location = new System.Drawing.Point(460, 126);
             this.buttonSearch.Name = "buttonSearch";
             this.buttonSearch.Size = new System.Drawing.Size(75, 23);
-            this.buttonSearch.TabIndex = 7;
+            this.buttonSearch.TabIndex = 3;
             this.buttonSearch.Text = "Buscar";
             this.buttonSearch.UseVisualStyleBackColor = true;
             this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
@@ -121,6 +121,7 @@
             // 
             // FormListadoEstadistico
             // 
+            this.AcceptButton = this.buttonSearch;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(570, 417);

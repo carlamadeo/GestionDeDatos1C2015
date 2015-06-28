@@ -47,14 +47,14 @@
             this.textBoxSuscripciones.Location = new System.Drawing.Point(132, 62);
             this.textBoxSuscripciones.Name = "textBoxSuscripciones";
             this.textBoxSuscripciones.Size = new System.Drawing.Size(134, 20);
-            this.textBoxSuscripciones.TabIndex = 1;
+            this.textBoxSuscripciones.TabIndex = 0;
             // 
             // buttonAceptar
             // 
             this.buttonAceptar.Location = new System.Drawing.Point(190, 131);
             this.buttonAceptar.Name = "buttonAceptar";
             this.buttonAceptar.Size = new System.Drawing.Size(75, 23);
-            this.buttonAceptar.TabIndex = 3;
+            this.buttonAceptar.TabIndex = 1;
             this.buttonAceptar.Text = "Aceptar";
             this.buttonAceptar.UseVisualStyleBackColor = true;
             this.buttonAceptar.Click += new System.EventHandler(this.buttonAceptar_Click);

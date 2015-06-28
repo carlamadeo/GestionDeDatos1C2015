@@ -66,5 +66,16 @@ namespace PagoElectronico.Login
             else
                 return false;
         }
+
+        public static void checkAccounts()
+        {
+            SqlCommand sp_check_accounts = new SqlCommand();
+            sp_check_accounts.CommandText = "SQL_SERVANT.check_and_update_accounts";
+            sp_check_accounts.Parameters.Add(new SqlParameter("@p_today", SqlDbType.DateTime));
+            sp_check_accounts.Parameters["@p_today"].Value = DateHelper.getToday();
+
+            ProcedureHelper.execute(sp_check_accounts, "chequear si las cuentas de usuario estan vencidas", false);
+
+        }
     }
 }

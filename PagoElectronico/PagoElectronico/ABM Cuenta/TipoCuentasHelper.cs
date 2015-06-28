@@ -47,8 +47,13 @@ namespace PagoElectronico.ABM_Cuenta
             command.Parameters.Add(new SqlParameter("@p_account_client_id", SqlDbType.Int));
             command.Parameters["@p_account_client_id"].Value = clientId;
 
-
             DataGridViewHelper.fill(command, dgvAccount);
+            dgvAccount.Columns[0].Width = 25;
+            dgvAccount.Columns[1].Width = 50;
+            dgvAccount.Columns[2].Width = 50;
+            dgvAccount.Columns[3].Width = 120;
+            dgvAccount.Columns[4].Width = 50;
+            dgvAccount.Columns[8].Width = 50;
         }
 
         public static void fillTypeAccount(ComboBox cmb)

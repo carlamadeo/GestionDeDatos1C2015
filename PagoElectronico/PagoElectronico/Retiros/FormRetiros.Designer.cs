@@ -46,7 +46,7 @@
             this.buttonBack.Location = new System.Drawing.Point(41, 301);
             this.buttonBack.Name = "buttonBack";
             this.buttonBack.Size = new System.Drawing.Size(75, 23);
-            this.buttonBack.TabIndex = 0;
+            this.buttonBack.TabIndex = 4;
             this.buttonBack.Text = "Volver";
             this.buttonBack.UseVisualStyleBackColor = true;
             this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
@@ -84,7 +84,7 @@
             this.textBoxNroDoc.Location = new System.Drawing.Point(150, 215);
             this.textBoxNroDoc.Name = "textBoxNroDoc";
             this.textBoxNroDoc.Size = new System.Drawing.Size(114, 20);
-            this.textBoxNroDoc.TabIndex = 5;
+            this.textBoxNroDoc.TabIndex = 0;
             // 
             // label2
             // 
@@ -100,7 +100,7 @@
             this.textBoxCount.Location = new System.Drawing.Point(150, 253);
             this.textBoxCount.Name = "textBoxCount";
             this.textBoxCount.Size = new System.Drawing.Size(58, 20);
-            this.textBoxCount.TabIndex = 7;
+            this.textBoxCount.TabIndex = 2;
             // 
             // label3
             // 
@@ -117,7 +117,7 @@
             this.comboBoxBank.Location = new System.Drawing.Point(474, 215);
             this.comboBoxBank.Name = "comboBoxBank";
             this.comboBoxBank.Size = new System.Drawing.Size(135, 21);
-            this.comboBoxBank.TabIndex = 9;
+            this.comboBoxBank.TabIndex = 1;
             // 
             // labelMax
             // 
@@ -129,6 +129,7 @@
             // 
             // FormRetiros
             // 
+            this.AcceptButton = this.buttonRetire;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 356);

@@ -71,7 +71,7 @@
             this.buttonBack.Location = new System.Drawing.Point(35, 213);
             this.buttonBack.Name = "buttonBack";
             this.buttonBack.Size = new System.Drawing.Size(75, 23);
-            this.buttonBack.TabIndex = 3;
+            this.buttonBack.TabIndex = 6;
             this.buttonBack.Text = "Volver";
             this.buttonBack.UseVisualStyleBackColor = true;
             this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
@@ -81,7 +81,7 @@
             this.buttonSave.Location = new System.Drawing.Point(560, 213);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
-            this.buttonSave.TabIndex = 4;
+            this.buttonSave.TabIndex = 5;
             this.buttonSave.Text = "Guardar";
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
@@ -118,7 +118,7 @@
             this.dtpCreationDate.Location = new System.Drawing.Point(435, 39);
             this.dtpCreationDate.Name = "dtpCreationDate";
             this.dtpCreationDate.Size = new System.Drawing.Size(200, 20);
-            this.dtpCreationDate.TabIndex = 8;
+            this.dtpCreationDate.TabIndex = 3;
             // 
             // label4
             // 
@@ -143,7 +143,7 @@
             this.dtpExpirationDate.Location = new System.Drawing.Point(435, 92);
             this.dtpExpirationDate.Name = "dtpExpirationDate";
             this.dtpExpirationDate.Size = new System.Drawing.Size(200, 20);
-            this.dtpExpirationDate.TabIndex = 11;
+            this.dtpExpirationDate.TabIndex = 4;
             // 
             // FormABMCuentaModify
             // 

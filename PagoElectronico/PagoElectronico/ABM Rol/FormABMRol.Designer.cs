@@ -60,7 +60,7 @@
             this.buttonClean.Location = new System.Drawing.Point(27, 83);
             this.buttonClean.Name = "buttonClean";
             this.buttonClean.Size = new System.Drawing.Size(75, 23);
-            this.buttonClean.TabIndex = 8;
+            this.buttonClean.TabIndex = 4;
             this.buttonClean.Text = "Limpiar";
             this.buttonClean.UseVisualStyleBackColor = true;
             this.buttonClean.Click += new System.EventHandler(this.buttonClean_Click);
@@ -88,7 +88,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(27, 305);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 7;
+            this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "Cancelar";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -98,7 +98,7 @@
             this.buttonAdd.Location = new System.Drawing.Point(191, 305);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(75, 23);
-            this.buttonAdd.TabIndex = 6;
+            this.buttonAdd.TabIndex = 3;
             this.buttonAdd.Text = "Crear";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
@@ -108,7 +108,7 @@
             this.buttonEdit.Location = new System.Drawing.Point(351, 305);
             this.buttonEdit.Name = "buttonEdit";
             this.buttonEdit.Size = new System.Drawing.Size(75, 23);
-            this.buttonEdit.TabIndex = 3;
+            this.buttonEdit.TabIndex = 2;
             this.buttonEdit.Text = "Modificar";
             this.buttonEdit.UseVisualStyleBackColor = true;
             this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
