@@ -1309,17 +1309,21 @@ GO
 --SE VERIFICA SI LA TARJETA DE CREDITO SE ENCUENTRA VENCIDA
 CREATE PROCEDURE [SQL_SERVANT].[sp_tarjeta_not_expired](
 @p_tarjeta_id varchar(16) = 0,
+@p_today datetime,
 @p_notExpired bit = 1 OUTPUT
 )
 AS
 BEGIN
 
-	Declare @p_fecha_vencimiento datetime
-
-	SELECT @p_fecha_vencimiento = Fecha_Vencimiento FROM SQL_SERVANT.Tarjeta
-	WHERE CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', Id_Tarjeta)) = @p_tarjeta_id
+	Declare @exist int
 	
-	IF (@p_fecha_vencimiento < CAST(GETDATE() AS DATE))
+	SELECT @exist = 1 FROM SQL_SERVANT.Tarjeta t
+	WHERE CONVERT(varchar(50), DecryptByPassphrase ('SQL SERVANT', Id_Tarjeta)) = @p_tarjeta_id
+	AND (@p_today BETWEEN DATEADD(DAY, -1, t.Fecha_Emision) AND DATEADD(DAY, 1, t.Fecha_Vencimiento))
+
+	IF (@exist IS NOT NULL)
+		SET @p_notExpired = 1
+	ELSE
 		SET @p_notExpired = 0
 END
 GO

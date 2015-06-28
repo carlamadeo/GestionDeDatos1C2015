@@ -176,14 +176,17 @@ namespace PagoElectronico
             sp_tarjeta_not_expired.Parameters.Add(new SqlParameter("@p_tarjeta_id", SqlDbType.VarChar));
             sp_tarjeta_not_expired.Parameters["@p_tarjeta_id"].Value = tarjeta;
 
+            sp_tarjeta_not_expired.Parameters.Add(new SqlParameter("@p_today", SqlDbType.DateTime));
+            sp_tarjeta_not_expired.Parameters["@p_today"].Value = DateHelper.getToday();
+
             var returnParametersIsEnabled = sp_tarjeta_not_expired.Parameters.Add(new SqlParameter("@p_notExpired", SqlDbType.Int));
             returnParametersIsEnabled.Direction = ParameterDirection.InputOutput;
 
             ProcedureHelper.execute(sp_tarjeta_not_expired, "chequear tarjeta no vencida", false);
 
-            if (Convert.ToInt16(returnParametersIsEnabled.Value) == 1)
+            if (Convert.ToInt16(returnParametersIsEnabled.Value) == 0)
             {
-                MessageBox.Show("La tarjeta seleccionada se encuentra vencida", "Error",  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("La tarjeta seleccionada se encuentra vencida o la fecha de emision es posterior a la actual", "Error",  MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             else

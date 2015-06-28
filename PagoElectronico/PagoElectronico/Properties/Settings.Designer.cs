@@ -48,7 +48,7 @@ namespace PagoElectronico.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("01-06-2016 00:00:00")]
+        [global::System.Configuration.DefaultSettingValueAttribute("01-06-2015 00:00:00")]
         public string fechaSistema {
             get {
                 return ((string)(this["fechaSistema"]));
