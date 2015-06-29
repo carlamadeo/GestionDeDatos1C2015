@@ -28,6 +28,21 @@ namespace PagoElectronico.Retiros
 
             BancoHelper.fillComboBox(comboBoxBank);
             reloadGrid();
+
+            if (!ClienteHelper.isEnabledByUserId(VarGlobal.usuario.id))
+            {
+                this.disableForm();
+                MessageBox.Show("No puede realizar retiros dado que se encuentra deshabilitado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void disableForm()
+        {
+            this.dgvAccount.Enabled = false;
+            this.textBoxNroDoc.Enabled = false;
+            this.comboBoxBank.Enabled = false;
+            this.textBoxCount.Enabled = false;
+            this.buttonRetire.Enabled = false;
         }
 
         private void buttonBack_Click(object sender, EventArgs e)
@@ -72,8 +87,8 @@ namespace PagoElectronico.Retiros
 
             return Validaciones.validAndRequiredInt32(textBoxNroDoc.Text, "El nro de documento debe ser numerico")
             && ClienteHelper.checkIdentificationIsCorrect(Convert.ToInt32(textBoxNroDoc.Text))
-            && Validaciones.condition(importeMaximo >= Convert.ToDecimal(textBoxCount.Text.ToString().Replace(".", ",")), "El importe maximo a retirar es de " + String.Format("{0:C}", importeMaximo))
             && Validaciones.validAndRequiredDecimalMoreThan0(textBoxCount.Text, "El importe debe ser numerico y mayor a 0")
+            && Validaciones.condition(importeMaximo >= Convert.ToDecimal(textBoxCount.Text.ToString().Replace(".", ",")), "El importe maximo a retirar es de " + String.Format("{0:C}", importeMaximo))   
             && Validaciones.requiredString(comboBoxBank.SelectedValue.ToString(), "Debe seleccionar un banco de donde extraer");
         }
 

@@ -52,10 +52,10 @@ namespace PagoElectronico.Seguridad
 
         private Boolean validar()
         {
-            return 
+            return
                 Validaciones.requiredString(textBoxOldPass.Text, "Debe ingresar la contraseña actual") &&
-                Validaciones.requiredString(textBoxRespSec.Text, "La respuesta secreta no puede ser vacia") &&
-                Validaciones.requiredString(textBoxPregSec.Text, "La pregunta secreta no puede ser vacia");
+                Validaciones.requiredString(textBoxPregSec.Text, "La pregunta secreta no puede ser vacia") &&
+                Validaciones.requiredString(textBoxRespSec.Text, "La respuesta secreta no puede ser vacia");
 
         }
     }

@@ -13,7 +13,7 @@
       <Value Profile="(Default)">Server=localhost\SQLSERVER2008;Database=GD1C2015;User Id=gd;Password=gd2015;MultipleActiveResultSets=True</Value>
     </Setting>
     <Setting Name="fechaSistema" Type="System.String" Scope="User">
-      <Value Profile="(Default)">01-06-2016 00:00:00</Value>
+      <Value Profile="(Default)">20-01-2016 00:00:00</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -31,6 +31,22 @@ namespace PagoElectronico.Transferencias
             ListBoxHelper.fill(this.listBoxUsuario, "SQL_SERVANT.Usuario_Cliente uc",
                 "uc.Id_Usuario", "uc.Id_Usuario", "", null);
 
+            if (!ClienteHelper.isEnabledByUserId(VarGlobal.usuario.id))
+            {
+                this.disableForm();
+                MessageBox.Show("No puede realizar transferencias dado que se encuentra deshabilitado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void disableForm()
+        {
+            this.comboBoxCuentaOrigen.Enabled = false;
+            this.comboBoxCuentaPropia.Enabled = false;
+            this.comboBoxCuentaTercero.Enabled = false;
+            this.textBoxImporte.Enabled = false;
+            this.listBoxUsuario.Enabled = false;
+            this.buttonTransferencia.Enabled = false;
         }
 
         private void buttonVolver_Click(object sender, EventArgs e)

@@ -271,6 +271,12 @@ namespace PagoElectronico.ABM_Cliente
             }
         }
 
+        public static Boolean isEnabledByUserId(string userId)
+        {
+            Int32 clientId = getClientIdByUserId(userId);
+            return isEnabled(clientId);
+        }
+
         public static Int16 getClientIdByUserId(string usuarioId)
         {
             SqlCommand sp_client_get_by_user = new SqlCommand();

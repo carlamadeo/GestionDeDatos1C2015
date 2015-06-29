@@ -6,6 +6,7 @@ using PagoElectronico.ABM_Cuenta;
 using PagoElectronico.DB;
 using PagoElectronico.Tarjetas;
 using PagoElectronico.Utils;
+using PagoElectronico.ABM_Cliente;
 
 namespace PagoElectronico.Depositos
 {
@@ -30,6 +31,21 @@ namespace PagoElectronico.Depositos
             Tarjeta.fillTarjetasByClient(comboBoxTarjetas, VarGlobal.usuario.clientId);
             CuentaHelper.fillCuentasHabilitadasByClient(comboBoxCuentas, VarGlobal.usuario.clientId);
             this.fillListBoxMonedas();
+
+            if (!ClienteHelper.isEnabledByUserId(VarGlobal.usuario.id))
+            {
+                this.disableForm();
+                MessageBox.Show("No puede realizar depositos dado que se encuentra deshabilitado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void disableForm()
+        {
+            this.comboBoxTarjetas.Enabled = false;
+            this.textBoxImporte.Enabled = false;
+            this.comboBoxCuentas.Enabled = false;
+            this.listBoxMoneda.Enabled = false;
+            this.buttonDepositar.Enabled = false;
         }
 
         public void fillListBoxMonedas()
