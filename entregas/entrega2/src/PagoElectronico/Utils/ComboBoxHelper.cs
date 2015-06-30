@@ -1,0 +1,108 @@
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Windows.Forms;
+using PagoElectronico.Tarjetas;
+
+namespace PagoElectronico
+{
+    public class ComboBoxHelper
+    {
+        public static void clean(Control parent)
+        {
+            ComboBox t;
+            foreach (Control c in parent.Controls)
+            {
+                t = c as ComboBox;
+                if (t != null)
+                {
+                    t.SelectedIndex = -1;
+                }
+                if (c.Controls.Count > 0)
+                {
+                    clean(c);
+                }
+            }
+        }
+
+        public static void fill(ComboBox comboBox, String dataSource, String valueMember, String displayMember, String whereMember, String orderMember)
+        {
+            SqlConnection conn = Connection.getConnection();
+            DataSet dataSet = new DataSet();
+            SqlDataAdapter dataAdapter = new SqlDataAdapter(String.Format("SELECT {0} AS 'Value',{1} AS 'Display' FROM {2} {3} {4}", valueMember, displayMember, dataSource, String.IsNullOrEmpty(whereMember) ? "" : "WHERE " + whereMember, String.IsNullOrEmpty(orderMember) ? "" : "ORDER BY " + orderMember), conn);
+            dataAdapter.Fill(dataSet, dataSource);
+            DataRow row = dataSet.Tables[0].NewRow();
+            dataSet.Tables[0].Rows.InsertAt(row, 0);
+            comboBox.DataSource = dataSet.Tables[0].DefaultView;
+            comboBox.ValueMember = "Value";
+            comboBox.DisplayMember = "Display";
+            comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox.Text = "(Seleccione una Opcion)";
+
+            Connection.close(conn);
+        }
+
+        public static void fillWithoutLast4Digits(ComboBox comboBox, String dataSource, String valueMember, String displayMember, String whereMember, String orderMember)
+        {
+            SqlConnection conn = Connection.getConnection();
+            DataSet dataSet = new DataSet();
+            SqlDataAdapter dataAdapter = new SqlDataAdapter(String.Format("SELECT {0} AS 'Value',{1} AS 'Display' FROM {2} {3} {4}", valueMember, displayMember, dataSource, String.IsNullOrEmpty(whereMember) ? "" : "WHERE " + whereMember, String.IsNullOrEmpty(orderMember) ? "" : "ORDER BY " + orderMember), conn);
+            dataAdapter.Fill(dataSet, dataSource);
+            DataRow row = dataSet.Tables[0].NewRow();
+            dataSet.Tables[0].Rows.InsertAt(row, 0);
+            
+            foreach (DataRow dr in dataSet.Tables[0].Rows)
+            {
+                dr[1] = Tarjeta.tc4UltimosDigitos(dr[1].ToString());
+            }
+            comboBox.DataSource = dataSet.Tables[0].DefaultView;
+            comboBox.ValueMember = "Value";
+            comboBox.DisplayMember = "Display";
+            
+            comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox.Text = "(Seleccione una Opcion)";
+
+            Connection.close(conn);
+        }
+
+        public static void fillFromProcedure(ComboBox comboBox, String dataSource, String valueMember, String displayMember, String whereMember, String orderMember)
+        {
+            SqlConnection conn = Connection.getConnection();
+            DataSet dataSet = new DataSet();
+            SqlDataAdapter dataAdapter = new SqlDataAdapter("EXEC " + dataSource, conn);
+            dataAdapter.Fill(dataSet, dataSource);
+            DataRow row = dataSet.Tables[0].NewRow();
+            dataSet.Tables[0].Rows.InsertAt(row, 0);
+            comboBox.DataSource = dataSet.Tables[0].DefaultView;
+            comboBox.ValueMember = valueMember;
+            comboBox.DisplayMember = displayMember;
+            comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox.Text = "(Seleccione una Opcion)";
+
+            Connection.close(conn);
+        }
+
+        public static void fillFromProc(ComboBox comboBox, int idCliente)
+        {
+            SqlConnection conn = Connection.getConnection();
+            SqlCommand cmd = new SqlCommand();
+            DataSet ds = new DataSet();
+
+            //Load user list
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "SQL_SERVANT.sp_card_by_client_id";
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd.CommandText, conn);
+            cmd.Parameters.Add(idCliente);
+            adapter.Fill(ds);
+            comboBox.DataSource = ds.Tables[0].DefaultView;
+            comboBox.DisplayMember = "Numero";
+            comboBox.ValueMember = "Numero";
+            cmd.Parameters.Clear();
+            comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox.Text = "(Seleccione una Opcion)";
+
+            Connection.close(conn);
+        }
+
+    }
+}

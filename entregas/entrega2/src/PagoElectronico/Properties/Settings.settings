@@ -1,0 +1,19 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PagoElectronico.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="formatoFecha" Type="System.String" Scope="User">
+      <Value Profile="(Default)">dd-MM-yyyy HH:mm:ss</Value>
+    </Setting>
+    <Setting Name="connectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Server=localhost\SQLSERVER2008;Database=GD1C2015;User Id=gd;Password=gd2015;MultipleActiveResultSets=True&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Server=localhost\SQLSERVER2008;Database=GD1C2015;User Id=gd;Password=gd2015;MultipleActiveResultSets=True</Value>
+    </Setting>
+    <Setting Name="fechaSistema" Type="System.String" Scope="User">
+      <Value Profile="(Default)">20-01-2016 00:00:00</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
